@@ -1,0 +1,16 @@
+{
+  "name": "Lounge by Gigi",
+  "short_name": "Lounge",
+  "description": "Lounge by Gigi - fashion, swimwear, essentials and elevated pieces.",
+  "start_url": "/",
+  "display": "standalone",
+  "background_color": "#f6f1ea",
+  "theme_color": "#1f1713",
+  "icons": [
+    {
+      "src": "/icon.svg",
+      "sizes": "512x512",
+      "type": "image/svg+xml"
+    }
+  ]
+}

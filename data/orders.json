@@ -1,0 +1,20 @@
+[
+  {
+    "id": "demo-order-001",
+    "createdAt": "2026-06-01T10:00:00.000Z",
+    "customerEmail": "cliente@example.com",
+    "status": "paid",
+    "paymentProvider": "manual",
+    "total": 120,
+    "items": [
+      {
+        "productId": "soft-lounge-set",
+        "title": "Soft Lounge Set",
+        "quantity": 1,
+        "price": 72,
+        "variant": "Nude / M"
+      }
+    ],
+    "receiptSent": false
+  }
+]

@@ -1,0 +1,175 @@
+{
+  "brand": {
+    "name": "lounge",
+    "tagline": "elevated essentials",
+    "language": "pt",
+    "currency": "EUR",
+    "supportEmail": "hello@lounge.com",
+    "whatsapp": "",
+    "instagram": "",
+    "announcement": "Free shipping from 90â‚¬"
+  },
+  "home": {
+    "heroEyebrow": "elevated essentials",
+    "heroTitle": "Lounge by Gigi",
+    "heroText": "louging louging louging",
+    "heroMediaType": "image",
+    "heroMediaUrl": "https://i.postimg.cc/fbMj7BXh/IMG-0386.jpg",
+    "heroOverlay": 42,
+    "newnessTitle": "novidades",
+    "newnessText": "PeÃ§as selecionadas para lounge, movimento e dias premium.",
+    "newnessMediaType": "image",
+    "newnessMediaUrl": "https://i.postimg.cc/VL6NtMdJ/IMG-0388.jpg"
+  },
+  "layout": {
+    "theme": "skims",
+    "background": "#fbf7f2",
+    "text": "#211a17",
+    "muted": "#74665f",
+    "accent": "#9f8373",
+    "card": "#ffffff",
+    "radius": 32,
+    "menuStyle": "original",
+    "productGridColumns": 4,
+    "categoryCardHeight": 420,
+    "heroHeight": 88,
+    "fontMode": "minimal"
+  },
+  "navigation": [
+    {
+      "label": "Men",
+      "href": "/shop?gender=men"
+    },
+    {
+      "label": "Women",
+      "href": "/shop?gender=women"
+    }
+  ],
+  "payments": {
+    "stripeEnabled": false,
+    "stripeSecretKey": "",
+    "stripeWebhookSecret": "",
+    "manualPaymentEnabled": true,
+    "manualPaymentInstructions": "Pedido recebido. Entraremos em contacto para confirmar pagamento e disponibilidade.",
+    "stripePublishableKey": "",
+    "paypalEnabled": false,
+    "paypalClientId": "",
+    "paypalClientSecret": "",
+    "paypalMode": "sandbox",
+    "checkoutProvider": "stripe"
+  },
+  "email": {
+    "provider": "resend",
+    "apiKey": "",
+    "from": "lounge <orders@lounge.com>",
+    "receiptEnabled": false
+  },
+  "integrations": {
+    "shopify": {
+      "enabled": false,
+      "storeDomain": "",
+      "storefrontAccessToken": "",
+      "apiVersion": "2025-10",
+      "useShopifyAsDatabase": true,
+      "checkoutMode": "shopify_checkout"
+    },
+    "woocommerce": {
+      "enabled": false,
+      "storeUrl": "",
+      "consumerKey": "",
+      "consumerSecret": ""
+    },
+    "suppliers": [],
+    "printful": {
+      "enabled": false,
+      "apiToken": "",
+      "storeId": "",
+      "useAsProductSource": true,
+      "autoSubmitOrders": true
+    },
+    "printify": {
+      "enabled": false,
+      "apiToken": "",
+      "shopId": "",
+      "useAsProductSource": true,
+      "autoSubmitOrders": true
+    }
+  },
+  "localization": {
+    "defaultCountry": "PT",
+    "countries": [
+      {
+        "code": "PT",
+        "name": "Portugal",
+        "language": "pt",
+        "currency": "EUR",
+        "symbol": "â‚¬",
+        "rate": 1
+      },
+      {
+        "code": "ES",
+        "name": "EspaÃ±a",
+        "language": "es",
+        "currency": "EUR",
+        "symbol": "â‚¬",
+        "rate": 1
+      },
+      {
+        "code": "FR",
+        "name": "France",
+        "language": "fr",
+        "currency": "EUR",
+        "symbol": "â‚¬",
+        "rate": 1
+      },
+      {
+        "code": "GB",
+        "name": "United Kingdom",
+        "language": "en",
+        "currency": "GBP",
+        "symbol": "Â£",
+        "rate": 0.85
+      },
+      {
+        "code": "US",
+        "name": "United States",
+        "language": "en",
+        "currency": "USD",
+        "symbol": "$",
+        "rate": 1.09
+      }
+    ]
+  },
+  "pricing": {
+    "mode": "manual",
+    "marginPercent": 40,
+    "defaultMarket": "Europe"
+  },
+  "productOverrides": {},
+  "shopPages": {
+    "men": {
+      "heroTitle": "Men editorial essentials",
+      "heroText": "Classic menswear, refined sports pieces and elevated essentials with an editorial finish.",
+      "heroMediaUrl": "https://i.pinimg.com/1200x/e7/d9/fa/e7d9fa6fd8378282a2b56e5b63c4266c.jpg",
+      "heroMediaType": "image"
+    },
+    "women": {
+      "heroTitle": "Women essentials",
+      "heroText": "Soft essentials, swimwear, elevated everyday pieces and lounge silhouettes.",
+      "heroMediaType": "image",
+      "heroMediaUrl": "https://i.pinimg.com/1200x/60/93/c7/6093c7089d8a61945a385ee00ee2ab07.jpg"
+    }
+  },
+  "about": {
+    "title": "Sobre a Lounge by Gigi",
+    "subtitle": "Uma marca online pensada como uma pagina de revista: visual, simples e intencional.",
+    "story": "A Lounge by Gigi nasce para reunir pecas de moda, swimwear, essentials e detalhes editoriais num espaco digital limpo e contemporaneo. Muitas pecas sao produzidas on demand atraves de parceiros de fulfilment, ajudando a evitar excesso de stock e permitindo uma selecao em constante evolucao.",
+    "mission": "A nossa missao e criar uma experiencia de compra visual, calma e direta, com produtos selecionados para diferentes estilos, momentos e ritmos.",
+    "images": [
+      "https://i.postimg.cc/fbMj7BXh/IMG-0386.jpg",
+      "https://i.postimg.cc/V6LNtMdJ/IMG-0388.jpg",
+      "https://images.unsplash.com/photo-1496747611176-843222e1e57c?q=80&w=1200&auto=format&fit=crop"
+    ]
+  },
+  "legal": {}
+}

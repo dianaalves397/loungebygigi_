@@ -1,0 +1,3 @@
+﻿import { requireAdmin } from "@/lib/auth"; import { getSettings } from "@/lib/settings"; import Stripe from "stripe";
+export const dynamic="force-dynamic"; export const revalidate=0; export async function POST(){const u=await requireAdmin(); if(u) return u; try{const settings=await getSettings(); const key=settings.payments?.stripeSecretKey; if(!key) throw new Error("Stripe Secret Key em falta."); const stripe=new Stripe(key); const account=await stripe.accounts.retrieve(); return Response.json({message:`Stripe OK. Conta: ${account.id}`});}catch(e:any){return Response.json({error:e.message||"Erro Stripe"},{status:500});}}
+

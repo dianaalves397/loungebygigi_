@@ -1,0 +1,204 @@
+[
+  {
+    "id": "shape-sculpt-body",
+    "slug": "shape-sculpt-body",
+    "title": "Shape Sculpt Body",
+    "categoryId": "shapewear",
+    "category": "Shapewear",
+    "collection": "shapewear",
+    "gender": "women",
+    "style": "sculpt",
+    "price": 48,
+    "compareAt": 68,
+    "stock": 18,
+    "status": "active",
+    "source": "manual",
+    "image": "https://images.unsplash.com/photo-1515886657613-9f3515b0c78f?q=80&w=1200&auto=format&fit=crop",
+    "mediaType": "image",
+    "gallery": [
+      "https://images.unsplash.com/photo-1515886657613-9f3515b0c78f?q=80&w=1200&auto=format&fit=crop"
+    ],
+    "description": "Body modelador com toque suave, corte minimalista e conforto premium.",
+    "details": [
+      "Tecido suave",
+      "Suporte leve",
+      "Corte minimalista"
+    ],
+    "colors": [
+      {
+        "name": "Sand",
+        "hex": "#d8c5b5",
+        "stock": 8
+      },
+      {
+        "name": "Espresso",
+        "hex": "#211a17",
+        "stock": 10
+      }
+    ],
+    "sizes": [
+      "XS",
+      "S",
+      "M",
+      "L"
+    ],
+    "tags": [
+      "shapewear",
+      "sale"
+    ],
+    "categoryIds": [
+      "shapewear"
+    ]
+  },
+  {
+    "id": "w-sports-wrap-top",
+    "slug": "w-sports-wrap-top",
+    "title": "W Sports Wrap Top",
+    "categoryId": "w-sports",
+    "category": "W Sports",
+    "collection": "w-sports",
+    "gender": "women",
+    "style": "studio",
+    "price": 34,
+    "compareAt": 0,
+    "stock": 26,
+    "status": "active",
+    "source": "manual",
+    "image": "https://images.unsplash.com/photo-1518611012118-696072aa579a?q=80&w=1200&auto=format&fit=crop",
+    "mediaType": "image",
+    "gallery": [
+      "https://images.unsplash.com/photo-1518611012118-696072aa579a?q=80&w=1200&auto=format&fit=crop"
+    ],
+    "description": "Top de movimento elegante para studio, treino e dias ativos.",
+    "details": [
+      "Respirável",
+      "Ajuste confortável",
+      "Tons neutros"
+    ],
+    "colors": [
+      {
+        "name": "Cream",
+        "hex": "#fbf7f2",
+        "stock": 12
+      },
+      {
+        "name": "Taupe",
+        "hex": "#9f8373",
+        "stock": 14
+      }
+    ],
+    "sizes": [
+      "XS",
+      "S",
+      "M",
+      "L"
+    ],
+    "tags": [
+      "w sports"
+    ],
+    "categoryIds": [
+      "w-sports"
+    ]
+  },
+  {
+    "id": "soft-lounge-set",
+    "slug": "soft-lounge-set",
+    "title": "Soft Lounge Set",
+    "categoryId": "loungewear",
+    "category": "Loungewear",
+    "collection": "loungewear",
+    "gender": "women",
+    "style": "sets",
+    "price": 72,
+    "compareAt": 95,
+    "stock": 12,
+    "status": "active",
+    "source": "manual",
+    "image": "https://images.unsplash.com/photo-1506629905607-d405d7d3b0d2?q=80&w=1200&auto=format&fit=crop",
+    "mediaType": "image",
+    "gallery": [
+      "https://images.unsplash.com/photo-1506629905607-d405d7d3b0d2?q=80&w=1200&auto=format&fit=crop"
+    ],
+    "description": "Conjunto lounge em tons neutros para conforto premium.",
+    "details": [
+      "Conjunto completo",
+      "Corte solto",
+      "Tecido macio"
+    ],
+    "colors": [
+      {
+        "name": "Nude",
+        "hex": "#d8c5b5",
+        "stock": 7
+      },
+      {
+        "name": "Stone",
+        "hex": "#b8aba2",
+        "stock": 5
+      }
+    ],
+    "sizes": [
+      "S",
+      "M",
+      "L"
+    ],
+    "tags": [
+      "loungewear",
+      "sale"
+    ],
+    "categoryIds": [
+      "loungewear"
+    ]
+  },
+  {
+    "id": "m-sports-performance-polo",
+    "slug": "m-sports-performance-polo",
+    "title": "M Sports Performance Polo",
+    "categoryId": "m-sports",
+    "category": "M Sports",
+    "collection": "m-sports",
+    "gender": "men",
+    "style": "golf style",
+    "price": 46,
+    "compareAt": 62,
+    "stock": 20,
+    "status": "active",
+    "source": "manual",
+    "image": "https://images.unsplash.com/photo-1571019613914-85f342c6a11e?q=80&w=1200&auto=format&fit=crop",
+    "mediaType": "image",
+    "gallery": [
+      "https://images.unsplash.com/photo-1571019613914-85f342c6a11e?q=80&w=1200&auto=format&fit=crop"
+    ],
+    "description": "Polo desportivo com visual elegante inspirado em golf style.",
+    "details": [
+      "Performance fit",
+      "Leve",
+      "Estilo club"
+    ],
+    "colors": [
+      {
+        "name": "White",
+        "hex": "#ffffff",
+        "stock": 10
+      },
+      {
+        "name": "Navy",
+        "hex": "#1f2937",
+        "stock": 10
+      }
+    ],
+    "sizes": [
+      "S",
+      "M",
+      "L",
+      "XL"
+    ],
+    "tags": [
+      "m sports",
+      "sale"
+    ],
+    "categoryIds": [
+      "m-sports"
+    ]
+  }
+]

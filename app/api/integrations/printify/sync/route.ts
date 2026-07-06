@@ -1,0 +1,3 @@
+﻿import { requireAdmin } from "@/lib/auth"; import { getSettings } from "@/lib/settings"; import { getPrintifyConfig, queryPrintifyProducts } from "@/lib/printify"; import { saveSyncedProducts } from "@/lib/db";
+export const dynamic="force-dynamic"; export const revalidate=0; export async function POST(){const u=await requireAdmin(); if(u) return u; try{const settings=await getSettings(); const products=await queryPrintifyProducts(getPrintifyConfig(settings),settings); await saveSyncedProducts(products); return Response.json({message:`${products.length} produtos sincronizados da Printify.`});}catch(e:any){return Response.json({error:e.message||"Erro Printify"},{status:500});}}
+

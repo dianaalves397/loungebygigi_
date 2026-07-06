@@ -1,0 +1,124 @@
+[
+  {
+    "id": "sports",
+    "name": "Sports",
+    "gender": "unisex",
+    "image": "/image_tenis.jpg",
+    "sortOrder": 1,
+    "introTitle": "Movimento com elegância",
+    "introText": "Peças de desporto pensadas para o court, o green e a cidade."
+  },
+  {
+    "id": "summer",
+    "name": "Summer",
+    "gender": "unisex",
+    "image": "/image_casal_barco.jpg",
+    "sortOrder": 2,
+    "introTitle": "Dias de sal e sol",
+    "introText": "O essencial para a época mais longa do ano — do mar ao fim de tarde."
+  },
+  {
+    "id": "loungewear",
+    "name": "Loungewear",
+    "gender": "unisex",
+    "image": "/mood-couple.jpg",
+    "sortOrder": 3,
+    "introTitle": "Conforto assinado",
+    "introText": "Texturas suaves para os dias em casa — sem abdicar da linha."
+  },
+  {
+    "id": "acessorios",
+    "name": "Acessórios",
+    "gender": "unisex",
+    "image": "/mood-hat.jpg",
+    "sortOrder": 4,
+    "introTitle": "Os detalhes que ficam",
+    "introText": "Joalharia, malas, óculos e chapéus — o remate de cada conjunto."
+  },
+  {
+    "id": "w-sports",
+    "name": "Woman Sports",
+    "gender": "women",
+    "parentId": "sports",
+    "sortOrder": 1,
+    "image": "/image_tenis.jpg"
+  },
+  {
+    "id": "m-sports",
+    "name": "Man Sports",
+    "gender": "men",
+    "parentId": "sports",
+    "sortOrder": 2,
+    "image": "/image_tenis.jpg"
+  },
+  {
+    "id": "swimwear",
+    "name": "Swimwear",
+    "gender": "unisex",
+    "parentId": "summer",
+    "sortOrder": 1,
+    "image": "/image_casal_gelado.jpg"
+  },
+  {
+    "id": "tops",
+    "name": "Tops",
+    "gender": "women",
+    "parentId": "loungewear",
+    "sortOrder": 1,
+    "image": "https://images.unsplash.com/photo-1554568218-0f1715e72254?q=80&w=1200&auto=format&fit=crop"
+  },
+  {
+    "id": "shapewear",
+    "name": "Shapewear",
+    "gender": "women",
+    "parentId": "loungewear",
+    "sortOrder": 2,
+    "image": "https://images.unsplash.com/photo-1571513722275-4b41940f54b8?q=80&w=1200&auto=format&fit=crop"
+  },
+  {
+    "id": "jewellery",
+    "name": "Jewellery",
+    "gender": "unisex",
+    "parentId": "acessorios",
+    "sortOrder": 1,
+    "image": "https://images.unsplash.com/photo-1611591437281-460bfbe1220a?q=80&w=1200&auto=format&fit=crop"
+  },
+  {
+    "id": "bags",
+    "name": "Bags",
+    "gender": "unisex",
+    "parentId": "acessorios",
+    "sortOrder": 2,
+    "image": "https://images.unsplash.com/photo-1584917865442-de89df76afd3?q=80&w=1200&auto=format&fit=crop"
+  },
+  {
+    "id": "sunglasses",
+    "name": "Sunglasses",
+    "gender": "unisex",
+    "parentId": "acessorios",
+    "sortOrder": 3,
+    "image": "https://images.unsplash.com/photo-1511499767150-a48a237f0083?q=80&w=1200&auto=format&fit=crop"
+  },
+  {
+    "id": "hats",
+    "name": "Hats",
+    "gender": "unisex",
+    "parentId": "acessorios",
+    "sortOrder": 4,
+    "image": "https://images.unsplash.com/photo-1521369909029-2afed882baee?q=80&w=1200&auto=format&fit=crop"
+  },
+  {
+    "id": "women-sale",
+    "name": "Women Sale",
+    "gender": "women",
+    "sortOrder": 90,
+    "image": "/mood-horse.jpg"
+  },
+  {
+    "id": "men-sale",
+    "name": "Men Sale",
+    "gender": "men",
+    "sortOrder": 91,
+    "image": "/mood-horse.jpg"
+  }
+]
