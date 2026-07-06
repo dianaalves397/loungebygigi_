@@ -809,7 +809,7 @@ export default function ControlPanel() {
                         <label className="category-picker-item category-picker-parent">
                           <input
                             type="checkbox"
-                            checked={productForm.categoryIds.includes(parentCategory.id)}
+                            checked={(productForm.categoryIds ?? []).includes(parentCategory.id)}
                             onChange={(event) => toggleProductCategory(parentCategory, event.target.checked)}
                           />
                           {parentCategory.name}
@@ -820,7 +820,7 @@ export default function ControlPanel() {
                             <label key={sub.id} className="category-picker-item category-picker-child">
                               <input
                                 type="checkbox"
-                                checked={productForm.categoryIds.includes(sub.id)}
+                                checked={(productForm.categoryIds ?? []).includes(sub.id)}
                                 onChange={(event) => toggleProductCategory(sub, event.target.checked)}
                               />
                               {sub.name}
