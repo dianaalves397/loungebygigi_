@@ -9,6 +9,22 @@ import fs from "fs/promises";
 import path from "path";
 import { getSupabaseAdmin, hasSupabaseConfig } from "@/lib/supabaseAdmin";
 
+// Importações estáticas: garantem que os dados iniciais são sempre incluídos
+// no bundle Lambda do Vercel (o file tracing dinâmico falha com process.cwd()).
+import _defaultProducts from "@/data/products.json";
+import _defaultCategories from "@/data/categories.json";
+import _defaultSettings from "@/data/settings.json";
+import _defaultOrders from "@/data/orders.json";
+import _defaultCustomers from "@/data/customers.json";
+
+const bundledDefaults: Record<string, unknown> = {
+  products: _defaultProducts,
+  categories: _defaultCategories,
+  settings: _defaultSettings,
+  orders: _defaultOrders,
+  customers: _defaultCustomers,
+};
+
 const dataDir = path.join(process.cwd(), "data");
 
 type StoreKey =
@@ -31,7 +47,9 @@ async function readLocalJson<T>(key: StoreKey, fallback: T): Promise<T> {
     const raw = await fs.readFile(path.join(dataDir, files[key]), "utf-8");
     return JSON.parse(raw) as T;
   } catch {
-    return fallback;
+    // Se o ficheiro não for acessível em runtime (ex: Vercel Lambda),
+    // usa o import estático do build — inclui sempre os dados reais.
+    return (bundledDefaults[key] as T) ?? fallback;
   }
 }
 
