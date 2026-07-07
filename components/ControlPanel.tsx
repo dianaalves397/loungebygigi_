@@ -1218,6 +1218,29 @@ export default function ControlPanel() {
                 <button className="pill dark-pill" disabled={submitting}>
                   {categoryForm.id ? "Guardar categoria" : "Criar categoria"}
                 </button>
+                <button
+                  className="pill"
+                  type="button"
+                  disabled={submitting}
+                  onClick={async () => {
+                    try {
+                      const res = await fetch("/api/admin/create-subcategories", { method: "POST" });
+                      const data = await res.json();
+                      if (data.ok) {
+                        setMessage(data.added > 0
+                          ? `✅ ${data.added} subcategoria(s) criada(s). Total: ${data.total} categorias.`
+                          : "Todas as subcategorias já existem.");
+                        await loadAll();
+                      } else {
+                        setMessage(data.error || "Erro ao criar subcategorias.");
+                      }
+                    } catch {
+                      setMessage("Erro ao criar subcategorias.");
+                    }
+                  }}
+                >
+                  Criar subcategorias predefinidas
+                </button>
               </SectionActions>
             </form>
 
