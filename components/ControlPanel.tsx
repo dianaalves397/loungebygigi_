@@ -748,6 +748,28 @@ export default function ControlPanel() {
                       Inicializar Supabase (BD vazia)
                     </button>
                   )}
+                  {storageStatus && storageStatus.supabaseConfigured && storageStatus.supabaseReadable && (
+                    <button
+                      type="button"
+                      className="pill"
+                      onClick={async () => {
+                        try {
+                          const res = await fetch("/api/admin/create-subcategories", { method: "POST" });
+                          const data = await res.json();
+                          if (data.ok) {
+                            setMessage(`✅ ${data.added} subcategoria(s) criada(s). Total: ${data.total} categorias.`);
+                            await loadAll();
+                          } else {
+                            setMessage(data.error || "Erro ao criar subcategorias.");
+                          }
+                        } catch {
+                          setMessage("Erro ao criar subcategorias.");
+                        }
+                      }}
+                    >
+                      Criar subcategorias
+                    </button>
+                  )}
                 </div>
 
                 {storageStatus && (

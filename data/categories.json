@@ -108,6 +108,146 @@
     "image": "https://images.unsplash.com/photo-1521369909029-2afed882baee?q=80&w=1200&auto=format&fit=crop"
   },
   {
+    "id": "sports-superiores-women",
+    "name": "Peças superiores",
+    "gender": "women",
+    "parentId": "sports",
+    "sortOrder": 10,
+    "image": "/image_tenis.jpg",
+    "featured": false,
+    "styles": []
+  },
+  {
+    "id": "sports-inferiores-women",
+    "name": "Peças inferiores",
+    "gender": "women",
+    "parentId": "sports",
+    "sortOrder": 20,
+    "image": "/image_tenis.jpg",
+    "featured": false,
+    "styles": []
+  },
+  {
+    "id": "sports-conjuntos-women",
+    "name": "Conjuntos",
+    "gender": "women",
+    "parentId": "sports",
+    "sortOrder": 30,
+    "image": "/image_tenis.jpg",
+    "featured": false,
+    "styles": []
+  },
+  {
+    "id": "sports-superiores-men",
+    "name": "Peças superiores",
+    "gender": "men",
+    "parentId": "sports",
+    "sortOrder": 11,
+    "image": "/image_tenis.jpg",
+    "featured": false,
+    "styles": []
+  },
+  {
+    "id": "sports-inferiores-men",
+    "name": "Peças inferiores",
+    "gender": "men",
+    "parentId": "sports",
+    "sortOrder": 21,
+    "image": "/image_tenis.jpg",
+    "featured": false,
+    "styles": []
+  },
+  {
+    "id": "sports-conjuntos-men",
+    "name": "Conjuntos",
+    "gender": "men",
+    "parentId": "sports",
+    "sortOrder": 31,
+    "image": "/image_tenis.jpg",
+    "featured": false,
+    "styles": []
+  },
+  {
+    "id": "lounge-superiores-women",
+    "name": "Peças superiores",
+    "gender": "women",
+    "parentId": "loungewear",
+    "sortOrder": 10,
+    "image": "/mood-couple.jpg",
+    "featured": false,
+    "styles": []
+  },
+  {
+    "id": "lounge-inferiores-women",
+    "name": "Peças inferiores",
+    "gender": "women",
+    "parentId": "loungewear",
+    "sortOrder": 20,
+    "image": "/mood-couple.jpg",
+    "featured": false,
+    "styles": []
+  },
+  {
+    "id": "lounge-conjuntos-women",
+    "name": "Conjuntos",
+    "gender": "women",
+    "parentId": "loungewear",
+    "sortOrder": 30,
+    "image": "/mood-couple.jpg",
+    "featured": false,
+    "styles": []
+  },
+  {
+    "id": "lounge-superiores-men",
+    "name": "Peças superiores",
+    "gender": "men",
+    "parentId": "loungewear",
+    "sortOrder": 11,
+    "image": "/mood-couple.jpg",
+    "featured": false,
+    "styles": []
+  },
+  {
+    "id": "lounge-inferiores-men",
+    "name": "Peças inferiores",
+    "gender": "men",
+    "parentId": "loungewear",
+    "sortOrder": 21,
+    "image": "/mood-couple.jpg",
+    "featured": false,
+    "styles": []
+  },
+  {
+    "id": "lounge-conjuntos-men",
+    "name": "Conjuntos",
+    "gender": "men",
+    "parentId": "loungewear",
+    "sortOrder": 31,
+    "image": "/mood-couple.jpg",
+    "featured": false,
+    "styles": []
+  },
+  {
+    "id": "summer-roupa",
+    "name": "Roupa",
+    "gender": "unisex",
+    "parentId": "summer",
+    "sortOrder": 10,
+    "image": "/image_casal_barco.jpg",
+    "featured": false,
+    "styles": []
+  },
+  {
+    "id": "summer-banho",
+    "name": "Banho",
+    "gender": "unisex",
+    "parentId": "summer",
+    "sortOrder": 20,
+    "image": "/image_casal_barco.jpg",
+    "featured": false,
+    "styles": []
+  },
+  {
     "id": "women-sale",
     "name": "Women Sale",
     "gender": "women",

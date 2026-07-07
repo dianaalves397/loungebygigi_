@@ -110,7 +110,7 @@ export default function RootLayout({
   };
 
   return (
-    <html lang="en" className={`${displayFont.variable} ${bodyFont.variable}`}>
+    <html lang="pt" className={`${displayFont.variable} ${bodyFont.variable}`}>
       <body>
         <link rel="preconnect" href="https://i.postimg.cc" />
         <link rel="preconnect" href="https://images.unsplash.com" />
