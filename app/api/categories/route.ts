@@ -3,7 +3,6 @@ export const revalidate = 0;
 
 import { requireAdmin } from "@/lib/auth";
 import { getCategories, saveCategories, slugify } from "@/lib/db";
-import { getCachedCategories } from "@/lib/cache";
 import { getSettings, saveSettings } from "@/lib/settings";
 
 function cleanId(value: string) {
@@ -61,8 +60,18 @@ async function setHiddenId(id: string, hidden: boolean) {
 }
 
 export async function GET() {
-  const categories = await getCachedCategories();
-  const settings = await getSettings();
+  let categories: any[];
+  let settings: any;
+
+  try {
+    categories = await getCategories();
+    settings = await getSettings();
+  } catch (error: any) {
+    return Response.json(
+      { error: error?.message || "Erro ao carregar categorias." },
+      { status: 500 }
+    );
+  }
 
   const hiddenCategoryIds = new Set(
     (settings.hiddenCategoryIds || [])
@@ -87,8 +96,6 @@ export async function GET() {
     new Map(fixed.map((category: any) => [cleanId(category.id || category.name), category])).values()
   );
 
-  await saveCategories(unique);
-
   return Response.json(unique, {
     headers: {
       "Cache-Control": "no-store, no-cache, must-revalidate"
@@ -100,6 +107,7 @@ export async function POST(req: Request) {
   const unauthorized = await requireAdmin();
   if (unauthorized) return unauthorized;
 
+  try {
   const incoming = await req.json();
 
   const originalId = cleanId(
@@ -177,12 +185,19 @@ export async function POST(req: Request) {
       "Cache-Control": "no-store, no-cache, must-revalidate"
     }
   });
+  } catch (error: any) {
+    return Response.json(
+      { error: error?.message || "Erro ao guardar categoria." },
+      { status: 500 }
+    );
+  }
 }
 
 export async function DELETE(req: Request) {
   const unauthorized = await requireAdmin();
   if (unauthorized) return unauthorized;
 
+  try {
   const url = new URL(req.url);
 
   let body: any = {};
@@ -227,4 +242,10 @@ export async function DELETE(req: Request) {
       }
     }
   );
+  } catch (error: any) {
+    return Response.json(
+      { error: error?.message || "Erro ao apagar categoria." },
+      { status: 500 }
+    );
+  }
 }

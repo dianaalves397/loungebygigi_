@@ -1,6 +1,6 @@
 "use client";
 
-import { useCallback, useEffect, useMemo, useState } from "react";
+import { useCallback, useEffect, useMemo, useRef, useState } from "react";
 import type { FormEvent, ReactNode } from "react";
 import type { Product, Category } from "@/types";
 
@@ -200,6 +200,13 @@ export default function ControlPanel() {
   const [products, setProducts] = useState<Product[]>([]);
   const [categories, setCategories] = useState<CategoryFormModel[]>([]);
   const [orders, setOrders] = useState<Order[]>([]);
+
+  const messageRef = useRef<HTMLParagraphElement>(null);
+  useEffect(() => {
+    if (message) {
+      messageRef.current?.scrollIntoView({ behavior: "smooth", block: "center" });
+    }
+  }, [message]);
 
   const [productForm, setProductForm] = useState<Product>(emptyProduct);
   const [categoryForm, setCategoryForm] = useState<CategoryFormModel>(emptyCategory);
@@ -685,7 +692,7 @@ export default function ControlPanel() {
       </aside>
 
       <section className="control-main">
-        {message && <p className="control-message">{message}</p>}
+        {message && <p ref={messageRef} className="control-message">{message}</p>}
 
         {tab === "overview" && (
           <Panel title="Visão geral" eyebrow="dashboard">

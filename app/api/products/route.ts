@@ -1,8 +1,7 @@
 // @ts-nocheck
 
 import { requireAdmin } from "@/lib/auth";
-import { upsertProduct } from "@/lib/db";
-import { getCachedProducts } from "@/lib/cache";
+import { upsertProduct, getProducts } from "@/lib/db";
 
 export const dynamic = "force-dynamic";
 export const revalidate = 0;
@@ -38,7 +37,10 @@ export async function GET() {
 
   for (let attempt = 0; attempt < 2; attempt++) {
     try {
-      const data = await getCachedProducts();
+      // Lê diretamente sem unstable_cache para garantir dados sempre frescos.
+      // getCachedProducts() tem 6h de TTL e pode devolver dados antigos mesmo
+      // depois de revalidateTag — crítico para o painel de controlo.
+      const data = await getProducts();
       products = Array.isArray(data) ? data : [];
 
       if (products.length > 0) break;
@@ -72,12 +74,19 @@ export async function POST(req: Request) {
   const unauthorized = await requireAdmin();
   if (unauthorized) return unauthorized;
 
-  const product = await req.json();
-  const saved = await upsertProduct(product);
+  try {
+    const product = await req.json();
+    const saved = await upsertProduct(product);
 
-  return Response.json(saved || product, {
-    headers: {
-      "Cache-Control": "no-store, no-cache, must-revalidate"
-    }
-  });
+    return Response.json(saved || product, {
+      headers: {
+        "Cache-Control": "no-store, no-cache, must-revalidate"
+      }
+    });
+  } catch (error: any) {
+    return Response.json(
+      { error: error?.message || "Erro ao guardar produto." },
+      { status: 500 }
+    );
+  }
 }

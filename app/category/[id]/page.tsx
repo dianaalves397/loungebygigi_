@@ -48,11 +48,15 @@ function productMatchesAny(product: any, ids: Set<string>) {
 }
 
 export default async function CategoryPage({
-  params
+  params,
+  searchParams
 }: {
   params: Promise<{ id: string }>;
+  searchParams: Promise<{ from?: string }>;
 }) {
   const { id } = await params;
+  const { from } = await searchParams;
+
   const [categories, allProducts] = await Promise.all([
     getCachedCategories() as Promise<any[]>,
     getCachedProducts() as Promise<any[]>
@@ -61,10 +65,24 @@ export default async function CategoryPage({
   const category = categories.find((item) => String(item.id) === id) || null;
   if (!category || category.hidden) notFound();
 
+  const parent = category.parentId
+    ? categories.find((item) => String(item.id) === String(category.parentId)) || null
+    : null;
+
+  // Género efectivo: ?from (vem do link da coleção) > género da categoria > unisex
+  const categoryGender = String(parent?.gender || category.gender || "unisex");
+  const effectiveGender = (from === "men" || from === "women") ? from : categoryGender;
+
+  function matchesGender(product: any) {
+    if (effectiveGender === "unisex") return true;
+    const pg = String(product.gender || "unisex");
+    return pg === "unisex" || pg === effectiveGender;
+  }
+
   // categoria + todas as subcategorias
   const familyIds = new Set(getDescendantCategoryIds(categories as any, id));
   const products = allProducts.filter(
-    (product) => product.status === "active" && productMatchesAny(product, familyIds)
+    (product) => product.status === "active" && productMatchesAny(product, familyIds) && matchesGender(product)
   );
 
   // subcategorias diretas, com contagem (inclui as descendentes de cada uma)
@@ -74,16 +92,12 @@ export default async function CategoryPage({
     .map((sub: any) => {
       const subFamily = new Set(getDescendantCategoryIds(categories as any, sub.id));
       const count = allProducts.filter(
-        (product) => product.status === "active" && productMatchesAny(product, subFamily)
+        (product) => product.status === "active" && productMatchesAny(product, subFamily) && matchesGender(product)
       ).length;
       return { id: sub.id, name: sub.name, count };
     });
 
-  const parent = category.parentId
-    ? categories.find((item) => String(item.id) === String(category.parentId)) || null
-    : null;
-
-  const gender = String(parent?.gender || category.gender || "unisex");
+  const gender = effectiveGender !== "unisex" ? effectiveGender : categoryGender;
   const backHref = gender === "men" ? "/collections/men" : "/collections/women";
 
   const sharedProps = {

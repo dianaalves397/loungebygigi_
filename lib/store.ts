@@ -1,20 +1,13 @@
-const memoryCache = new Map<
-  string,
-  {
-    value: any;
-    updated: number;
-  }
->();
+// Memória local apenas para modo sem Supabase (dev local, ficheiros).
+// Em modo Supabase, cada Lambda tem a sua própria memória — não há cache
+// partilhado entre instâncias, logo sempre lemos directamente do Supabase.
+const localCache = new Map<string, { value: any; updated: number }>();
+const LOCAL_CACHE_TTL = 1000 * 60 * 5; // 5 minutos (só local)
 
-const CACHE_TIME = 1000 * 60 * 5; // 5 minutos
-
-
-
-import { revalidateTag } from "next/cache";
+import { revalidateTag, revalidatePath } from "next/cache";
 import fs from "fs/promises";
 import path from "path";
 import { getSupabaseAdmin, hasSupabaseConfig } from "@/lib/supabaseAdmin";
-
 
 const dataDir = path.join(process.cwd(), "data");
 
@@ -52,25 +45,19 @@ async function writeLocalJson<T>(key: StoreKey, data: T) {
 }
 
 export async function readStore<T>(key: StoreKey, fallback: T): Promise<T> {
-
-const cached = memoryCache.get(key);
-
-if (cached && Date.now() - cached.updated < CACHE_TIME) {
-  return cached.value;
-}
-
   if (!hasSupabaseConfig()) {
-
+    // Modo local: usa cache em memória para evitar leituras repetidas de disco
+    const cached = localCache.get(key);
+    if (cached && Date.now() - cached.updated < LOCAL_CACHE_TTL) {
+      return cached.value;
+    }
     const local = await readLocalJson(key, fallback);
-
-    memoryCache.set(key,{
-        value:local,
-        updated:Date.now()
-    });
-
+    localCache.set(key, { value: local, updated: Date.now() });
     return local;
-}
+  }
 
+  // Modo Supabase: lê sempre directamente — cada Lambda tem memória isolada,
+  // por isso a cache em memória seria sempre stale após escrita noutra instância.
   const supabase = getSupabaseAdmin();
   const { data, error } = await supabase
     .from("lounge_store")
@@ -83,32 +70,31 @@ if (cached && Date.now() - cached.updated < CACHE_TIME) {
   }
 
   if (!data) {
+    // Sem registo no Supabase: semeia a partir dos ficheiros locais de deploy
     const local = await readLocalJson(key, fallback);
     await writeStore(key, local);
     return local;
   }
 
-  memoryCache.set(key, {
-  value: data.data,
-  updated: Date.now()
-});
-
-return data.data as T;
+  return data.data as T;
 }
 
 export async function writeStore<T>(key: StoreKey, value: T) {
-
-  memoryCache.set(key,{
-    value,
-    updated:Date.now()
-});
-
   if (!hasSupabaseConfig()) {
+    if (process.env.VERCEL) {
+      // Na Vercel sem Supabase, o filesystem é efémero — dados perder-se-iam.
+      throw new Error(
+        "Base de dados não configurada. Adiciona NEXT_PUBLIC_SUPABASE_URL e SUPABASE_SERVICE_ROLE_KEY nas variáveis de ambiente da Vercel."
+      );
+    }
+    // Local: actualiza cache em memória + ficheiro em disco
+    localCache.set(key, { value, updated: Date.now() });
     await writeLocalJson(key, value);
     invalidatePublicCache();
     return;
   }
 
+  // Modo Supabase: escreve directamente, sem cache em memória (cross-Lambda)
   const supabase = getSupabaseAdmin();
   const { error } = await supabase.from("lounge_store").upsert({
     key,
@@ -123,13 +109,14 @@ export async function writeStore<T>(key: StoreKey, value: T) {
   }
 }
 
-// Invalida a cache pública sempre que algo é gravado (painel, checkout, sync).
-// Guardado em try/catch porque revalidateTag só é permitido em route handlers.
 function invalidatePublicCache() {
   try {
     revalidateTag("store");
-  } catch {
-    // fora de um route handler (ex.: seed durante render) — ignorar
+    revalidatePath("/", "layout");
+  } catch (err) {
+    if (process.env.NODE_ENV !== "production") {
+      console.warn("[store] invalidatePublicCache ignorado:", err);
+    }
   }
 }
 
@@ -153,4 +140,3 @@ export async function seedSupabaseFromLocal() {
 
   return { ok: true };
 }
-

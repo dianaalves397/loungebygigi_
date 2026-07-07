@@ -9,32 +9,39 @@ export async function DELETE(_req: Request, { params }: { params: Promise<{ id: 
   const unauthorized = await requireAdmin();
   if (unauthorized) return unauthorized;
 
-  const { id } = await params;
-  const products = await getProducts();
-  const target = products.find((product) => product.id === id);
+  try {
+    const { id } = await params;
+    const products = await getProducts();
+    const target = products.find((product) => product.id === id);
 
-  if (!target) {
-    return Response.json({ ok: true });
+    if (!target) {
+      return Response.json({ ok: true });
+    }
+
+    if (
+      String(target.id).startsWith("printful-") ||
+      String(target.id).startsWith("printify-") ||
+      target.source === "printful" ||
+      target.source === "printify"
+    ) {
+      const settings = await getSettings();
+      settings.productOverrides = settings.productOverrides || {};
+      settings.productOverrides[id] = {
+        ...(settings.productOverrides[id] || {}),
+        status: "archived"
+      };
+      await saveSettings(settings);
+
+      return Response.json({ ok: true, hidden: true });
+    }
+
+    await saveProducts(products.filter((product) => product.id !== id));
+    return Response.json({ ok: true, deleted: true });
+  } catch (error: any) {
+    return Response.json(
+      { error: error?.message || "Erro ao apagar produto." },
+      { status: 500 }
+    );
   }
-
-  if (
-    String(target.id).startsWith("printful-") ||
-    String(target.id).startsWith("printify-") ||
-    target.source === "printful" ||
-    target.source === "printify"
-  ) {
-    const settings = await getSettings();
-    settings.productOverrides = settings.productOverrides || {};
-    settings.productOverrides[id] = {
-      ...(settings.productOverrides[id] || {}),
-      status: "archived"
-    };
-    await saveSettings(settings);
-
-    return Response.json({ ok: true, hidden: true });
-  }
-
-  await saveProducts(products.filter((product) => product.id !== id));
-  return Response.json({ ok: true, deleted: true });
 }
 

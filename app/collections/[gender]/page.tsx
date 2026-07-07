@@ -56,6 +56,9 @@ export default async function CollectionsPage({
     const family = new Set(getDescendantCategoryIds(categories as any, id));
     return products.filter((product: any) => {
       if (product.status !== "active") return false;
+      // Filtra também pelo género da coleção actual
+      const pg = String(product.gender || "unisex");
+      if (pg !== "unisex" && pg !== gender) return false;
       if (family.has(String(product.categoryId))) return true;
       if ((product.categoryIds || []).some((cid: string) => family.has(String(cid)))) return true;
       return family.has(slugify(product.category));
