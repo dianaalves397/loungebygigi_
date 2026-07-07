@@ -210,6 +210,18 @@ export default function ControlPanel() {
 
   const [productForm, setProductForm] = useState<Product>(emptyProduct);
   const [categoryForm, setCategoryForm] = useState<CategoryFormModel>(emptyCategory);
+  const [storageStatus, setStorageStatus] = useState<Record<string, any> | null>(null);
+
+  const checkStorageStatus = useCallback(async () => {
+    setStorageStatus(null);
+    try {
+      const res = await fetch("/api/admin/status", { cache: "no-store" });
+      const data = await res.json();
+      setStorageStatus(data);
+    } catch {
+      setStorageStatus({ error: "Não foi possível contactar o servidor." });
+    }
+  }, []);
 
   const stats = useMemo(
     () => ({
@@ -701,6 +713,66 @@ export default function ControlPanel() {
               <StatCard label="Categorias" value={stats.categories} />
               <StatCard label="Stock" value={stats.stock} />
               <StatCard label="Encomendas" value={stats.orders} />
+            </div>
+
+            <div className="form-grid" style={{ marginTop: "2rem" }}>
+              <div className="field">
+                <span className="field-label">Base de dados</span>
+                <div style={{ display: "flex", gap: "0.75rem", alignItems: "center", flexWrap: "wrap" }}>
+                  <button
+                    type="button"
+                    className="pill"
+                    onClick={checkStorageStatus}
+                  >
+                    Testar ligação
+                  </button>
+                  {storageStatus && (
+                    <button
+                      type="button"
+                      className="pill"
+                      onClick={async () => {
+                        if (!window.confirm("Inicializar Supabase com os dados locais?")) return;
+                        try {
+                          const res = await fetch("/api/admin/seed-supabase", { method: "POST" });
+                          const data = await res.json();
+                          setMessage(data.error || data.message || "Supabase inicializado.");
+                          await checkStorageStatus();
+                        } catch {
+                          setMessage("Erro ao inicializar Supabase.");
+                        }
+                      }}
+                    >
+                      Inicializar Supabase
+                    </button>
+                  )}
+                </div>
+
+                {storageStatus && (
+                  <pre style={{
+                    marginTop: "0.75rem",
+                    padding: "0.75rem 1rem",
+                    background: storageStatus.error || !storageStatus.supabaseConfigured || storageStatus.supabaseReadable === false
+                      ? "#fff0f0"
+                      : "#f0fff4",
+                    border: "1px solid",
+                    borderColor: storageStatus.error || !storageStatus.supabaseConfigured || storageStatus.supabaseReadable === false
+                      ? "#ffcccc"
+                      : "#b2f5c8",
+                    borderRadius: "6px",
+                    fontSize: "0.78rem",
+                    lineHeight: 1.6,
+                    whiteSpace: "pre-wrap",
+                    wordBreak: "break-word"
+                  }}>
+                    {!storageStatus.supabaseConfigured
+                      ? "❌ Supabase NÃO configurado\n\nAdiciona na Vercel (Settings → Environment Variables):\n• NEXT_PUBLIC_SUPABASE_URL\n• SUPABASE_SERVICE_ROLE_KEY\n\nDepois faz redeploy."
+                      : storageStatus.supabaseReadable === false
+                        ? `❌ Supabase configurado mas com erro:\n${storageStatus.supabaseError || storageStatus.storeError}\n\nVerifica se a tabela 'lounge_store' existe no Supabase.\nCorre o ficheiro supabase/schema.sql no SQL Editor do Supabase.`
+                        : `✅ Supabase OK\n• Linhas na BD: ${storageStatus.supabaseRows ?? "?"}\n• Chaves: ${(storageStatus.supabaseKeys ?? []).join(", ") || "(nenhuma — clica Inicializar Supabase)"}\n• Produtos na BD: ${storageStatus.productsCount ?? "?"}`
+                    }
+                  </pre>
+                )}
+              </div>
             </div>
           </Panel>
         )}
