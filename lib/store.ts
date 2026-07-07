@@ -88,10 +88,10 @@ export async function readStore<T>(key: StoreKey, fallback: T): Promise<T> {
   }
 
   if (!data) {
-    // Sem registo no Supabase: semeia a partir dos ficheiros locais de deploy
-    const local = await readLocalJson(key, fallback);
-    await writeStore(key, local);
-    return local;
+    // Sem registo no Supabase: devolve o default estático sem escrever.
+    // O Supabase só é populado quando o utilizador guardar algo ou clicar
+    // explicitamente em "Inicializar Supabase" no painel.
+    return (bundledDefaults[key] as T) ?? fallback;
   }
 
   return data.data as T;

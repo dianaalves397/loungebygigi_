@@ -726,12 +726,13 @@ export default function ControlPanel() {
                   >
                     Testar ligação
                   </button>
-                  {storageStatus && (
+                  {storageStatus && storageStatus.supabaseConfigured && storageStatus.supabaseReadable && (storageStatus.productsCount ?? -1) === 0 && (
                     <button
                       type="button"
                       className="pill"
+                      style={{ background: "#fee2e2", color: "#991b1b", borderColor: "#fca5a5" }}
                       onClick={async () => {
-                        if (!window.confirm("Inicializar Supabase com os dados locais?")) return;
+                        if (!window.confirm("ATENÇÃO: Isto vai APAGAR todos os dados no Supabase e substituí-los pelos dados demo (4 produtos).\n\nUsa isto APENAS se o Supabase estiver vazio. Continuar?")) return;
                         try {
                           const res = await fetch("/api/admin/seed-supabase", { method: "POST" });
                           const data = await res.json();
@@ -742,7 +743,7 @@ export default function ControlPanel() {
                         }
                       }}
                     >
-                      Inicializar Supabase
+                      Inicializar Supabase (BD vazia)
                     </button>
                   )}
                 </div>
@@ -768,7 +769,7 @@ export default function ControlPanel() {
                       ? "❌ Supabase NÃO configurado\n\nAdiciona na Vercel (Settings → Environment Variables):\n• NEXT_PUBLIC_SUPABASE_URL\n• SUPABASE_SERVICE_ROLE_KEY\n\nDepois faz redeploy."
                       : storageStatus.supabaseReadable === false
                         ? `❌ Supabase configurado mas com erro:\n${storageStatus.supabaseError || storageStatus.storeError}\n\nVerifica se a tabela 'lounge_store' existe no Supabase.\nCorre o ficheiro supabase/schema.sql no SQL Editor do Supabase.`
-                        : `✅ Supabase OK\n• Linhas na BD: ${storageStatus.supabaseRows ?? "?"}\n• Chaves: ${(storageStatus.supabaseKeys ?? []).join(", ") || "(nenhuma — clica Inicializar Supabase)"}\n• Produtos na BD: ${storageStatus.productsCount ?? "?"}`
+                        : `✅ Supabase OK\n• Linhas na BD: ${storageStatus.supabaseRows ?? "?"}\n• Chaves: ${(storageStatus.supabaseKeys ?? []).join(", ") || "(nenhuma)"}\n• Produtos na BD: ${storageStatus.productsCount ?? "?"}`
                     }
                   </pre>
                 )}
