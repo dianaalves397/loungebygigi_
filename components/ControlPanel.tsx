@@ -22,6 +22,7 @@ type PaymentProviderName = "stripe" | "paypal";
 type IntegrationSettings = {
   enabled: boolean;
   useAsProductSource: boolean;
+  autoSubmitOrders: boolean;
   apiToken: string;
   storeId?: string;
   shopId?: string;
@@ -66,8 +67,6 @@ type Order = {
 
 type CategoryFormModel = Category & {
   sortOrder?: number;
-  showInMen?: boolean;
-  showInWomen?: boolean;
 };
 
 const emptyProduct: Product = {
@@ -106,8 +105,8 @@ const emptyCategory: CategoryFormModel = {
   featured: true,
   styles: [],
   sortOrder: 1,
-  showInMen: true,
-  showInWomen: true
+  showInMenTab: true,
+  showInWomenTab: true
 };
 
 const defaultSettings: Settings = {
@@ -123,12 +122,14 @@ const defaultSettings: Settings = {
     printful: {
       enabled: false,
       useAsProductSource: false,
+      autoSubmitOrders: true,
       apiToken: "",
       storeId: ""
     },
     printify: {
       enabled: false,
       useAsProductSource: false,
+      autoSubmitOrders: true,
       apiToken: "",
       shopId: ""
     }
@@ -182,9 +183,9 @@ function normalizeCategory(category: Category): CategoryFormModel {
   return {
     ...category,
     parentId: category.parentId || "",
-    sortOrder: (category as CategoryFormModel).sortOrder ?? 1,
-    showInMen: (category as CategoryFormModel).showInMen ?? true,
-    showInWomen: (category as CategoryFormModel).showInWomen ?? true
+    sortOrder: (category as any).sortOrder ?? 1,
+    showInMenTab: category.showInMenTab ?? true,
+    showInWomenTab: category.showInWomenTab ?? true
   };
 }
 
@@ -473,8 +474,8 @@ export default function ControlPanel() {
           ...categoryForm,
           id: categoryForm.id || makeSlug(categoryForm.name),
           sortOrder: Number(categoryForm.sortOrder || 1),
-          showInMen: categoryForm.showInMen ?? true,
-          showInWomen: categoryForm.showInWomen ?? true
+          showInMenTab: categoryForm.showInMenTab ?? true,
+          showInWomenTab: categoryForm.showInWomenTab ?? true
         };
 
         const data = await requestJson<CategoryFormModel>("/api/categories", {
@@ -903,39 +904,45 @@ export default function ControlPanel() {
               />
 
               {/* Categorias e subcategorias — um produto pode ter várias */}
-              <div className="field">
+              <div className="field wide">
                 <span className="field-label">Categorias e subcategorias</span>
                 <div className="category-picker">
                   {categories
                     .filter((item: any) => !item.parentId)
-                    .map((parentCategory: any) => (
-                      <div key={parentCategory.id} className="category-picker-group">
-                        <label className="category-picker-item category-picker-parent">
-                          <input
-                            type="checkbox"
-                            checked={(productForm.categoryIds ?? []).includes(parentCategory.id)}
-                            onChange={(event) => toggleProductCategory(parentCategory, event.target.checked)}
-                          />
-                          {parentCategory.name}
-                        </label>
-                        {categories
-                          .filter((sub: any) => sub.parentId === parentCategory.id)
-                          .map((sub: any) => (
-                            <label key={sub.id} className="category-picker-item category-picker-child">
-                              <input
-                                type="checkbox"
-                                checked={(productForm.categoryIds ?? []).includes(sub.id)}
-                                onChange={(event) => toggleProductCategory(sub, event.target.checked)}
-                              />
-                              {sub.name}
-                            </label>
-                          ))}
-                      </div>
-                    ))}
+                    .sort((a: any, b: any) => Number(a.sortOrder || 999) - Number(b.sortOrder || 999))
+                    .map((parentCategory: any) => {
+                      const children = categories
+                        .filter((sub: any) => sub.parentId === parentCategory.id)
+                        .sort((a: any, b: any) => Number(a.sortOrder || 999) - Number(b.sortOrder || 999));
+                      return (
+                        <div key={parentCategory.id} className="category-picker-group">
+                          <label className="category-picker-item category-picker-parent">
+                            <input
+                              type="checkbox"
+                              checked={(productForm.categoryIds ?? []).includes(parentCategory.id)}
+                              onChange={(event) => toggleProductCategory(parentCategory, event.target.checked)}
+                            />
+                            {parentCategory.name}
+                          </label>
+                          {children.map((sub: any) => {
+                            const genderTag = sub.gender === "women" ? " · mulher" : sub.gender === "men" ? " · homem" : "";
+                            return (
+                              <label key={sub.id} className="category-picker-item category-picker-child">
+                                <input
+                                  type="checkbox"
+                                  checked={(productForm.categoryIds ?? []).includes(sub.id)}
+                                  onChange={(event) => toggleProductCategory(sub, event.target.checked)}
+                                />
+                                {sub.name}{genderTag && <span className="category-picker-gender">{genderTag}</span>}
+                              </label>
+                            );
+                          })}
+                        </div>
+                      );
+                    })}
                 </div>
                 <span className="muted small">
-                  Marca todas as que se aplicam. Ao marcar uma subcategoria, a
-                  categoria-mãe é incluída automaticamente.
+                  Marca todas as que se aplicam. Ao marcar uma subcategoria, a categoria-mãe é incluída automaticamente.
                 </span>
               </div>
 
@@ -1059,7 +1066,13 @@ export default function ControlPanel() {
                     <tr key={product.id}>
                       <td>{product.title}</td>
                       <td>{product.provider || product.source}</td>
-                      <td>{product.category}</td>
+                      <td>
+                        {product.categoryIds && product.categoryIds.length > 1
+                          ? product.categoryIds
+                              .map((cid) => categories.find((c) => c.id === cid)?.name || cid)
+                              .join(", ")
+                          : product.category || product.categoryId}
+                      </td>
                       <td>{product.price} EUR</td>
                       <td>{product.stock}</td>
                       <td>
@@ -1191,25 +1204,25 @@ export default function ControlPanel() {
               />
 
               <SelectField
-                label="Mostrar na aba Men"
-                value={categoryForm.showInMen ? "yes" : "no"}
+                label="Mostrar na coleção Men"
+                value={categoryForm.showInMenTab !== false ? "yes" : "no"}
                 options={["yes", "no"]}
                 onChange={(value) =>
                   setCategoryForm({
                     ...categoryForm,
-                    showInMen: value === "yes"
+                    showInMenTab: value === "yes"
                   })
                 }
               />
 
               <SelectField
-                label="Mostrar na aba Women"
-                value={categoryForm.showInWomen ? "yes" : "no"}
+                label="Mostrar na coleção Women"
+                value={categoryForm.showInWomenTab !== false ? "yes" : "no"}
                 options={["yes", "no"]}
                 onChange={(value) =>
                   setCategoryForm({
                     ...categoryForm,
-                    showInWomen: value === "yes"
+                    showInWomenTab: value === "yes"
                   })
                 }
               />
@@ -1248,49 +1261,50 @@ export default function ControlPanel() {
               <table>
                 <thead>
                   <tr>
-                    <th>ID</th>
                     <th>Nome</th>
+                    <th>Subcategoria de</th>
                     <th>Género</th>
-                    <th>Estilos</th>
                     <th>Homepage</th>
-                    <th>Aba Men</th>
-                    <th>Aba Women</th>
                     <th>Ordem</th>
                     <th>Ações</th>
                   </tr>
                 </thead>
                 <tbody>
-                  {categories.map((category) => (
-                    <tr key={category.id}>
-                      <td>{category.id}</td>
-                      <td>{category.name}</td>
-                      <td>{category.gender}</td>
-                      <td>{category.styles.join(", ")}</td>
-                      <td>{category.featured ? "Sim" : "Não"}</td>
-                      <td>{category.showInMen ? "Sim" : "Não"}</td>
-                      <td>{category.showInWomen ? "Sim" : "Não"}</td>
-                      <td>{category.sortOrder || 999}</td>
-                      <td>
-                        <div className="inline-actions">
-                          <button
-                            className="pill"
-                            type="button"
-                            onClick={() => editCategory(category)}
-                          >
-                            Editar
-                          </button>
-
-                          <button
-                            className="pill"
-                            type="button"
-                            onClick={() => deleteCategory(category.id)}
-                          >
-                            Apagar
-                          </button>
-                        </div>
-                      </td>
-                    </tr>
-                  ))}
+                  {categories
+                    .slice()
+                    .sort((a, b) => {
+                      const aOrder = Number((a as any).sortOrder || 999);
+                      const bOrder = Number((b as any).sortOrder || 999);
+                      if (!a.parentId && b.parentId) return -1;
+                      if (a.parentId && !b.parentId) return 1;
+                      return aOrder - bOrder;
+                    })
+                    .map((category) => {
+                      const parent = category.parentId
+                        ? categories.find((c) => c.id === category.parentId)
+                        : null;
+                      return (
+                        <tr key={category.id} style={category.parentId ? { opacity: 0.8 } : undefined}>
+                          <td style={category.parentId ? { paddingLeft: "1.5rem" } : undefined}>
+                            {category.parentId ? "↳ " : ""}{category.name}
+                          </td>
+                          <td>{parent ? parent.name : "—"}</td>
+                          <td>{category.gender}</td>
+                          <td>{category.featured ? "Sim" : "Não"}</td>
+                          <td>{(category as any).sortOrder || "—"}</td>
+                          <td>
+                            <div className="inline-actions">
+                              <button className="pill" type="button" onClick={() => editCategory(category)}>
+                                Editar
+                              </button>
+                              <button className="pill" type="button" onClick={() => deleteCategory(category.id)}>
+                                Apagar
+                              </button>
+                            </div>
+                          </td>
+                        </tr>
+                      );
+                    })}
                 </tbody>
               </table>
             </div>
@@ -1372,6 +1386,24 @@ export default function ControlPanel() {
                 }
               />
 
+              <SelectField
+                label="Envio automático à Printful após pagamento"
+                value={printful.autoSubmitOrders !== false ? "yes" : "no"}
+                options={["yes", "no"]}
+                onChange={(value) =>
+                  setSettings({
+                    ...settings,
+                    integrations: {
+                      ...settings.integrations,
+                      printful: {
+                        ...printful,
+                        autoSubmitOrders: value === "yes"
+                      }
+                    }
+                  })
+                }
+              />
+
               <SectionActions>
                 <button className="pill" type="button" onClick={() => testConnection("printful")}>
                   Testar Printful
@@ -1447,6 +1479,24 @@ export default function ControlPanel() {
                       printify: {
                         ...printify,
                         shopId: value
+                      }
+                    }
+                  })
+                }
+              />
+
+              <SelectField
+                label="Envio automático à Printify após pagamento"
+                value={printify.autoSubmitOrders !== false ? "yes" : "no"}
+                options={["yes", "no"]}
+                onChange={(value) =>
+                  setSettings({
+                    ...settings,
+                    integrations: {
+                      ...settings.integrations,
+                      printify: {
+                        ...printify,
+                        autoSubmitOrders: value === "yes"
                       }
                     }
                   })
