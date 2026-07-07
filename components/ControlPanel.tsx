@@ -40,10 +40,14 @@ type PaymentSettings = {
 };
 
 type HomeSettings = {
+  heroEyebrow: string;
   heroTitle: string;
   heroText: string;
   heroMediaUrl: string;
   heroMediaType: MediaType;
+  heroOverlay: number;
+  newnessTitle: string;
+  newnessText: string;
   newnessMediaUrl: string;
   newnessMediaType: MediaType;
 };
@@ -111,10 +115,14 @@ const emptyCategory: CategoryFormModel = {
 
 const defaultSettings: Settings = {
   home: {
+    heroEyebrow: "",
     heroTitle: "",
     heroText: "",
     heroMediaUrl: "",
     heroMediaType: "image",
+    heroOverlay: 40,
+    newnessTitle: "",
+    newnessText: "",
     newnessMediaUrl: "",
     newnessMediaType: "image"
   },
@@ -693,7 +701,7 @@ export default function ControlPanel() {
         </button>
 
         <a className="pill" href="/lounge-atelier-772/shop-customization">
-          Personalizar loja
+          Aparência
         </a>
         <a className="pill" href="/lounge-atelier-772/pages">
           Páginas e políticas
@@ -806,77 +814,96 @@ export default function ControlPanel() {
         {tab === "home" && (
           <Panel title="Página inicial" eyebrow="homepage">
             <div className="form-grid">
+              <h3 className="wide">Hero (topo da página)</h3>
+
               <TextField
-                label="Hero título"
+                label="Eyebrow (texto pequeno acima do título)"
+                value={settings.home.heroEyebrow || ""}
+                onChange={(value) =>
+                  setSettings({ ...settings, home: { ...settings.home, heroEyebrow: value } })
+                }
+              />
+
+              <TextField
+                label="Título"
                 value={settings.home.heroTitle}
                 onChange={(value) =>
-                  setSettings({
-                    ...settings,
-                    home: { ...settings.home, heroTitle: value }
-                  })
+                  setSettings({ ...settings, home: { ...settings.home, heroTitle: value } })
                 }
               />
 
               <TextField
-                label="Hero texto"
+                label="Subtítulo / texto"
                 value={settings.home.heroText}
                 onChange={(value) =>
-                  setSettings({
-                    ...settings,
-                    home: { ...settings.home, heroText: value }
-                  })
+                  setSettings({ ...settings, home: { ...settings.home, heroText: value } })
                 }
               />
 
               <TextField
-                label="Hero imagem/vídeo"
+                label="URL da imagem ou vídeo"
                 value={settings.home.heroMediaUrl}
                 onChange={(value) =>
-                  setSettings({
-                    ...settings,
-                    home: { ...settings.home, heroMediaUrl: value }
-                  })
+                  setSettings({ ...settings, home: { ...settings.home, heroMediaUrl: value } })
                 }
               />
 
               <SelectField
-                label="Tipo hero"
+                label="Tipo de media"
                 value={settings.home.heroMediaType}
                 options={["image", "video"]}
                 onChange={(value) =>
-                  setSettings({
-                    ...settings,
-                    home: {
-                      ...settings.home,
-                      heroMediaType: value as MediaType
-                    }
-                  })
+                  setSettings({ ...settings, home: { ...settings.home, heroMediaType: value as MediaType } })
+                }
+              />
+
+              <label>
+                Opacidade do overlay escuro — <strong>{settings.home.heroOverlay ?? 40}%</strong>
+                <input
+                  type="range"
+                  min={0}
+                  max={80}
+                  step={2}
+                  value={settings.home.heroOverlay ?? 40}
+                  onChange={(e) =>
+                    setSettings({ ...settings, home: { ...settings.home, heroOverlay: Number(e.target.value) } })
+                  }
+                  style={{ width: "100%", marginTop: 6 }}
+                />
+              </label>
+
+              <h3 className="wide">Secção Novidades</h3>
+
+              <TextField
+                label="Título das novidades"
+                value={settings.home.newnessTitle || ""}
+                onChange={(value) =>
+                  setSettings({ ...settings, home: { ...settings.home, newnessTitle: value } })
                 }
               />
 
               <TextField
-                label="Novidades imagem/vídeo"
+                label="Texto das novidades"
+                value={settings.home.newnessText || ""}
+                onChange={(value) =>
+                  setSettings({ ...settings, home: { ...settings.home, newnessText: value } })
+                }
+              />
+
+              <TextField
+                label="URL da imagem ou vídeo das novidades"
                 value={settings.home.newnessMediaUrl}
                 onChange={(value) =>
-                  setSettings({
-                    ...settings,
-                    home: { ...settings.home, newnessMediaUrl: value }
-                  })
+                  setSettings({ ...settings, home: { ...settings.home, newnessMediaUrl: value } })
                 }
               />
 
               <SelectField
-                label="Tipo novidades"
+                label="Tipo de media das novidades"
                 value={settings.home.newnessMediaType}
                 options={["image", "video"]}
                 onChange={(value) =>
-                  setSettings({
-                    ...settings,
-                    home: {
-                      ...settings.home,
-                      newnessMediaType: value as MediaType
-                    }
-                  })
+                  setSettings({ ...settings, home: { ...settings.home, newnessMediaType: value as MediaType } })
                 }
               />
 

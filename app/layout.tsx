@@ -2,6 +2,9 @@ import type { Metadata } from "next";
 import { Cormorant_Garamond, Jost } from "next/font/google";
 import "./globals.css";
 import "./editorial.css";
+import { readStore } from "@/lib/store";
+
+export const dynamic = "force-dynamic";
 
 const displayFont = Cormorant_Garamond({
   subsets: ["latin"],
@@ -86,11 +89,25 @@ export const metadata: Metadata = {
   manifest: "/manifest.json"
 };
 
-export default function RootLayout({
+export default async function RootLayout({
   children
 }: {
   children: React.ReactNode;
 }) {
+  let themeStyle = "";
+  try {
+    const settings = await readStore<any>("settings", {});
+    const l = settings?.layout || {};
+    const vars: string[] = [];
+    if (l.background) vars.push(`--bg:${l.background}`);
+    if (l.text) vars.push(`--text:${l.text}`);
+    if (l.muted) vars.push(`--muted:${l.muted}`);
+    if (l.accent) vars.push(`--accent:${l.accent}`);
+    if (l.card) vars.push(`--card:${l.card}`);
+    if (l.radius != null) vars.push(`--radius:${l.radius}px`);
+    if (vars.length) themeStyle = `:root{${vars.join(";")}}`;
+  } catch {}
+
   const structuredData = {
     "@context": "https://schema.org",
     "@type": "OnlineStore",
@@ -112,6 +129,7 @@ export default function RootLayout({
   return (
     <html lang="pt" className={`${displayFont.variable} ${bodyFont.variable}`}>
       <body>
+        {themeStyle && <style dangerouslySetInnerHTML={{ __html: themeStyle }} />}
         <link rel="preconnect" href="https://i.postimg.cc" />
         <link rel="preconnect" href="https://images.unsplash.com" />
         <link rel="preconnect" href="https://files.cdn.printful.com" />

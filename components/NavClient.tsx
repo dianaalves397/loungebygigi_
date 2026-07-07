@@ -2,10 +2,11 @@
 
 import Link from "next/link";
 import { usePathname, useRouter } from "next/navigation";
-import { useRef, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import CartButton from "@/components/CartButton";
+import { type Locale, LOCALES, detectLocale, getTranslations, saveLocale } from "@/lib/i18n";
 
-function SearchToggle() {
+function SearchToggle({ placeholder, label }: { placeholder: string; label: string }) {
   const router = useRouter();
   const [open, setOpen] = useState(false);
   const inputRef = useRef<HTMLInputElement>(null);
@@ -30,8 +31,8 @@ function SearchToggle() {
             ref={inputRef}
             type="search"
             name="q"
-            placeholder="Procurar produtos…"
-            aria-label="Procurar produtos"
+            placeholder={placeholder}
+            aria-label={label}
             onBlur={() => setOpen(false)}
           />
         </form>
@@ -39,7 +40,7 @@ function SearchToggle() {
         <button
           type="button"
           className="old-nav-search-btn"
-          aria-label="Procurar"
+          aria-label={label}
           onClick={openSearch}
         >
           <svg viewBox="0 0 20 20" width="18" height="18" fill="none" aria-hidden="true">
@@ -70,6 +71,21 @@ export default function NavClient({
   const pathname = usePathname();
   const isHome = pathname === "/";
 
+  const [locale, setLocaleState] = useState<Locale>("pt");
+
+  useEffect(() => {
+    setLocaleState(detectLocale());
+  }, []);
+
+  const t = getTranslations(locale);
+
+  function changeLocale(code: Locale) {
+    setLocaleState(code);
+    saveLocale(code);
+    // update <html lang> for accessibility and browser translate
+    document.documentElement.lang = code;
+  }
+
   return (
     <header className="old-nav">
       <Link className="old-nav-logo" href="/">
@@ -77,13 +93,13 @@ export default function NavClient({
       </Link>
 
       <nav className="old-nav-center">
-        {!isHome ? <Link href="/">Página inicial</Link> : null}
+        {!isHome ? <Link href="/">{t.home}</Link> : null}
 
         <details className="old-nav-dropdown">
-          <summary>Men</summary>
+          <summary>{t.men}</summary>
           <div className="old-nav-dropdown-menu">
-            <Link href="/collections/men">Moodboard Man</Link>
-            <Link href="/shop?gender=men">Ver todas as peças Men</Link>
+            <Link href="/collections/men">{t.moodboardMen}</Link>
+            <Link href="/shop?gender=men">{t.allMen}</Link>
             {menCategories.map((category) => (
               <Link
                 key={category.id}
@@ -97,10 +113,10 @@ export default function NavClient({
         </details>
 
         <details className="old-nav-dropdown">
-          <summary>Women</summary>
+          <summary>{t.women}</summary>
           <div className="old-nav-dropdown-menu">
-            <Link href="/collections/women">Moodboard Woman</Link>
-            <Link href="/shop?gender=women">Ver todas as peças Women</Link>
+            <Link href="/collections/women">{t.moodboardWomen}</Link>
+            <Link href="/shop?gender=women">{t.allWomen}</Link>
             {womenCategories.map((category) => (
               <Link
                 key={category.id}
@@ -115,14 +131,23 @@ export default function NavClient({
       </nav>
 
       <div className="old-nav-right">
-        <SearchToggle />
+        <SearchToggle placeholder={t.searchPlaceholder} label={t.search} />
 
-        <select className="old-nav-select" defaultValue="PT-EUR">
-          <option value="PT-EUR">PT · EUR</option>
+        <select
+          className="old-nav-select"
+          value={locale}
+          onChange={(e) => changeLocale(e.target.value as Locale)}
+          aria-label="Language"
+        >
+          {LOCALES.map((l) => (
+            <option key={l.code} value={l.code}>
+              {l.label}
+            </option>
+          ))}
         </select>
 
         <Link className="old-nav-account" href="/account">
-          Conta
+          {t.account}
         </Link>
 
         <CartButton />
