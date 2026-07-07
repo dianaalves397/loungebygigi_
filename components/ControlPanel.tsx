@@ -99,6 +99,7 @@ const emptyProduct: Product = {
 const emptyCategory: CategoryFormModel = {
   id: "",
   name: "",
+  parentId: "",
   gender: "unisex",
   image: "",
   mediaType: "image",
@@ -180,6 +181,7 @@ async function requestJson<T>(input: RequestInfo | URL, init?: RequestInit): Pro
 function normalizeCategory(category: Category): CategoryFormModel {
   return {
     ...category,
+    parentId: category.parentId || "",
     sortOrder: (category as CategoryFormModel).sortOrder ?? 1,
     showInMen: (category as CategoryFormModel).showInMen ?? true,
     showInWomen: (category as CategoryFormModel).showInWomen ?? true
@@ -1079,6 +1081,27 @@ export default function ControlPanel() {
                 value={categoryForm.name}
                 onChange={(value) => setCategoryForm({ ...categoryForm, name: value })}
               />
+
+              <label>
+                Categoria-mãe
+                <select
+                  value={categoryForm.parentId || ""}
+                  onChange={(e) => setCategoryForm({ ...categoryForm, parentId: e.target.value })}
+                >
+                  <option value="">— (categoria principal · aparece no moodboard)</option>
+                  {categories
+                    .filter((c) => !c.parentId)
+                    .sort((a, b) => Number(a.sortOrder || 999) - Number(b.sortOrder || 999))
+                    .map((c) => (
+                      <option key={c.id} value={c.id}>{c.name}</option>
+                    ))}
+                </select>
+                <small style={{ color: "#74665f", fontSize: "0.75rem", marginTop: "0.25rem", display: "block" }}>
+                  {categoryForm.parentId
+                    ? "Subcategoria — aparece nas abas de navegação, não no moodboard"
+                    : "Categoria principal — aparece no moodboard e nas abas de navegação"}
+                </small>
+              </label>
 
               <SelectField
                 label="Género"
