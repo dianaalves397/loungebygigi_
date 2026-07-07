@@ -3,8 +3,9 @@ export const revalidate = 0;
 
 import { requireAdmin } from "@/lib/auth";
 import { getCategories, saveCategories } from "@/lib/db";
+import type { Category } from "@/types";
 
-const NEW_SUBCATEGORIES = [
+const NEW_SUBCATEGORIES: Category[] = [
   // Sports — women
   { id: "sports-superiores-women", name: "Peças superiores", gender: "women", parentId: "sports", sortOrder: 10, image: "/image_tenis.jpg", mediaType: "image", featured: false, styles: [] },
   { id: "sports-inferiores-women", name: "Peças inferiores", gender: "women", parentId: "sports", sortOrder: 20, image: "/image_tenis.jpg", mediaType: "image", featured: false, styles: [] },
@@ -31,10 +32,10 @@ export async function POST() {
   if (unauthorized) return unauthorized;
 
   const existing = await getCategories();
-  const existingIds = new Set(existing.map((c: any) => String(c.id)));
+  const existingIds = new Set(existing.map((c) => String(c.id)));
 
   const toAdd = NEW_SUBCATEGORIES.filter((c) => !existingIds.has(c.id));
-  const merged = [...existing, ...toAdd];
+  const merged: Category[] = [...existing, ...toAdd];
 
   await saveCategories(merged);
 
