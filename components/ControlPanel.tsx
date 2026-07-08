@@ -382,8 +382,10 @@ export default function ControlPanel() {
         const isRemote =
           productForm.id.startsWith("printful-") ||
           productForm.id.startsWith("printify-") ||
+          productForm.id.startsWith("apliiq-") ||
           productForm.source === "printful" ||
-          productForm.source === "printify";
+          productForm.source === "printify" ||
+          productForm.source === "apliiq";
 
         if (isRemote) {
           const data = await requestJson<Product>("/api/product-overrides", {

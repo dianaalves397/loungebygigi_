@@ -5,6 +5,7 @@ import { readStore, writeStore } from "@/lib/store";
 import { getPrintfulConfig, queryPrintfulProducts } from "@/lib/printful";
 import { getPrintifyConfig, queryPrintifyProducts } from "@/lib/printify";
 import { getApliiqConfig, queryApliiqProducts } from "@/lib/apliiq";
+import { detectCategoryFromTitle } from "@/lib/autoCategorize";
 
 export function slugify(value: string) {
   return String(value || "")
@@ -14,6 +15,27 @@ export function slugify(value: string) {
     .replace(/&/g, "and")
     .replace(/[^a-z0-9]+/g, "-")
     .replace(/(^-|-$)+/g, "");
+}
+
+// Categoriza automaticamente produtos ainda sem categoria (tipicamente vindos
+// de um fornecedor recém-sincronizado), usando o código de 3 letras no nome
+// do produto. Corre antes de applyOverrides, para que uma escolha manual no
+// painel continue sempre a prevalecer sobre a deteção automática.
+function applyAutoCategorize(products: Product[]) {
+  return products.map((product) => {
+    if (product.categoryId) return product;
+
+    const detected = detectCategoryFromTitle(product.title);
+    if (!detected) return product;
+
+    return {
+      ...product,
+      categoryId: detected.categoryId,
+      category: detected.category,
+      categoryIds: [detected.categoryId],
+      gender: detected.gender
+    };
+  });
 }
 
 function applyOverrides(products: Product[], settings: any) {
@@ -82,7 +104,7 @@ export async function getProducts() {
   }
 
   const unique = Array.from(new Map(products.map((p) => [p.id, p])).values());
-  return applyOverrides(unique, settings);
+  return applyOverrides(applyAutoCategorize(unique), settings);
 }
 
 export async function saveProducts(products: Product[]) {
