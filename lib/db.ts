@@ -4,6 +4,7 @@ import { getSettings } from "@/lib/settings";
 import { readStore, writeStore } from "@/lib/store";
 import { getPrintfulConfig, queryPrintfulProducts } from "@/lib/printful";
 import { getPrintifyConfig, queryPrintifyProducts } from "@/lib/printify";
+import { getApliiqConfig, queryApliiqProducts } from "@/lib/apliiq";
 
 export function slugify(value: string) {
   return String(value || "")
@@ -66,6 +67,20 @@ export async function getProducts() {
     }
   }
 
+  const apliiq = getApliiqConfig(settings);
+  if (apliiq.enabled && apliiq.useAsProductSource) {
+    try {
+      const cachedApliiq = unstable_cache(
+        async () => queryApliiqProducts(apliiq, settings),
+        ["apliiq-products", String(apliiq.apiKey || "default")],
+        { revalidate: 60 * 60 * 6, tags: ["store"] }
+      );
+      products.push(...(await cachedApliiq()));
+    } catch (error) {
+      console.error("Erro Apliiq. A usar produtos guardados.", error);
+    }
+  }
+
   const unique = Array.from(new Map(products.map((p) => [p.id, p])).values());
   return applyOverrides(unique, settings);
 }
@@ -76,7 +91,8 @@ export async function saveProducts(products: Product[]) {
     products.filter(
       (product) =>
         !product.id.startsWith("printful-") &&
-        !product.id.startsWith("printify-")
+        !product.id.startsWith("printify-") &&
+        !product.id.startsWith("apliiq-")
     )
   );
 }

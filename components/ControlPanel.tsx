@@ -16,7 +16,7 @@ type Tab =
 type MediaType = "image" | "video";
 type Gender = "women" | "men" | "unisex";
 type ProductStatus = "active" | "draft" | "archived";
-type ProviderName = "printful" | "printify";
+type ProviderName = "printful" | "printify" | "apliiq";
 type PaymentProviderName = "stripe" | "paypal";
 
 type IntegrationSettings = {
@@ -26,6 +26,8 @@ type IntegrationSettings = {
   apiToken: string;
   storeId?: string;
   shopId?: string;
+  apiKey?: string;
+  sharedSecret?: string;
 };
 
 type PaymentSettings = {
@@ -57,6 +59,7 @@ type Settings = {
   integrations: {
     printful: IntegrationSettings;
     printify: IntegrationSettings;
+    apliiq: IntegrationSettings;
   };
   payments: PaymentSettings;
 };
@@ -140,6 +143,14 @@ const defaultSettings: Settings = {
       autoSubmitOrders: true,
       apiToken: "",
       shopId: ""
+    },
+    apliiq: {
+      enabled: false,
+      useAsProductSource: false,
+      autoSubmitOrders: true,
+      apiToken: "",
+      apiKey: "",
+      sharedSecret: ""
     }
   },
   payments: {
@@ -670,7 +681,7 @@ export default function ControlPanel() {
     return <main className="control-login">A carregar...</main>;
   }
 
-  const { printful, printify } = settings.integrations;
+  const { printful, printify, apliiq } = settings.integrations;
   const payments = settings.payments;
 
   return (
@@ -1536,6 +1547,105 @@ export default function ControlPanel() {
                 </button>
                 <button className="pill" type="button" onClick={() => syncProvider("printify")}>
                   Sincronizar Printify
+                </button>
+              </SectionActions>
+
+              <h3 className="wide">Apliiq</h3>
+
+              <SelectField
+                label="Ativar Apliiq"
+                value={apliiq.enabled ? "yes" : "no"}
+                options={["yes", "no"]}
+                onChange={(value) =>
+                  setSettings({
+                    ...settings,
+                    integrations: {
+                      ...settings.integrations,
+                      apliiq: {
+                        ...apliiq,
+                        enabled: value === "yes"
+                      }
+                    }
+                  })
+                }
+              />
+
+              <SelectField
+                label="Usar produtos Apliiq"
+                value={apliiq.useAsProductSource ? "yes" : "no"}
+                options={["yes", "no"]}
+                onChange={(value) =>
+                  setSettings({
+                    ...settings,
+                    integrations: {
+                      ...settings.integrations,
+                      apliiq: {
+                        ...apliiq,
+                        useAsProductSource: value === "yes"
+                      }
+                    }
+                  })
+                }
+              />
+
+              <TextField
+                label="Apliiq API Key"
+                value={apliiq.apiKey || ""}
+                onChange={(value) =>
+                  setSettings({
+                    ...settings,
+                    integrations: {
+                      ...settings.integrations,
+                      apliiq: {
+                        ...apliiq,
+                        apiKey: value
+                      }
+                    }
+                  })
+                }
+              />
+
+              <TextField
+                label="Apliiq Shared Secret"
+                value={apliiq.sharedSecret || ""}
+                onChange={(value) =>
+                  setSettings({
+                    ...settings,
+                    integrations: {
+                      ...settings.integrations,
+                      apliiq: {
+                        ...apliiq,
+                        sharedSecret: value
+                      }
+                    }
+                  })
+                }
+              />
+
+              <SelectField
+                label="Envio automático à Apliiq após pagamento"
+                value={apliiq.autoSubmitOrders !== false ? "yes" : "no"}
+                options={["yes", "no"]}
+                onChange={(value) =>
+                  setSettings({
+                    ...settings,
+                    integrations: {
+                      ...settings.integrations,
+                      apliiq: {
+                        ...apliiq,
+                        autoSubmitOrders: value === "yes"
+                      }
+                    }
+                  })
+                }
+              />
+
+              <SectionActions>
+                <button className="pill" type="button" onClick={() => testConnection("apliiq")}>
+                  Testar Apliiq
+                </button>
+                <button className="pill" type="button" onClick={() => syncProvider("apliiq")}>
+                  Sincronizar Apliiq
                 </button>
               </SectionActions>
 

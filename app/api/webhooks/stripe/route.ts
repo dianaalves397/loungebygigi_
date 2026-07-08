@@ -9,6 +9,7 @@ import { getOrders, saveOrders, getCustomers, saveCustomers } from "@/lib/db";
 import { getSettings } from "@/lib/settings";
 import { recipientFromStripeSession, submitOrderToPrintful } from "@/lib/printfulOrders";
 import { submitOrderToPrintify } from "@/lib/printifyOrders";
+import { submitOrderToApliiq } from "@/lib/apliiqOrders";
 
 export const dynamic = "force-dynamic";
 export const revalidate = 0;
@@ -108,6 +109,18 @@ export async function POST(req: Request) {
     }
   } catch (error: any) {
     order.printify = { submitted: false, error: error.message };
+  }
+
+  try {
+    if (recipient) {
+      const result = await submitOrderToApliiq(settings, order, recipient);
+      order.apliiq = { ...order.apliiq, ...result };
+      if (result.submitted) anyFulfilled = true;
+    } else {
+      order.apliiq = { ...order.apliiq, submitted: false, reason: "Morada de envio em falta." };
+    }
+  } catch (error: any) {
+    order.apliiq = { ...order.apliiq, submitted: false, error: error.message };
   }
 
   if (anyFulfilled) order.status = "fulfilled";
