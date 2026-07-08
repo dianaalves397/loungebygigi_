@@ -197,6 +197,7 @@ export async function ensureCategoryForProduct(product: Product) {
 
 export async function upsertProduct(product: Product) {
   product.categoryId = await ensureCategoryForProduct(product);
+  product.createdAt = product.createdAt || new Date().toISOString();
 
   const products = await readStore<Product[]>("products", []);
   const index = products.findIndex((item) => item.id === product.id);

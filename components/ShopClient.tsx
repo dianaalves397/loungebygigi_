@@ -6,6 +6,8 @@ import { Suspense, useEffect, useMemo, useState } from "react";
 import Link from "next/link";
 import { useSearchParams } from "next/navigation";
 import ProductCard from "@/components/ProductCard";
+import SortControl from "@/components/category/SortControl";
+import { sortProducts } from "@/lib/sortProducts";
 
 function clean(value: any) {
   return String(value || "")
@@ -204,6 +206,7 @@ function ShopClientInner({
   const gender = String(params.get("gender") || initialGender || "all").toLowerCase();
   const categoryParam = String(params.get("category") || initialCategory || "").trim();
   const query = String(params.get("q") || params.get("search") || initialQuery || "").trim();
+  const sort = params.get("sort") || "";
 
   async function load() {
     setLoading(true);
@@ -231,13 +234,15 @@ function ShopClientInner({
   }, [categories, categoryParam]);
 
   const visibleProducts = useMemo(() => {
-    return products
+    const filtered = products
       .filter((product) => String(product.status || "active").toLowerCase() !== "draft")
       .filter((product) => product.hidden !== true)
       .filter((product) => productMatchesGender(product, query ? "all" : gender))
       .filter((product) => productMatchesCategory(product, categoryParam, selectedCategory, categories))
       .filter((product) => productMatchesSearch(product, query));
-  }, [products, categories, gender, categoryParam, selectedCategory, query]);
+
+    return sortProducts(filtered, sort);
+  }, [products, categories, gender, categoryParam, selectedCategory, query, sort]);
 
   const title = selectedCategory
     ? clean(selectedCategory.name || selectedCategory.title || categoryParam)
@@ -300,7 +305,9 @@ function ShopClientInner({
             </p>
           </div>
 
-          <div style={{ display: "flex", gap: ".6rem", flexWrap: "wrap" }}>
+          <div style={{ display: "flex", gap: ".6rem", flexWrap: "wrap", alignItems: "center" }}>
+            <SortControl />
+
             <button className="pill" type="button" onClick={load}>
               Atualizar
             </button>

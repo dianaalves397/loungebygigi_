@@ -821,6 +821,43 @@
   color: var(--lg-sepia);
 }
 
+.lgc-count-meta {
+  display: flex;
+  align-items: center;
+  gap: 18px;
+  flex-wrap: wrap;
+}
+
+.lgc-sort {
+  display: inline-flex;
+  align-items: center;
+}
+
+.lgc-sort select {
+  appearance: none;
+  -webkit-appearance: none;
+  background: transparent;
+  border: none;
+  border-bottom: 1px solid rgba(30, 25, 19, 0.28);
+  padding: 0 16px 2px 0;
+  font-family: var(--lg-body);
+  font-size: 10px;
+  letter-spacing: 0.3em;
+  text-transform: uppercase;
+  color: var(--lg-ink);
+  cursor: pointer;
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='8' height='6' viewBox='0 0 8 6'%3E%3Cpath d='M0 0L4 6L8 0' fill='%238a7a64'/%3E%3C/svg%3E");
+  background-repeat: no-repeat;
+  background-position: right center;
+}
+
+.lgc-sort select:hover { color: var(--lg-brass); }
+
+.lgc-sort select:focus-visible {
+  outline: 2px solid var(--lg-brass);
+  outline-offset: 4px;
+}
+
 .lgc-grid {
   max-width: 1160px;
   margin: 0 auto;

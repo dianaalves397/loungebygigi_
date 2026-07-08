@@ -11,11 +11,14 @@ import SportsExperience from "@/components/category/SportsExperience";
 import SummerExperience from "@/components/category/SummerExperience";
 import AccessoriesExperience from "@/components/category/AccessoriesExperience";
 import LoungewearExperience from "@/components/category/LoungewearExperience";
+import { sortProducts } from "@/lib/sortProducts";
 
-function Inner(props: any) {
+function Inner(rawProps: any) {
   const params = useSearchParams();
   const from = params.get("from") || undefined;
-  const id = props.categoryId as string;
+  const sort = params.get("sort") || "";
+  const id = rawProps.categoryId as string;
+  const props = { ...rawProps, products: sortProducts(rawProps.products || [], sort) };
 
   if (["acessorios", "jewellery", "bags", "sunglasses", "hats"].includes(id)) {
     return <AccessoriesExperience {...props} variant={from === "men" ? "sun" : "sea"} />;

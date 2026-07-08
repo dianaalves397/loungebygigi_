@@ -38,6 +38,7 @@ export type Product = {
   apliiqSku?: string;
   shopifyProductId?: string;
   shopifyVariantId?: string;
+  createdAt?: string;
 };
 
 export type Category = {
