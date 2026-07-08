@@ -13,8 +13,8 @@ export default async function Home() {
   return (
     <main>
       <LandingHero
-        womanImage={landing.womanImage || "/image_casal_gelado.jpg"}
-        manImage={landing.manImage || "/image_tenis.jpg"}
+        womanImage={landing.womanImage || "/woman1.jpg"}
+        manImage={landing.manImage || "/man1.jpg"}
         womanLabel={landing.womanLabel || "Woman"}
         manLabel={landing.manLabel || "Man"}
         brandName={settings.brand?.name || "Lounge by Gigi"}

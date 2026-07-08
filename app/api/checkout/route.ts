@@ -60,7 +60,8 @@ async function priceItemsFromCatalog(items: any[]) {
       printfulSyncProductId: product.printfulSyncProductId || "",
       printfulSyncVariantId: String(variant?.syncVariantId || variant?.id || product.printfulSyncVariantId || ""),
       printifyProductId: product.printifyProductId || "",
-      printifyVariantId: item.printifyVariantId || product.printifyVariantId || ""
+      printifyVariantId: item.printifyVariantId || product.printifyVariantId || "",
+      apliiqSku: variant?.apliiqSku || product.apliiqSku || ""
     };
   });
 }
@@ -90,7 +91,8 @@ async function createLocalOrder({ items, customerEmail, status, paymentProvider 
       printfulSyncProductId: item.printfulSyncProductId,
       printfulSyncVariantId: item.printfulSyncVariantId,
       printifyProductId: item.printifyProductId,
-      printifyVariantId: item.printifyVariantId
+      printifyVariantId: item.printifyVariantId,
+      apliiqSku: item.apliiqSku
     })),
     receiptSent: false
   };

@@ -18,7 +18,7 @@ export type Product = {
   compareAt?: number;
   cost?: number;
   stock: number;
-  source: "manual" | "shopify" | "supplier" | "printful" | "printify";
+  source: "manual" | "shopify" | "supplier" | "printful" | "printify" | "apliiq";
   status: "active" | "draft" | "archived";
   image: string;
   mediaType: "image" | "video";
@@ -28,15 +28,17 @@ export type Product = {
   colors: ProductColor[];
   sizes: string[];
   tags: string[];
-  provider?: "manual" | "printful" | "printify" | "shopify";
+  provider?: "manual" | "printful" | "printify" | "apliiq" | "shopify";
   providerProductId?: string;
   providerVariantId?: string;
   printfulSyncProductId?: string;
   printfulSyncVariantId?: string;
   printifyProductId?: string;
   printifyVariantId?: string;
+  apliiqSku?: string;
   shopifyProductId?: string;
   shopifyVariantId?: string;
+  createdAt?: string;
 };
 
 export type Category = {
@@ -66,13 +68,14 @@ export type CartItem = {
   quantity: number;
   color?: string;
   size?: string;
-  provider?: "manual" | "printful" | "printify" | "shopify";
+  provider?: "manual" | "printful" | "printify" | "apliiq" | "shopify";
   providerProductId?: string;
   providerVariantId?: string;
   printfulSyncProductId?: string;
   printfulSyncVariantId?: string;
   printifyProductId?: string;
   printifyVariantId?: string;
+  apliiqSku?: string;
   shopifyVariantId?: string;
 };
 
@@ -82,7 +85,7 @@ export type Order = {
   customerEmail: string;
   status: "pending" | "paid" | "fulfilled" | "cancelled";
   paymentProvider: "stripe" | "paypal" | "shopify" | "woocommerce" | "manual";
-  fulfillmentProvider?: "printful" | "printify" | "manual";
+  fulfillmentProvider?: "printful" | "printify" | "apliiq" | "manual";
   total: number;
   items: Array<{
     productId: string;

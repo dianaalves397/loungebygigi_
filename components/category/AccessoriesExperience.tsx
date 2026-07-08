@@ -8,6 +8,7 @@
 import Link from "next/link";
 import { useEffect, useRef, useState } from "react";
 import ProductCard from "@/components/ProductCard";
+import SortControl from "@/components/category/SortControl";
 
 type SubCategory = { id: string; name: string; count: number };
 
@@ -247,9 +248,12 @@ export default function AccessoriesExperience({
 
         <div className="lgc-count">
           <h2>As peças</h2>
-          <span>
-            {products.length} {products.length === 1 ? "artigo" : "artigos"}
-          </span>
+          <div className="lgc-count-meta">
+            <span>
+              {products.length} {products.length === 1 ? "artigo" : "artigos"}
+            </span>
+            <SortControl />
+          </div>
         </div>
 
         {products.length ? (

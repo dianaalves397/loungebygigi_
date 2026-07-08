@@ -1,0 +1,2 @@
+import { requireAdmin } from "@/lib/auth"; import { getSettings } from "@/lib/settings"; import { getApliiqConfig, testApliiqConnection } from "@/lib/apliiq";
+export const dynamic="force-dynamic"; export const revalidate=0; export async function POST(){const u=await requireAdmin(); if(u) return u; try{const result=await testApliiqConnection(getApliiqConfig(await getSettings())); return Response.json({message:`Ligação Apliiq OK. Produtos encontrados: ${result.count}`,...result});}catch(e:any){return Response.json({error:e.message||"Erro Apliiq"},{status:500});}}
