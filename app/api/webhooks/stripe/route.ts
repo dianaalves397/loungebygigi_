@@ -1,5 +1,5 @@
 // @ts-nocheck
-// Webhook do Stripe — confirma pagamentos e dispara o envio na Printful.
+// Webhook do Stripe — confirma pagamentos e dispara o envio na Printful/Printify.
 // Configurar no Stripe Dashboard: endpoint https://loungebygigi.online/api/webhooks/stripe
 // com o evento "checkout.session.completed", e guardar o "signing secret"
 // no painel (Pagamentos → Stripe Webhook Secret) ou em STRIPE_WEBHOOK_SECRET.
@@ -8,6 +8,7 @@ import Stripe from "stripe";
 import { getOrders, saveOrders, getCustomers, saveCustomers } from "@/lib/db";
 import { getSettings } from "@/lib/settings";
 import { recipientFromStripeSession, submitOrderToPrintful } from "@/lib/printfulOrders";
+import { submitOrderToPrintify } from "@/lib/printifyOrders";
 
 export const dynamic = "force-dynamic";
 export const revalidate = 0;
@@ -80,12 +81,14 @@ export async function POST(req: Request) {
   const recipient = recipientFromStripeSession(session);
   if (recipient) order.shippingAddress = recipient;
 
-  // Enviar à Printful (produção + envio automáticos).
+  // Enviar à Printful e/ou à Printify (produção + envio automáticos).
+  let anyFulfilled = false;
+
   try {
     if (recipient) {
       const result = await submitOrderToPrintful(settings, order, recipient);
       order.printful = result;
-      if (result.submitted) order.status = "fulfilled";
+      if (result.submitted) anyFulfilled = true;
     } else {
       order.printful = { submitted: false, reason: "Morada de envio em falta." };
     }
@@ -94,6 +97,20 @@ export async function POST(req: Request) {
     // para submissão manual, com o erro registado.
     order.printful = { submitted: false, error: error.message };
   }
+
+  try {
+    if (recipient) {
+      const result = await submitOrderToPrintify(settings, order, recipient);
+      order.printify = result;
+      if (result.submitted) anyFulfilled = true;
+    } else {
+      order.printify = { submitted: false, reason: "Morada de envio em falta." };
+    }
+  } catch (error: any) {
+    order.printify = { submitted: false, error: error.message };
+  }
+
+  if (anyFulfilled) order.status = "fulfilled";
 
   orders[index] = order;
   await saveOrders(orders);
