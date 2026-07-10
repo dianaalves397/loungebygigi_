@@ -3,7 +3,9 @@
     "id": "sports",
     "name": "Sports",
     "gender": "unisex",
-    "image": "/image_tenis.jpg",
+    "image": "/sports-women.jpg",
+    "imageWomen": "/sports-women.jpg",
+    "imageMen": "/sports-men.png",
     "sortOrder": 1,
     "introTitle": "Movimento com elegância",
     "introText": "Peças de desporto pensadas para o court, o green e a cidade."
@@ -12,7 +14,9 @@
     "id": "summer",
     "name": "Summer",
     "gender": "unisex",
-    "image": "/image_casal_barco.jpg",
+    "image": "/summer-women.jpg",
+    "imageWomen": "/summer-women.jpg",
+    "imageMen": "/summer-men.jpg",
     "sortOrder": 2,
     "introTitle": "Dias de sal e sol",
     "introText": "O essencial para a época mais longa do ano — do mar ao fim de tarde."
@@ -21,7 +25,9 @@
     "id": "loungewear",
     "name": "Loungewear",
     "gender": "unisex",
-    "image": "/mood-couple.jpg",
+    "image": "/lounge-women.jpg",
+    "imageWomen": "/lounge-women.jpg",
+    "imageMen": "/lounge-men.jpg",
     "sortOrder": 3,
     "introTitle": "Conforto assinado",
     "introText": "Texturas suaves para os dias em casa — sem abdicar da linha."
@@ -30,7 +36,9 @@
     "id": "acessorios",
     "name": "Acessórios",
     "gender": "unisex",
-    "image": "/mood-hat.jpg",
+    "image": "/acessorios-women.jpg",
+    "imageWomen": "/acessorios-women.jpg",
+    "imageMen": "/acessorios-men.jpg",
     "sortOrder": 4,
     "introTitle": "Os detalhes que ficam",
     "introText": "Joalharia, malas, óculos e chapéus — o remate de cada conjunto."

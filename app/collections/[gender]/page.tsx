@@ -12,6 +12,17 @@ export const revalidate = 3600;
 
 const GENDERS = new Set(["women", "men"]);
 
+// Imagens por género das categorias de topo (unisex) — usadas quando a
+// categoria ainda não tem imageWomen/imageMen definido na base de dados,
+// para que a troca funcione de imediato após o deploy, sem depender de uma
+// migração de dados.
+const DEFAULT_GENDER_IMAGES: Record<string, { women: string; men: string }> = {
+  sports: { women: "/sports-women.jpg", men: "/sports-men.png" },
+  summer: { women: "/summer-women.jpg", men: "/summer-men.jpg" },
+  loungewear: { women: "/lounge-women.jpg", men: "/lounge-men.jpg" },
+  acessorios: { women: "/acessorios-women.jpg", men: "/acessorios-men.jpg" }
+};
+
 export function generateStaticParams() {
   return [{ gender: "women" }, { gender: "men" }];
 }
@@ -78,13 +89,21 @@ export default async function CollectionsPage({
       return categoryGender === gender || categoryGender === "unisex";
     })
     .sort((a: any, b: any) => Number(a.sortOrder || 999) - Number(b.sortOrder || 999))
-    .map((category: any) => ({
-      id: category.id,
-      name: category.name,
-      image: category.image,
-      introTitle: category.introTitle,
-      count: countFor(category.id)
-    }));
+    .map((category: any) => {
+      const defaults = DEFAULT_GENDER_IMAGES[String(category.id)];
+      const genderImage =
+        gender === "men"
+          ? category.imageMen || defaults?.men
+          : category.imageWomen || defaults?.women;
+
+      return {
+        id: category.id,
+        name: category.name,
+        image: genderImage || category.image,
+        introTitle: category.introTitle,
+        count: countFor(category.id)
+      };
+    });
 
   const label = gender === "men" ? "Man" : "Woman";
   const brand = settings.brand?.name || "Lounge by Gigi";
