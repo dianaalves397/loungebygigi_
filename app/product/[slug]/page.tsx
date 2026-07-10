@@ -65,16 +65,22 @@ async function getProductsFromApi() {
 }
 
 async function loadProducts() {
-  const fromApi = await getProductsFromApi();
+  // Junta as duas fontes em vez de confiar só numa: se a chamada "fresca"
+  // à API vier incompleta (ex: um produto falhou momentaneamente a buscar
+  // detalhes a um fornecedor), o produto continua encontrável através da
+  // lista em cache que a loja já usa — antes, um resultado não-vazio mas
+  // incompleto fazia a página nunca chegar a consultar a cache.
+  const [fromApi, fromDb] = await Promise.all([
+    getProductsFromApi(),
+    getCachedProducts().catch(() => [])
+  ]);
 
-  if (fromApi.length) return fromApi;
-
-  try {
-    const fromDb = await getCachedProducts();
-    return Array.isArray(fromDb) ? fromDb : [];
-  } catch {
-    return [];
+  const merged = new Map<string, any>();
+  for (const product of [...(Array.isArray(fromDb) ? fromDb : []), ...fromApi]) {
+    if (product?.id) merged.set(String(product.id), product);
   }
+
+  return Array.from(merged.values());
 }
 
 export default async function ProductPage({ params }: { params: any }) {
