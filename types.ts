@@ -47,6 +47,8 @@ export type Category = {
   parentId?: string; // subcategoria quando definido
   gender: "women" | "men" | "unisex";
   image: string;
+  imageWomen?: string;
+  imageMen?: string;
   mediaType: "image" | "video";
   featured: boolean;
   hidden?: boolean;
