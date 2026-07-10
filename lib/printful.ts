@@ -290,10 +290,10 @@ export async function queryPrintfulProducts(config: any, settings: any): Promise
 
     const imageCandidates = variantOptions.flatMap((variant: any) => variant.images || []);
 
-    // Usa sempre todas as imagens disponíveis (variantes + miniatura), mesmo
-    // com uma só cor — evita ficar sem nenhuma imagem válida quando a única
-    // candidata calha a ser rejeitada pelo filtro anti-imagens-más.
-    const gallery = cleanGallery([...imageCandidates, p.thumbnail_url]);
+    // Miniatura oficial primeiro — é a foto pensada pela Printful para
+    // representar o produto. As fotos dos variantes (que às vezes incluem
+    // ângulos de detalhe) só entram a seguir, como imagens extra da galeria.
+    const gallery = cleanGallery([p.thumbnail_url, ...imageCandidates]);
 
     const image =
       gallery[0] ||
