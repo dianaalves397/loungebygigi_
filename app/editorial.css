@@ -343,15 +343,16 @@
   width: 100%;
   height: 100%;
   object-fit: cover;
-  /* impressão envelhecida, como a referência — desaparece ao passar o rato */
-  filter: sepia(0.55) saturate(0.62) brightness(1.05) contrast(0.94);
+  /* filtro quente que unifica fotos de origens diferentes (mar, verde,
+     dourado, neutro) numa só paleta editorial — desaparece ao passar o rato */
+  filter: sepia(0.65) saturate(0.5) hue-rotate(-6deg) brightness(1.04) contrast(0.96);
   transform: scale(1.03);
   transition: filter 0.9s ease, transform 1.3s cubic-bezier(0.22, 1, 0.36, 1);
 }
 
 .lgm-card:hover img,
 .lgm-card:focus-visible img {
-  filter: sepia(0) saturate(1);
+  filter: none;
   transform: scale(1);
 }
 
@@ -535,11 +536,12 @@
     width: 100%;
     height: 100%;
     object-fit: cover;
-    filter: sepia(0.18) saturate(0.88);
+    filter: sepia(0.65) saturate(0.5) hue-rotate(-6deg) brightness(1.04) contrast(0.96);
     transition: filter 0.8s ease;
   }
 
-  .lgmm-tile:active .lgmm-media img { filter: sepia(0) saturate(1); }
+  .lgmm-tile:active .lgmm-media img,
+  .lgmm-tile:focus-visible .lgmm-media img { filter: none; }
 
   .lgmm-caption {
     display: flex;
