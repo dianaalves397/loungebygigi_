@@ -755,7 +755,8 @@
   padding: clamp(40px, 7vh, 72px) clamp(16px, 5vw, 72px) 140px;
 }
 
-/* aba de navegação das subcategorias */
+/* aba de navegação das subcategorias — pílula bem visível, no mesmo
+   estilo do menu principal (fundo escuro no item ativo). */
 .lgc-tabs {
   max-width: 1160px;
   margin: 0 auto;
@@ -764,8 +765,10 @@
   gap: 6px;
   overflow-x: auto;
   scrollbar-width: none;
-  border-bottom: 1px solid rgba(30, 25, 19, 0.14);
-  padding-bottom: 0;
+  padding: 7px;
+  border: 1px solid rgba(30, 25, 19, 0.16);
+  border-radius: 999px;
+  background: rgba(30, 25, 19, 0.035);
 }
 
 .lgc-tabs::-webkit-scrollbar { display: none; }
@@ -775,27 +778,32 @@
   display: inline-flex;
   align-items: baseline;
   gap: 7px;
-  padding: 12px 18px 14px;
+  padding: 12px 20px;
+  border-radius: 999px;
   font-family: var(--lg-body);
   font-size: 10px;
+  font-weight: 600;
   letter-spacing: 0.28em;
   text-transform: uppercase;
   color: var(--lg-sepia);
   text-decoration: none;
-  border-bottom: 2px solid transparent;
-  margin-bottom: -1px;
   white-space: nowrap;
-  transition: color 0.3s ease, border-color 0.3s ease;
+  transition: background 0.3s ease, color 0.3s ease, transform 0.2s ease;
 }
 
-.lgc-tab:hover { color: var(--lg-ink); }
-
-.lgc-tab-active {
+.lgc-tab:hover {
   color: var(--lg-ink);
-  border-bottom-color: var(--lg-ink);
+  background: rgba(30, 25, 19, 0.08);
 }
 
-.lgc-tab em { font-style: normal; font-size: 9px; color: var(--lg-sepia); }
+.lgc-tab-active,
+.lgc-tab-active:hover {
+  color: #fdfcf9;
+  background: var(--lg-ink);
+  transform: none;
+}
+
+.lgc-tab em { font-style: normal; font-size: 9px; color: inherit; opacity: 0.75; }
 
 .lgc-count {
   max-width: 1160px;
