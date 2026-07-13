@@ -756,8 +756,12 @@
 }
 
 /* aba de navegação das subcategorias — pílula bem visível, no mesmo
-   estilo do menu principal (fundo escuro no item ativo). */
+   estilo do menu principal (fundo sólido e desfocado, como .site-nav),
+   para se destacar quer sobre o papel claro quer sobre a sombra escura
+   que algumas edições (Sports/Summer/Loungewear) lançam no topo do corpo. */
 .lgc-tabs {
+  position: relative;
+  z-index: 6;
   max-width: 1160px;
   margin: 0 auto;
   display: flex;
@@ -765,10 +769,13 @@
   gap: 6px;
   overflow-x: auto;
   scrollbar-width: none;
-  padding: 7px;
-  border: 1px solid rgba(30, 25, 19, 0.16);
+  padding: 8px;
+  border: 1px solid rgba(30, 25, 19, 0.14);
   border-radius: 999px;
-  background: rgba(30, 25, 19, 0.035);
+  background: rgba(253, 252, 249, 0.86);
+  backdrop-filter: blur(14px);
+  -webkit-backdrop-filter: blur(14px);
+  box-shadow: 0 14px 32px -22px rgba(30, 25, 19, 0.45);
 }
 
 .lgc-tabs::-webkit-scrollbar { display: none; }
@@ -785,22 +792,23 @@
   font-weight: 600;
   letter-spacing: 0.28em;
   text-transform: uppercase;
-  color: var(--lg-sepia);
+  color: var(--lg-ink);
+  opacity: 0.6;
   text-decoration: none;
   white-space: nowrap;
-  transition: background 0.3s ease, color 0.3s ease, transform 0.2s ease;
+  transition: background 0.3s ease, color 0.3s ease, opacity 0.3s ease;
 }
 
 .lgc-tab:hover {
-  color: var(--lg-ink);
+  opacity: 1;
   background: rgba(30, 25, 19, 0.08);
 }
 
 .lgc-tab-active,
 .lgc-tab-active:hover {
   color: #fdfcf9;
+  opacity: 1;
   background: var(--lg-ink);
-  transform: none;
 }
 
 .lgc-tab em { font-style: normal; font-size: 9px; color: inherit; opacity: 0.75; }
