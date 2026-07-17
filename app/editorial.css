@@ -343,15 +343,16 @@
   width: 100%;
   height: 100%;
   object-fit: cover;
-  /* impressão envelhecida, como a referência — desaparece ao passar o rato */
-  filter: sepia(0.55) saturate(0.62) brightness(1.05) contrast(0.94);
+  /* filtro quente que unifica fotos de origens diferentes (mar, verde,
+     dourado, neutro) numa só paleta editorial — desaparece ao passar o rato */
+  filter: sepia(0.65) saturate(0.5) hue-rotate(-6deg) brightness(1.04) contrast(0.96);
   transform: scale(1.03);
   transition: filter 0.9s ease, transform 1.3s cubic-bezier(0.22, 1, 0.36, 1);
 }
 
 .lgm-card:hover img,
 .lgm-card:focus-visible img {
-  filter: sepia(0) saturate(1);
+  filter: none;
   transform: scale(1);
 }
 
@@ -535,11 +536,12 @@
     width: 100%;
     height: 100%;
     object-fit: cover;
-    filter: sepia(0.18) saturate(0.88);
+    filter: sepia(0.65) saturate(0.5) hue-rotate(-6deg) brightness(1.04) contrast(0.96);
     transition: filter 0.8s ease;
   }
 
-  .lgmm-tile:active .lgmm-media img { filter: sepia(0) saturate(1); }
+  .lgmm-tile:active .lgmm-media img,
+  .lgmm-tile:focus-visible .lgmm-media img { filter: none; }
 
   .lgmm-caption {
     display: flex;
@@ -753,8 +755,13 @@
   padding: clamp(40px, 7vh, 72px) clamp(16px, 5vw, 72px) 140px;
 }
 
-/* aba de navegação das subcategorias */
+/* aba de navegação das subcategorias — pílula bem visível, no mesmo
+   estilo do menu principal (fundo sólido e desfocado, como .site-nav),
+   para se destacar quer sobre o papel claro quer sobre a sombra escura
+   que algumas edições (Sports/Summer/Loungewear) lançam no topo do corpo. */
 .lgc-tabs {
+  position: relative;
+  z-index: 6;
   max-width: 1160px;
   margin: 0 auto;
   display: flex;
@@ -762,8 +769,13 @@
   gap: 6px;
   overflow-x: auto;
   scrollbar-width: none;
-  border-bottom: 1px solid rgba(30, 25, 19, 0.14);
-  padding-bottom: 0;
+  padding: 8px;
+  border: 1px solid rgba(30, 25, 19, 0.14);
+  border-radius: 999px;
+  background: rgba(253, 252, 249, 0.86);
+  backdrop-filter: blur(14px);
+  -webkit-backdrop-filter: blur(14px);
+  box-shadow: 0 14px 32px -22px rgba(30, 25, 19, 0.45);
 }
 
 .lgc-tabs::-webkit-scrollbar { display: none; }
@@ -773,27 +785,33 @@
   display: inline-flex;
   align-items: baseline;
   gap: 7px;
-  padding: 12px 18px 14px;
+  padding: 12px 20px;
+  border-radius: 999px;
   font-family: var(--lg-body);
   font-size: 10px;
+  font-weight: 600;
   letter-spacing: 0.28em;
   text-transform: uppercase;
-  color: var(--lg-sepia);
-  text-decoration: none;
-  border-bottom: 2px solid transparent;
-  margin-bottom: -1px;
-  white-space: nowrap;
-  transition: color 0.3s ease, border-color 0.3s ease;
-}
-
-.lgc-tab:hover { color: var(--lg-ink); }
-
-.lgc-tab-active {
   color: var(--lg-ink);
-  border-bottom-color: var(--lg-ink);
+  opacity: 0.6;
+  text-decoration: none;
+  white-space: nowrap;
+  transition: background 0.3s ease, color 0.3s ease, opacity 0.3s ease;
 }
 
-.lgc-tab em { font-style: normal; font-size: 9px; color: var(--lg-sepia); }
+.lgc-tab:hover {
+  opacity: 1;
+  background: rgba(30, 25, 19, 0.08);
+}
+
+.lgc-tab-active,
+.lgc-tab-active:hover {
+  color: #fdfcf9;
+  opacity: 1;
+  background: var(--lg-ink);
+}
+
+.lgc-tab em { font-style: normal; font-size: 9px; color: inherit; opacity: 0.75; }
 
 .lgc-count {
   max-width: 1160px;
