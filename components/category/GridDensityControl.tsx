@@ -4,7 +4,7 @@ import { useEffect, useState } from "react";
 
 const OPTIONS = [2, 3, 4];
 const STORAGE_KEY = "lounge:mobile-grid-cols";
-const DEFAULT_COLS = 4;
+const DEFAULT_COLS = 2;
 
 function apply(cols: number) {
   document.documentElement.style.setProperty("--mobile-grid-cols", String(cols));

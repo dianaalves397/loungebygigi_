@@ -15,7 +15,7 @@
   --lg-body: var(--font-body, "Jost", "Helvetica Neue", sans-serif);
   /* nº de colunas da grelha de produtos no telemóvel — ajustável pelo
      cliente (ver GridDensityControl). */
-  --mobile-grid-cols: 4;
+  --mobile-grid-cols: 2;
 }
 
 @media (prefers-reduced-motion: reduce) {
@@ -889,7 +889,7 @@
 
 @media (max-width: 720px) {
   .lgc-grid {
-    grid-template-columns: repeat(var(--mobile-grid-cols, 4), minmax(0, 1fr));
+    grid-template-columns: repeat(var(--mobile-grid-cols, 2), minmax(0, 1fr));
     gap: 10px;
   }
 }
