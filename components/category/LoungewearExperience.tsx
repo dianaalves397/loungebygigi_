@@ -11,6 +11,7 @@ import Link from "next/link";
 import { useEffect, useRef, useState } from "react";
 import ProductCard from "@/components/ProductCard";
 import SortControl from "@/components/category/SortControl";
+import GridDensityControl from "@/components/category/GridDensityControl";
 import FlowerGarden from "@/components/category/FlowerGarden";
 
 type SubCategory = { id: string; name: string; count: number };
@@ -290,6 +291,7 @@ export default function LoungewearExperience({
               {products.length} {products.length === 1 ? "artigo" : "artigos"}
             </span>
             <SortControl />
+            <GridDensityControl />
           </div>
         </div>
 

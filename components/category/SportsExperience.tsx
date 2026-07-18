@@ -23,6 +23,7 @@ import Link from "next/link";
 import { useEffect, useRef } from "react";
 import ProductCard from "@/components/ProductCard";
 import SortControl from "@/components/category/SortControl";
+import GridDensityControl from "@/components/category/GridDensityControl";
 import { EDITIONS } from "@/components/category/editions";
 
 const MagazineWorld = dynamic(() => import("@/components/category/MagazineWorld"), {
@@ -229,6 +230,7 @@ export default function SportsExperience({
               {products.length} {products.length === 1 ? "artigo" : "artigos"}
             </span>
             <SortControl />
+            <GridDensityControl />
           </div>
         </div>
 

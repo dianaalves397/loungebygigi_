@@ -7,6 +7,7 @@ import Link from "next/link";
 import { useSearchParams } from "next/navigation";
 import ProductCard from "@/components/ProductCard";
 import SortControl from "@/components/category/SortControl";
+import GridDensityControl from "@/components/category/GridDensityControl";
 import { sortProducts } from "@/lib/sortProducts";
 
 function clean(value: any) {
@@ -307,6 +308,7 @@ function ShopClientInner({
 
           <div style={{ display: "flex", gap: ".6rem", flexWrap: "wrap", alignItems: "center" }}>
             <SortControl />
+            <GridDensityControl />
 
             <button className="pill" type="button" onClick={load}>
               Atualizar
