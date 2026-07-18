@@ -236,7 +236,7 @@ function ShopClientInner({
 
   const visibleProducts = useMemo(() => {
     const filtered = products
-      .filter((product) => String(product.status || "active").toLowerCase() !== "draft")
+      .filter((product) => String(product.status || "active").toLowerCase() === "active")
       .filter((product) => product.hidden !== true)
       .filter((product) => productMatchesGender(product, query ? "all" : gender))
       .filter((product) => productMatchesCategory(product, categoryParam, selectedCategory, categories))
