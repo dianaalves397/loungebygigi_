@@ -5,7 +5,7 @@ import { readStore, writeStore } from "@/lib/store";
 import { getPrintfulConfig, queryPrintfulProducts } from "@/lib/printful";
 import { getPrintifyConfig, queryPrintifyProducts } from "@/lib/printify";
 import { getApliiqConfig, queryApliiqProducts } from "@/lib/apliiq";
-import { detectCategoryFromTitle } from "@/lib/autoCategorize";
+import { detectCategoryFromTitle, stripCategoryCode } from "@/lib/autoCategorize";
 
 export function slugify(value: string) {
   return String(value || "")
@@ -30,6 +30,7 @@ function applyAutoCategorize(products: Product[]) {
 
     return {
       ...product,
+      title: stripCategoryCode(product.title),
       categoryId: detected.categoryId,
       category: detected.category,
       categoryIds: [detected.categoryId],

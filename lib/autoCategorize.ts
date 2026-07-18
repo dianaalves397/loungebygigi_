@@ -109,6 +109,11 @@ const BRACKETED_RE = new RegExp(`[\\(\\[]\\s*(${ALL_CODES.join("|")})\\s*[\\)\\]
 // palavras normais como "sim" (código SIM) numa frase em minúsculas.
 const STANDALONE_RE = new RegExp(`\\b(${ALL_CODES.map((c) => c.toUpperCase()).join("|")})\\b`);
 
+// Versões "de remoção": incluem os espaços/parênteses à volta do código para
+// que, ao apagar o código do título, não fique um espaço duplo ou parênteses vazios.
+const BRACKETED_STRIP_RE = new RegExp(`\\s*[\\(\\[]\\s*(?:${ALL_CODES.join("|")})\\s*[\\)\\]]`, "i");
+const STANDALONE_STRIP_RE = new RegExp(`\\s*\\b(?:${ALL_CODES.map((c) => c.toUpperCase()).join("|")})\\b\\s*`);
+
 export function detectCategoryFromTitle(title: string): Detected | null {
   const text = String(title || "");
 
@@ -117,6 +122,24 @@ export function detectCategoryFromTitle(title: string): Detected | null {
   if (!code) return null;
 
   return decodeParts(code);
+}
+
+// Remove o código de categorização do título para exibição ao cliente
+// (o código continua a ser lido do título original antes desta limpeza).
+export function stripCategoryCode(title: string): string {
+  const text = String(title || "");
+
+  let cleaned = text.replace(BRACKETED_STRIP_RE, " ");
+  if (cleaned === text) {
+    cleaned = text.replace(STANDALONE_STRIP_RE, " ");
+  }
+
+  return cleaned
+    .replace(/\s+/g, " ")
+    .trim()
+    .replace(/^[-–—|,:]+\s*/, "")
+    .replace(/\s*[-–—|,:]+$/, "")
+    .trim();
 }
 
 export function listAutoCategorizeCodes() {
