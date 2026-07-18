@@ -86,8 +86,13 @@ export default async function CategoryPage({
   );
 
   // subcategorias diretas, com contagem (inclui as descendentes de cada uma)
+  // só as do género efetivo (ou unisexo) — nunca mostra as tabs do outro género
   const subcategories = getChildCategories(categories as any, id)
     .filter((sub: any) => !sub.hidden)
+    .filter((sub: any) => {
+      const subGender = String(sub.gender || "unisex");
+      return effectiveGender === "unisex" || subGender === "unisex" || subGender === effectiveGender;
+    })
     .sort((a: any, b: any) => Number(a.sortOrder || 999) - Number(b.sortOrder || 999))
     .map((sub: any) => {
       const subFamily = new Set(getDescendantCategoryIds(categories as any, sub.id));
