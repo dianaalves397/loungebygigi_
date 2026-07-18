@@ -2,6 +2,7 @@
 
 import Link from "next/link";
 import { usePathname } from "next/navigation";
+import NewsletterSignup from "@/components/NewsletterSignup";
 
 export default function SiteFooter() {
   const pathname = usePathname();
@@ -17,12 +18,14 @@ export default function SiteFooter() {
           Fashion, swimwear, essentials and selected pieces produced on demand
           through trusted fulfilment partners.
         </p>
+
+        <NewsletterSignup />
       </div>
 
       <nav>
         <Link href="/about">Sobre</Link>
         <Link href="/shipping-policy">Envios</Link>
-        <Link href="/returns-policy">Devolucoes</Link>
+        <Link href="/returns-policy">Devoluções</Link>
         <Link href="/privacy-policy">Privacidade</Link>
         <Link href="/terms">Termos</Link>
         <Link href="/contact">Contacto</Link>

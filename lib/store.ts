@@ -16,6 +16,7 @@ import _defaultCategories from "@/data/categories.json";
 import _defaultSettings from "@/data/settings.json";
 import _defaultOrders from "@/data/orders.json";
 import _defaultCustomers from "@/data/customers.json";
+import _defaultNewsletter from "@/data/newsletter.json";
 
 const bundledDefaults: Record<string, unknown> = {
   products: _defaultProducts,
@@ -23,6 +24,7 @@ const bundledDefaults: Record<string, unknown> = {
   settings: _defaultSettings,
   orders: _defaultOrders,
   customers: _defaultCustomers,
+  newsletter: _defaultNewsletter,
 };
 
 const dataDir = path.join(process.cwd(), "data");
@@ -32,14 +34,16 @@ type StoreKey =
   | "products"
   | "categories"
   | "orders"
-  | "customers";
+  | "customers"
+  | "newsletter";
 
 const files: Record<StoreKey, string> = {
   settings: "settings.json",
   products: "products.json",
   categories: "categories.json",
   orders: "orders.json",
-  customers: "customers.json"
+  customers: "customers.json",
+  newsletter: "newsletter.json"
 };
 
 async function readLocalJson<T>(key: StoreKey, fallback: T): Promise<T> {

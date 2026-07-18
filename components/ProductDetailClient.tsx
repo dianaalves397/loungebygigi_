@@ -4,6 +4,7 @@
 
 import { useEffect, useMemo, useState } from "react";
 import MediaBlock from "@/components/MediaBlock";
+import ProductCard from "@/components/ProductCard";
 
 function formatPrice(value: number) {
   return new Intl.NumberFormat("pt-PT", {
@@ -189,7 +190,7 @@ function getGalleryForColor(product: any, variantOptions: any[], selectedColor: 
   return cleanImages([product.image]).slice(0, 1);
 }
 
-export default function ProductDetailClient({ product }: { product: any }) {
+export default function ProductDetailClient({ product, related = [] }: { product: any; related?: any[] }) {
   const variantOptions = useMemo(() => getVariantOptions(product), [product]);
   const colors = useMemo(() => getColorOptions(product, variantOptions), [product, variantOptions]);
   const sizes = useMemo(() => getSizeOptions(product, variantOptions), [product, variantOptions]);
@@ -471,6 +472,12 @@ export default function ProductDetailClient({ product }: { product: any }) {
 
         {message ? <p className="product-message">{message}</p> : null}
 
+        <ul className="product-trust-list">
+          <li>Produção sob encomenda — envio estimado indicado na política de envios</li>
+          <li>Problemas com o artigo? Trocas e reembolsos ao abrigo da política de devoluções</li>
+          <li>Pagamento processado de forma segura via Stripe / PayPal</li>
+        </ul>
+
         {details.length > 0 ? (
           <div className="product-details-clean">
             <p className="eyebrow">detalhes</p>
@@ -483,6 +490,19 @@ export default function ProductDetailClient({ product }: { product: any }) {
           </div>
         ) : null}
       </section>
+
+      {related.length > 0 ? (
+        <section className="product-related">
+          <p className="eyebrow">também podes gostar</p>
+          <h2>Combina bem com</h2>
+
+          <div className="product-related-grid">
+            {related.map((item) => (
+              <ProductCard key={item.id} product={item} />
+            ))}
+          </div>
+        </section>
+      ) : null}
 
       <div className="mobile-sticky-cart">
         <div>

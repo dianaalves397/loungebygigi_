@@ -6,24 +6,24 @@ type PageKey = "shipping" | "returns" | "privacy" | "terms" | "contact";
 
 const defaultLegal: Record<PageKey, { title: string; body: string }> = {
   shipping: {
-    title: "Politica de envios",
-    body: "As encomendas podem incluir tempo de producao e tempo de envio."
+    title: "Política de envios",
+    body: "As encomendas podem incluir tempo de produção e tempo de envio."
   },
   returns: {
-    title: "Politica de devolucoes e reembolsos",
-    body: "Produtos feitos on demand podem ter regras especificas de devolucao."
+    title: "Política de devoluções e reembolsos",
+    body: "Produtos feitos on demand podem ter regras específicas de devolução."
   },
   privacy: {
-    title: "Politica de privacidade",
-    body: "Recolhemos apenas dados necessarios para processar encomendas e contacto."
+    title: "Política de privacidade",
+    body: "Recolhemos apenas dados necessários para processar encomendas e contacto."
   },
   terms: {
-    title: "Termos e condicoes",
+    title: "Termos e condições",
     body: "Ao usar o site, concordas com os termos da Lounge by Gigi."
   },
   contact: {
     title: "Contacto",
-    body: "Contacta-nos para duvidas sobre produtos, encomendas ou suporte."
+    body: "Contacta-nos para dúvidas sobre produtos, encomendas ou suporte."
   }
 };
 

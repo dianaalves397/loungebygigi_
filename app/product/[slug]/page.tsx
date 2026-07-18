@@ -114,10 +114,20 @@ export default async function ProductPage({ params }: { params: any }) {
     );
   }
 
+  const related = products
+    .filter((item: any) => item.id !== product.id)
+    .filter((item: any) => String(item.status || "active") === "active")
+    .filter((item: any) => {
+      if (product.categoryId && item.categoryId === product.categoryId) return true;
+      if (product.category && item.category === product.category) return true;
+      return false;
+    })
+    .slice(0, 4);
+
   return (
     <>
       <Nav />
-      <ProductDetailClient product={product} />
+      <ProductDetailClient product={product} related={related} />
     </>
   );
 }

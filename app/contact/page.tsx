@@ -18,7 +18,7 @@ export default async function Page() {
       <h1>{content.title || "Contacto"}</h1>
       <div className="policy-card">
         <p style={{ whiteSpace: "pre-line" }}>
-          {content.body || "Para duvidas sobre encomendas, pagamentos, tamanhos, envios ou problemas com produtos, contacta a Lounge by Gigi atraves do email indicado no site ou das redes sociais oficiais da marca. Ao contactar sobre uma encomenda, inclui o numero da encomenda, email usado na compra e fotografias caso estejas a reportar um problema com o produto."}
+          {content.body || "Para dúvidas sobre encomendas, pagamentos, tamanhos, envios ou problemas com produtos, contacta a Lounge by Gigi através do email indicado no site ou das redes sociais oficiais da marca. Ao contactar sobre uma encomenda, inclui o número da encomenda, email usado na compra e fotografias caso estejas a reportar um problema com o produto."}
         </p>
       </div>
     </main>

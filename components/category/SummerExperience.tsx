@@ -13,6 +13,7 @@ import Link from "next/link";
 import { useEffect, useRef, useState } from "react";
 import ProductCard from "@/components/ProductCard";
 import SortControl from "@/components/category/SortControl";
+import GridDensityControl from "@/components/category/GridDensityControl";
 import { EDITIONS } from "@/components/category/editions";
 
 type SubCategory = { id: string; name: string; count: number };
@@ -354,6 +355,7 @@ export default function SummerExperience({
               {products.length} {products.length === 1 ? "artigo" : "artigos"}
             </span>
             <SortControl />
+            <GridDensityControl />
           </div>
         </div>
 
