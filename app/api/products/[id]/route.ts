@@ -21,8 +21,10 @@ export async function DELETE(_req: Request, { params }: { params: Promise<{ id: 
     if (
       String(target.id).startsWith("printful-") ||
       String(target.id).startsWith("printify-") ||
+      String(target.id).startsWith("apliiq-") ||
       target.source === "printful" ||
-      target.source === "printify"
+      target.source === "printify" ||
+      target.source === "apliiq"
     ) {
       const settings = await getSettings();
       settings.productOverrides = settings.productOverrides || {};
