@@ -17,7 +17,7 @@ const GENDERS = new Set(["women", "men"]);
 // para que a troca funcione de imediato após o deploy, sem depender de uma
 // migração de dados.
 const DEFAULT_GENDER_IMAGES: Record<string, { women: string; men: string }> = {
-  sports: { women: "/sports-women.jpg", men: "/sports-men.png" },
+  sports: { women: "/sports-women.jpg", men: "/sports-men.jpg" },
   summer: { women: "/summer-women.jpg", men: "/summer-men.jpg" },
   loungewear: { women: "/lounge-women.jpg", men: "/lounge-men.jpg" },
   acessorios: { women: "/acessorios-women.jpg", men: "/acessorios-men.jpg" }

@@ -2,9 +2,13 @@ import type { Metadata } from "next";
 import { Cormorant_Garamond, Jost } from "next/font/google";
 import "./globals.css";
 import "./editorial.css";
-import { readStore } from "@/lib/store";
+import { getCachedPublicSettings } from "@/lib/cache";
 
-export const dynamic = "force-dynamic";
+// Estático com revalidação por tag (como o resto do site) — antes, o
+// "force-dynamic" aqui obrigava TODAS as páginas a serem recriadas no
+// servidor a cada visita, com uma leitura à Supabase de cada vez, anulando
+// toda a cache estática configurada nas páginas individuais.
+export const revalidate = 3600;
 
 const displayFont = Cormorant_Garamond({
   subsets: ["latin"],
@@ -96,7 +100,7 @@ export default async function RootLayout({
 }) {
   let themeStyle = "";
   try {
-    const settings = await readStore<any>("settings", {});
+    const settings = await getCachedPublicSettings();
     const l = settings?.layout || {};
     const vars: string[] = [];
     if (l.background) vars.push(`--bg:${l.background}`);
