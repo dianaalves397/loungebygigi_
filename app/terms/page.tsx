@@ -4,8 +4,8 @@ export const dynamic = "force-static";
 export const revalidate = 60;
 
 export const metadata = {
-  title: "Termos e condicoes | Lounge by Gigi",
-  description: "Termos e condicoes da Lounge by Gigi."
+  title: "Termos e condições | Lounge by Gigi",
+  description: "Termos e condições da Lounge by Gigi."
 };
 
 export default async function Page() {
@@ -15,10 +15,10 @@ export default async function Page() {
   return (
     <main className="policy-page">
       <p className="eyebrow">Lounge by Gigi</p>
-      <h1>{content.title || "Termos e condicoes"}</h1>
+      <h1>{content.title || "Termos e condições"}</h1>
       <div className="policy-card">
         <p style={{ whiteSpace: "pre-line" }}>
-          {content.body || "Ao usar a Lounge by Gigi, concordas com estes termos. Os produtos, precos, imagens e disponibilidade podem ser atualizados a qualquer momento. Produtos produzidos on demand so entram em producao depois da confirmacao da encomenda e pagamento. A Lounge by Gigi pode recusar ou cancelar encomendas em caso de erro tecnico, suspeita de fraude, dados incorretos ou indisponibilidade do produto. As informacoes do site sao fornecidas de boa fe e podem ser ajustadas para melhorar a experiencia do cliente."}
+          {content.body || "Ao usar a Lounge by Gigi, concordas com estes termos. Os produtos, preços, imagens e disponibilidade podem ser atualizados a qualquer momento. Produtos produzidos on demand só entram em produção depois da confirmação da encomenda e pagamento. A Lounge by Gigi pode recusar ou cancelar encomendas em caso de erro técnico, suspeita de fraude, dados incorretos ou indisponibilidade do produto. As informações do site são fornecidas de boa fé e podem ser ajustadas para melhorar a experiência do cliente."}
         </p>
       </div>
     </main>

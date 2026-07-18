@@ -301,7 +301,7 @@ function ShopClientInner({
             </p>
 
             <p style={{ opacity: 0.55, marginTop: 4 }}>
-              API: {products.length} produto{products.length === 1 ? "" : "s"} carregado{products.length === 1 ? "" : "s"}
+              {products.length} produto{products.length === 1 ? "" : "s"} carregado{products.length === 1 ? "" : "s"}
             </p>
           </div>
 

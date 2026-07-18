@@ -15,21 +15,17 @@ export default async function AboutPage() {
   const title = about.title || "Sobre a Lounge by Gigi";
   const subtitle =
     about.subtitle ||
-    "Uma marca online pensada como uma pagina de revista: visual, simples e intencional.";
+    "Uma marca online pensada como uma página de revista: visual, simples e intencional.";
   const story =
     about.story ||
-    "A Lounge by Gigi nasce para reunir pecas de moda, swimwear, essentials e detalhes editoriais num espaco digital limpo e contemporaneo. Muitas pecas sao produzidas on demand atraves de parceiros de fulfilment, ajudando a evitar excesso de stock e permitindo uma selecao em constante evolucao.";
+    "A Lounge by Gigi nasce para reunir peças de moda, swimwear, essentials e detalhes editoriais num espaço digital limpo e contemporâneo. Muitas peças são produzidas on demand através de parceiros de fulfilment, ajudando a evitar excesso de stock e permitindo uma seleção em constante evolução.";
   const mission =
     about.mission ||
-    "A nossa missao e criar uma experiencia de compra visual, calma e direta, com produtos selecionados para diferentes estilos, momentos e ritmos.";
+    "A nossa missão é criar uma experiência de compra visual, calma e direta, com produtos selecionados para diferentes estilos, momentos e ritmos.";
   const images =
     about.images?.length
       ? about.images
-      : [
-          "https://i.postimg.cc/fbMj7BXh/IMG-0386.jpg",
-          "https://i.postimg.cc/V6LNtMdJ/IMG-0388.jpg",
-          "https://images.unsplash.com/photo-1496747611176-843222e1e57c?q=80&w=1200&auto=format&fit=crop"
-        ];
+      : ["/editorial/hold-summer.jpg", "/editorial/hold-wacc.jpg", "/editorial/hold-macc.jpg"];
 
   return (
     <main className="about-magazine">
@@ -63,11 +59,12 @@ export default async function AboutPage() {
 
       <section className="about-note">
         <p className="eyebrow">production</p>
-        <h2>Producao on demand</h2>
+        <h2>Produção on demand</h2>
         <p>
-          Algumas pecas sao produzidas apenas depois da encomenda, atraves de
-          parceiros como Printful e Printify. Isto permite trabalhar com inventario
-          flexivel e reduzir desperdicio, mantendo a experiencia dentro da Lounge by Gigi.
+          Algumas peças são produzidas apenas depois da encomenda, através de
+          parceiros como Printful, Printify e Apliiq. Isto permite trabalhar com
+          inventário flexível e reduzir desperdício, mantendo a experiência dentro
+          da Lounge by Gigi.
         </p>
       </section>
     </main>

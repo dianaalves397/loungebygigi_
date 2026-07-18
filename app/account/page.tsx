@@ -46,10 +46,10 @@ function statusLabel(status: string) {
   const value = String(status || "").toLowerCase();
 
   if (value.includes("paid")) return "Pago";
-  if (value.includes("complete")) return "Concluido";
+  if (value.includes("complete")) return "Concluído";
   if (value.includes("failed")) return "Falhou";
   if (value.includes("cancel")) return "Cancelado";
-  if (value.includes("fulfill")) return "Em producao";
+  if (value.includes("fulfill")) return "Em produção";
   if (value.includes("ship")) return "Enviado";
 
   return "Pendente";
@@ -138,7 +138,7 @@ export default function AccountPage() {
     }
 
     setSession(data.session);
-    setMessage("Sessao iniciada.");
+    setMessage("Sessão iniciada.");
 
     if (data.session) {
       await loadAccount(data.session.access_token);
@@ -205,7 +205,7 @@ export default function AccountPage() {
       return;
     }
 
-    setMessage("Email de recuperacao enviado.");
+    setMessage("Email de recuperação enviado.");
   }
 
   async function logout() {
@@ -215,7 +215,7 @@ export default function AccountPage() {
     await supabase.auth.signOut();
     setSession(null);
     setOrders([]);
-    setMessage("Sessao terminada.");
+    setMessage("Sessão terminada.");
   }
 
   async function loadAccount(token: string) {
@@ -255,7 +255,7 @@ export default function AccountPage() {
     }
 
     if (!ordersRes.ok || !profileRes.ok) {
-      setMessage(ordersData.error || profileData.error || "Nao foi possivel carregar a conta.");
+      setMessage(ordersData.error || profileData.error || "Não foi possível carregar a conta.");
     }
   }
 
@@ -308,9 +308,9 @@ export default function AccountPage() {
       <main className="account-page">
         <section className="account-hero">
           <p className="eyebrow">account</p>
-          <h1>Area de cliente</h1>
+          <h1>Área de cliente</h1>
           <p>
-            A area de cliente precisa da variavel NEXT_PUBLIC_SUPABASE_ANON_KEY
+            A área de cliente precisa da variável NEXT_PUBLIC_SUPABASE_ANON_KEY
             configurada na Vercel.
           </p>
         </section>
@@ -323,7 +323,7 @@ export default function AccountPage() {
       <main className="account-page">
         <section className="account-hero">
           <p className="eyebrow">account</p>
-          <h1>Area de cliente</h1>
+          <h1>Área de cliente</h1>
           <p>
             Cria conta ou entra para veres encomendas, moradas, pagamentos e dados
             da tua conta Lounge by Gigi.
@@ -390,7 +390,7 @@ export default function AccountPage() {
           </form>
 
           <div className="account-card">
-            <p className="eyebrow">opcoes</p>
+            <p className="eyebrow">opções</p>
             <h2>Acesso</h2>
 
             <div className="account-links">
@@ -477,7 +477,7 @@ export default function AccountPage() {
           </label>
 
           <label>
-            Codigo postal
+            Código postal
             <input
               value={address.postalCode || ""}
               onChange={(event) => updateAddress("postalCode", event.target.value)}
@@ -485,7 +485,7 @@ export default function AccountPage() {
           </label>
 
           <label>
-            Pais
+            País
             <input
               value={address.country || ""}
               onChange={(event) => updateAddress("country", event.target.value)}
@@ -503,14 +503,14 @@ export default function AccountPage() {
           <p className="eyebrow">support</p>
           <h2>Ajuda</h2>
           <p>
-            Consulta politicas de envio/devolucao ou contacta a loja sobre uma
+            Consulta políticas de envio/devolução ou contacta a loja sobre uma
             encomenda.
           </p>
 
           <div className="account-links">
             <Link className="pill" href="/contact">Contacto</Link>
             <Link className="pill" href="/shipping-policy">Envios</Link>
-            <Link className="pill" href="/returns-policy">Devolucoes</Link>
+            <Link className="pill" href="/returns-policy">Devoluções</Link>
           </div>
         </div>
       </section>
@@ -523,7 +523,7 @@ export default function AccountPage() {
 
         {orders.length === 0 ? (
           <div className="empty-orders">
-            <p>Ainda nao existem encomendas associadas a esta conta.</p>
+            <p>Ainda não existem encomendas associadas a esta conta.</p>
             <Link className="pill dark-pill" href="/shop?gender=women">
               Ver loja
             </Link>
@@ -562,7 +562,7 @@ export default function AccountPage() {
                       </div>
                     ))
                   ) : (
-                    <p className="muted">Detalhes dos produtos indisponiveis.</p>
+                    <p className="muted">Detalhes dos produtos indisponíveis.</p>
                   )}
                 </div>
               </article>

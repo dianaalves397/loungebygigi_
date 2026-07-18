@@ -4,8 +4,8 @@ export const dynamic = "force-static";
 export const revalidate = 60;
 
 export const metadata = {
-  title: "Politica de devolucoes e reembolsos | Lounge by Gigi",
-  description: "Politica de devolucoes e reembolsos da Lounge by Gigi."
+  title: "Política de devoluções e reembolsos | Lounge by Gigi",
+  description: "Política de devoluções e reembolsos da Lounge by Gigi."
 };
 
 export default async function Page() {
@@ -15,10 +15,10 @@ export default async function Page() {
   return (
     <main className="policy-page">
       <p className="eyebrow">Lounge by Gigi</p>
-      <h1>{content.title || "Politica de devolucoes e reembolsos"}</h1>
+      <h1>{content.title || "Política de devoluções e reembolsos"}</h1>
       <div className="policy-card">
         <p style={{ whiteSpace: "pre-line" }}>
-          {content.body || "Como muitos produtos sao produzidos on demand, nao aceitamos devolucoes por troca de ideia, tamanho escolhido incorretamente ou preferencia pessoal, exceto quando indicado por lei aplicavel. Se o produto chegar danificado, defeituoso, com erro de fabrico ou diferente do artigo encomendado, contacta-nos com fotografias claras do problema e o numero da encomenda. Os parceiros Printful e Printify disponibilizam reprint ou reembolso em casos de dano, defeito ou erro de producao quando o problema e reportado dentro dos prazos aplicaveis, normalmente ate 30 dias apos a entrega. Cada caso e analisado individualmente."}
+          {content.body || "Como muitos produtos são produzidos on demand, não aceitamos devoluções por troca de ideia, tamanho escolhido incorretamente ou preferência pessoal, exceto quando indicado por lei aplicável. Se o produto chegar danificado, defeituoso, com erro de fabrico ou diferente do artigo encomendado, contacta-nos com fotografias claras do problema e o número da encomenda. Os parceiros Printful, Printify e Apliiq disponibilizam reprint ou reembolso em casos de dano, defeito ou erro de produção quando o problema é reportado dentro dos prazos aplicáveis, normalmente até 30 dias após a entrega. Cada caso é analisado individualmente."}
         </p>
       </div>
     </main>
