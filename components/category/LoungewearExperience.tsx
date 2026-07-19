@@ -176,10 +176,26 @@ export default function LoungewearExperience({
     update();
     window.addEventListener("scroll", onScroll, { passive: true });
     window.addEventListener("resize", onScroll);
+
+    // Numa primeira visita (sem cache), o vídeo pode demorar a expor
+    // readyState/duration — sem isto o scroll não "agarra" o vídeo até à
+    // próxima interação. Este polling curto tenta sincronizar assim que o
+    // vídeo fica pronto, mesmo que o utilizador já tenha parado de fazer scroll.
+    const readyPoll = window.setInterval(() => {
+      const video = videoRef.current;
+      if (video && video.readyState >= 1 && Number.isFinite(video.duration)) {
+        update();
+        window.clearInterval(readyPoll);
+      }
+    }, 200);
+    const readyTimeout = window.setTimeout(() => window.clearInterval(readyPoll), 12000);
+
     return () => {
       window.removeEventListener("scroll", onScroll);
       window.removeEventListener("resize", onScroll);
       if (raf) cancelAnimationFrame(raf);
+      window.clearInterval(readyPoll);
+      window.clearTimeout(readyTimeout);
     };
   }, [videoOk]);
 
@@ -221,6 +237,9 @@ export default function LoungewearExperience({
               playsInline
               preload="auto"
               onLoadedMetadata={() => window.dispatchEvent(new Event("scroll"))}
+              onLoadedData={() => window.dispatchEvent(new Event("scroll"))}
+              onCanPlay={() => window.dispatchEvent(new Event("scroll"))}
+              onDurationChange={() => window.dispatchEvent(new Event("scroll"))}
               onError={() => setVideoOk(false)}
             />
           ) : videoOk ? null : (
