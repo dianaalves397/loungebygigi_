@@ -1,10 +1,9 @@
 // @ts-nocheck
 
 import Link from "next/link";
-import { headers } from "next/headers";
 import Nav from "@/components/Nav";
 import ProductDetailClient from "@/components/ProductDetailClient";
-import { slugify } from "@/lib/db";
+import { slugify, getProducts } from "@/lib/db";
 import { getCachedProducts } from "@/lib/cache";
 
 export const revalidate = 3600;
@@ -38,60 +37,39 @@ function productKeys(product: any) {
     .map((value) => normalize(value));
 }
 
-async function getProductsFromApi() {
+async function loadProducts() {
+  const cached = await getCachedProducts().catch(() => []);
+  return Array.isArray(cached) ? cached : [];
+}
+
+// Só usado quando o produto não aparece na lista em cache (ex: acabou de
+// ser sincronizado e a cache de 6h ainda não o reflete) — chama getProducts()
+// diretamente, sem round-trip HTTP a /api/products, para não pagar o custo de
+// uma sincronização ao vivo com os fornecedores em TODAS as visitas normais.
+async function loadProductsFresh() {
   try {
-    const h = await headers();
-    const host = h.get("x-forwarded-host") || h.get("host");
-
-    if (!host) return [];
-
-    const protocol = h.get("x-forwarded-proto") || (host.includes("localhost") ? "http" : "https");
-    const url = `${protocol}://${host}/api/products`;
-
-    const res = await fetch(url, {
-      cache: "no-store",
-      headers: {
-        "Cache-Control": "no-store"
-      }
-    });
-
-    if (!res.ok) return [];
-
-    const data = await res.json();
-    return Array.isArray(data) ? data : [];
+    const fresh = await getProducts();
+    return Array.isArray(fresh) ? fresh : [];
   } catch {
     return [];
   }
-}
-
-async function loadProducts() {
-  // Junta as duas fontes em vez de confiar só numa: se a chamada "fresca"
-  // à API vier incompleta (ex: um produto falhou momentaneamente a buscar
-  // detalhes a um fornecedor), o produto continua encontrável através da
-  // lista em cache que a loja já usa — antes, um resultado não-vazio mas
-  // incompleto fazia a página nunca chegar a consultar a cache.
-  const [fromApi, fromDb] = await Promise.all([
-    getProductsFromApi(),
-    getCachedProducts().catch(() => [])
-  ]);
-
-  const merged = new Map<string, any>();
-  for (const product of [...(Array.isArray(fromDb) ? fromDb : []), ...fromApi]) {
-    if (product?.id) merged.set(String(product.id), product);
-  }
-
-  return Array.from(merged.values());
 }
 
 export default async function ProductPage({ params }: { params: any }) {
   const resolvedParams = await params;
   const slug = normalize(resolvedParams?.slug);
 
-  const products = await loadProducts();
+  let products = await loadProducts();
 
-  const product = products.find((item: any) => {
+  let product = products.find((item: any) => {
     return productKeys(item).includes(slug);
   });
+
+  if (!product) {
+    // Fallback raro: produto ainda não refletido na cache de 6h.
+    products = await loadProductsFresh();
+    product = products.find((item: any) => productKeys(item).includes(slug));
+  }
 
   if (!product) {
     return (
