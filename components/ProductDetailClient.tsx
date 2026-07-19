@@ -315,7 +315,7 @@ export default function ProductDetailClient({ product, related = [] }: { product
     let current = [];
 
     try {
-      current = JSON.parse(localStorage.getItem("cart") || "[]");
+      current = JSON.parse(localStorage.getItem("lounge_cart") || "[]");
     } catch {
       current = [];
     }
@@ -331,8 +331,8 @@ export default function ProductDetailClient({ product, related = [] }: { product
     if (existingIndex >= 0) current[existingIndex].quantity += 1;
     else current.push(item);
 
-    localStorage.setItem("cart", JSON.stringify(current));
-    window.dispatchEvent(new Event("cart-updated"));
+    localStorage.setItem("lounge_cart", JSON.stringify(current));
+    window.dispatchEvent(new Event("lounge-cart"));
     setMessage("Produto adicionado ao carrinho.");
   }
 
