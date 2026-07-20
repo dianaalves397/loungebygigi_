@@ -15,6 +15,7 @@ import ProductCard from "@/components/ProductCard";
 import SortControl from "@/components/category/SortControl";
 import GridDensityControl from "@/components/category/GridDensityControl";
 import { EDITIONS } from "@/components/category/editions";
+import { getVideoBlobUrl } from "@/lib/videoBlobCache";
 
 type SubCategory = { id: string; name: string; count: number };
 
@@ -39,6 +40,8 @@ export default function SummerExperience({
   // ---- abertura: o filme da costa, preso ao scroll (frame ↔ posição) ----
   const videoRef = useRef<HTMLVideoElement>(null);
   const [videoSrc, setVideoSrc] = useState<{ src: string; poster: string } | null>(null);
+  const [videoBlobUrl, setVideoBlobUrl] = useState<string | null>(null);
+  const [videoBlobFailed, setVideoBlobFailed] = useState(false);
 
   useEffect(() => {
     const portrait = window.matchMedia("(max-width: 760px)").matches;
@@ -48,6 +51,38 @@ export default function SummerExperience({
         : { src: "/editorial/film-summer-h.mp4", poster: "/editorial/film-summer-h-poster.jpg" }
     );
   }, []);
+
+  // Traz o vídeo inteiro para memória (blob) em vez de depender do browser ir
+  // buscando bocados enquanto se faz scroll — assim que chega, o scrub por
+  // scroll é instantâneo e fiável independentemente da rede ou de ser a
+  // primeira visita (que era exatamente quando isto falhava antes). Usa o
+  // Cache Storage do browser: quem já visitou esta categoria antes não volta
+  // a pedir o vídeo ao servidor. Só se isto falhar é que se cai para o
+  // carregamento direto (uma única tentativa cada vez, nunca os dois pedidos
+  // em simultâneo).
+  useEffect(() => {
+    if (!videoSrc) return;
+    let cancelled = false;
+    let objectUrl: string | null = null;
+
+    getVideoBlobUrl(videoSrc.src)
+      .then((url) => {
+        if (cancelled) {
+          URL.revokeObjectURL(url);
+          return;
+        }
+        objectUrl = url;
+        setVideoBlobUrl(url);
+      })
+      .catch(() => {
+        if (!cancelled) setVideoBlobFailed(true);
+      });
+
+    return () => {
+      cancelled = true;
+      if (objectUrl) URL.revokeObjectURL(objectUrl);
+    };
+  }, [videoSrc]);
 
   // desbloqueio de seek no iOS
   useEffect(() => {
@@ -112,7 +147,7 @@ export default function SummerExperience({
         window.clearInterval(readyPoll);
       }
     }, 200);
-    const readyTimeout = window.setTimeout(() => window.clearInterval(readyPoll), 12000);
+    const readyTimeout = window.setTimeout(() => window.clearInterval(readyPoll), 20000);
 
     return () => {
       window.removeEventListener("scroll", onScroll);
@@ -157,7 +192,7 @@ export default function SummerExperience({
             <video
               ref={videoRef}
               className="film-video"
-              src={videoSrc.src}
+              src={videoBlobUrl || (videoBlobFailed ? videoSrc.src : undefined)}
               poster={videoSrc.poster}
               muted
               playsInline

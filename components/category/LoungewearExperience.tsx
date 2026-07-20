@@ -5,14 +5,15 @@
 // subir recua, parar congela o frame — a meio do scroll estás a meio do
 // vídeo. À medida que a flor abre, anotações editoriais apontam para zonas
 // da flor (linhas finas + títulos, como numa prancha botânica futurista).
-// Se o vídeo falhar, entra o jardim 3D como plano B.
+// O vídeo aparece sempre — sem planos B alternativos; se o download falhar,
+// mostra o vídeo sem avançar ou a carregar/travar como um vídeo normal faria.
 
 import Link from "next/link";
 import { useEffect, useRef, useState } from "react";
 import ProductCard from "@/components/ProductCard";
 import SortControl from "@/components/category/SortControl";
 import GridDensityControl from "@/components/category/GridDensityControl";
-import FlowerGarden from "@/components/category/FlowerGarden";
+import { getVideoBlobUrl } from "@/lib/videoBlobCache";
 
 type SubCategory = { id: string; name: string; count: number };
 
@@ -107,9 +108,9 @@ export default function LoungewearExperience({
   const theme = THEMES[variant];
   const rootRef = useRef<HTMLDivElement>(null);
   const videoRef = useRef<HTMLVideoElement>(null);
-  const progressRef = useRef(0);
-  const [videoOk, setVideoOk] = useState(true);
   const [videoSrc, setVideoSrc] = useState<{ src: string; poster: string } | null>(null);
+  const [videoBlobUrl, setVideoBlobUrl] = useState<string | null>(null);
+  const [videoBlobFailed, setVideoBlobFailed] = useState(false);
 
   // horizontal para computador, vertical para telemóvel
   useEffect(() => {
@@ -123,6 +124,38 @@ export default function LoungewearExperience({
     };
     pick();
   }, []);
+
+  // Traz o vídeo inteiro para memória (blob) em vez de depender do browser ir
+  // buscando bocados enquanto se faz scroll — assim que chega, o scrub por
+  // scroll é instantâneo e fiável independentemente da rede ou de ser a
+  // primeira visita (que era exatamente quando isto falhava antes). Usa o
+  // Cache Storage do browser: quem já visitou esta categoria antes não volta
+  // a pedir o vídeo ao servidor. Só se isto falhar é que se cai para o
+  // carregamento direto (uma única tentativa cada vez, nunca os dois pedidos
+  // em simultâneo).
+  useEffect(() => {
+    if (!videoSrc) return;
+    let cancelled = false;
+    let objectUrl: string | null = null;
+
+    getVideoBlobUrl(videoSrc.src)
+      .then((url) => {
+        if (cancelled) {
+          URL.revokeObjectURL(url);
+          return;
+        }
+        objectUrl = url;
+        setVideoBlobUrl(url);
+      })
+      .catch(() => {
+        if (!cancelled) setVideoBlobFailed(true);
+      });
+
+    return () => {
+      cancelled = true;
+      if (objectUrl) URL.revokeObjectURL(objectUrl);
+    };
+  }, [videoSrc]);
 
   // desbloqueio de seek no iOS (um toque basta)
   useEffect(() => {
@@ -151,8 +184,6 @@ export default function LoungewearExperience({
       const rect = run.getBoundingClientRect();
       const total = rect.height - window.innerHeight;
       const progress = total > 0 ? Math.min(1, Math.max(0, -rect.top / total)) : 0;
-      progressRef.current = progress;
-
       const video = videoRef.current;
       if (video && video.readyState >= 1 && Number.isFinite(video.duration)) {
         const target = reduced ? video.duration * 0.7 : progress * video.duration;
@@ -188,7 +219,7 @@ export default function LoungewearExperience({
         window.clearInterval(readyPoll);
       }
     }, 200);
-    const readyTimeout = window.setTimeout(() => window.clearInterval(readyPoll), 12000);
+    const readyTimeout = window.setTimeout(() => window.clearInterval(readyPoll), 20000);
 
     return () => {
       window.removeEventListener("scroll", onScroll);
@@ -197,7 +228,7 @@ export default function LoungewearExperience({
       window.clearInterval(readyPoll);
       window.clearTimeout(readyTimeout);
     };
-  }, [videoOk]);
+  }, [videoSrc]);
 
   // reveal das peças
   useEffect(() => {
@@ -227,11 +258,11 @@ export default function LoungewearExperience({
     >
       <section className="lw-run" aria-label="A floração">
         <div className="lw-sticky">
-          {videoOk && videoSrc ? (
+          {videoSrc ? (
             <video
               ref={videoRef}
               className="lw-video"
-              src={videoSrc.src}
+              src={videoBlobUrl || (videoBlobFailed ? videoSrc.src : undefined)}
               poster={videoSrc.poster}
               muted
               playsInline
@@ -240,11 +271,8 @@ export default function LoungewearExperience({
               onLoadedData={() => window.dispatchEvent(new Event("scroll"))}
               onCanPlay={() => window.dispatchEvent(new Event("scroll"))}
               onDurationChange={() => window.dispatchEvent(new Event("scroll"))}
-              onError={() => setVideoOk(false)}
             />
-          ) : videoOk ? null : (
-            <FlowerGarden progressRef={progressRef} variant={variant} />
-          )}
+          ) : null}
 
           <nav className="sm-crumbs lw-crumbs" aria-label="Navegação">
             <Link href={backHref}>Coleção</Link>
