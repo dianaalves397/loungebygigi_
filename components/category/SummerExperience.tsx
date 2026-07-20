@@ -15,6 +15,7 @@ import ProductCard from "@/components/ProductCard";
 import SortControl from "@/components/category/SortControl";
 import GridDensityControl from "@/components/category/GridDensityControl";
 import { EDITIONS } from "@/components/category/editions";
+import { getVideoBlobUrl } from "@/lib/videoBlobCache";
 
 type SubCategory = { id: string; name: string; count: number };
 
@@ -54,20 +55,24 @@ export default function SummerExperience({
   // Traz o vídeo inteiro para memória (blob) em vez de depender do browser ir
   // buscando bocados enquanto se faz scroll — assim que chega, o scrub por
   // scroll é instantâneo e fiável independentemente da rede ou de ser a
-  // primeira visita (que era exatamente quando isto falhava antes). Só se
-  // este pedido falhar é que se cai para o carregamento direto (uma única
-  // tentativa cada vez, nunca os dois pedidos em simultâneo).
+  // primeira visita (que era exatamente quando isto falhava antes). Usa o
+  // Cache Storage do browser: quem já visitou esta categoria antes não volta
+  // a pedir o vídeo ao servidor. Só se isto falhar é que se cai para o
+  // carregamento direto (uma única tentativa cada vez, nunca os dois pedidos
+  // em simultâneo).
   useEffect(() => {
     if (!videoSrc) return;
     let cancelled = false;
     let objectUrl: string | null = null;
 
-    fetch(videoSrc.src)
-      .then((res) => res.blob())
-      .then((blob) => {
-        if (cancelled) return;
-        objectUrl = URL.createObjectURL(blob);
-        setVideoBlobUrl(objectUrl);
+    getVideoBlobUrl(videoSrc.src)
+      .then((url) => {
+        if (cancelled) {
+          URL.revokeObjectURL(url);
+          return;
+        }
+        objectUrl = url;
+        setVideoBlobUrl(url);
       })
       .catch(() => {
         if (!cancelled) setVideoBlobFailed(true);
