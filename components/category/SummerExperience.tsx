@@ -40,6 +40,7 @@ export default function SummerExperience({
   const videoRef = useRef<HTMLVideoElement>(null);
   const [videoSrc, setVideoSrc] = useState<{ src: string; poster: string } | null>(null);
   const [videoBlobUrl, setVideoBlobUrl] = useState<string | null>(null);
+  const [videoBlobFailed, setVideoBlobFailed] = useState(false);
 
   useEffect(() => {
     const portrait = window.matchMedia("(max-width: 760px)").matches;
@@ -53,7 +54,9 @@ export default function SummerExperience({
   // Traz o vídeo inteiro para memória (blob) em vez de depender do browser ir
   // buscando bocados enquanto se faz scroll — assim que chega, o scrub por
   // scroll é instantâneo e fiável independentemente da rede ou de ser a
-  // primeira visita (que era exatamente quando isto falhava antes).
+  // primeira visita (que era exatamente quando isto falhava antes). Só se
+  // este pedido falhar é que se cai para o carregamento direto (uma única
+  // tentativa cada vez, nunca os dois pedidos em simultâneo).
   useEffect(() => {
     if (!videoSrc) return;
     let cancelled = false;
@@ -67,7 +70,7 @@ export default function SummerExperience({
         setVideoBlobUrl(objectUrl);
       })
       .catch(() => {
-        // sem blob, o vídeo cai de volta ao carregamento normal via src direto
+        if (!cancelled) setVideoBlobFailed(true);
       });
 
     return () => {
@@ -184,7 +187,7 @@ export default function SummerExperience({
             <video
               ref={videoRef}
               className="film-video"
-              src={videoBlobUrl || undefined}
+              src={videoBlobUrl || (videoBlobFailed ? videoSrc.src : undefined)}
               poster={videoSrc.poster}
               muted
               playsInline

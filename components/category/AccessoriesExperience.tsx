@@ -82,8 +82,8 @@ export default function AccessoriesExperience({
   const rootRef = useRef<HTMLDivElement>(null);
   const videoRef = useRef<HTMLVideoElement>(null);
   const [videoSrc, setVideoSrc] = useState<{ src: string; poster: string } | null>(null);
-  const [videoOk, setVideoOk] = useState(true);
   const [videoBlobUrl, setVideoBlobUrl] = useState<string | null>(null);
+  const [videoBlobFailed, setVideoBlobFailed] = useState(false);
 
   useEffect(() => {
     const portrait = window.matchMedia("(max-width: 760px)").matches;
@@ -97,7 +97,9 @@ export default function AccessoriesExperience({
   // Traz o vídeo inteiro para memória (blob) em vez de depender do browser ir
   // buscando bocados enquanto se faz scroll — assim que chega, o scrub por
   // scroll é instantâneo e fiável independentemente da rede ou de ser a
-  // primeira visita (que era exatamente quando isto falhava antes).
+  // primeira visita (que era exatamente quando isto falhava antes). Só se
+  // este pedido falhar é que se cai para o carregamento direto (uma única
+  // tentativa cada vez, nunca os dois pedidos em simultâneo).
   useEffect(() => {
     if (!videoSrc) return;
     let cancelled = false;
@@ -111,7 +113,7 @@ export default function AccessoriesExperience({
         setVideoBlobUrl(objectUrl);
       })
       .catch(() => {
-        setVideoOk(false);
+        if (!cancelled) setVideoBlobFailed(true);
       });
 
     return () => {
@@ -223,11 +225,11 @@ export default function AccessoriesExperience({
     >
       <section className="film-run" aria-label="Os objetos do verão">
         <div className="film-sticky">
-          {videoSrc && videoOk ? (
+          {videoSrc ? (
             <video
               ref={videoRef}
               className="film-video"
-              src={videoBlobUrl || undefined}
+              src={videoBlobUrl || (videoBlobFailed ? videoSrc.src : undefined)}
               poster={videoSrc.poster}
               muted
               playsInline
@@ -236,11 +238,7 @@ export default function AccessoriesExperience({
               onLoadedData={() => window.dispatchEvent(new Event("scroll"))}
               onCanPlay={() => window.dispatchEvent(new Event("scroll"))}
               onDurationChange={() => window.dispatchEvent(new Event("scroll"))}
-              onError={() => setVideoOk(false)}
             />
-          ) : videoSrc ? (
-            // eslint-disable-next-line @next/next/no-img-element
-            <img src={videoSrc.poster} alt="" className="film-video" />
           ) : null}
 
           <nav className="sm-crumbs" aria-label="Navegação">
