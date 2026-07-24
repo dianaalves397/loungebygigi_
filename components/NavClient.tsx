@@ -103,7 +103,7 @@ export default function NavClient({
             {menCategories.map((category) => (
               <Link
                 key={category.id}
-                href={`/shop?gender=men&category=${category.id}`}
+                href={`/category/${category.id}?from=men`}
                 style={category.parentId ? { paddingLeft: 18, opacity: 0.85 } : undefined}
               >
                 {category.parentId ? "— " : ""}{category.name}
@@ -120,7 +120,7 @@ export default function NavClient({
             {womenCategories.map((category) => (
               <Link
                 key={category.id}
-                href={`/shop?gender=women&category=${category.id}`}
+                href={`/category/${category.id}?from=women`}
                 style={category.parentId ? { paddingLeft: 18, opacity: 0.85 } : undefined}
               >
                 {category.parentId ? "— " : ""}{category.name}
