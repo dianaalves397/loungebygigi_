@@ -5,7 +5,7 @@ import { readStore, writeStore } from "@/lib/store";
 import { getPrintfulConfig, queryPrintfulProducts } from "@/lib/printful";
 import { getPrintifyConfig, queryPrintifyProducts } from "@/lib/printify";
 import { getApliiqConfig, queryApliiqProducts } from "@/lib/apliiq";
-import { detectCategoryFromTitle, stripCategoryCode } from "@/lib/autoCategorize";
+import { detectCategoriesFromTitle, stripCategoryCode } from "@/lib/autoCategorize";
 
 export function slugify(value: string) {
   return String(value || "")
@@ -18,23 +18,27 @@ export function slugify(value: string) {
 }
 
 // Categoriza automaticamente produtos ainda sem categoria (tipicamente vindos
-// de um fornecedor recém-sincronizado), usando o código de 3 letras no nome
-// do produto. Corre antes de applyOverrides, para que uma escolha manual no
-// painel continue sempre a prevalecer sobre a deteção automática.
+// de um fornecedor recém-sincronizado), usando os códigos de 3 letras no nome
+// do produto — pode haver mais do que um código, e o produto fica associado a
+// todas as categorias detetadas (categoryId/category/gender vêm do primeiro,
+// como categoria principal). Corre antes de applyOverrides, para que uma
+// escolha manual no painel continue sempre a prevalecer sobre a deteção automática.
 function applyAutoCategorize(products: Product[]) {
   return products.map((product) => {
     if (product.categoryId) return product;
 
-    const detected = detectCategoryFromTitle(product.title);
-    if (!detected) return product;
+    const detected = detectCategoriesFromTitle(product.title);
+    if (!detected.length) return product;
+
+    const [primary] = detected;
 
     return {
       ...product,
       title: stripCategoryCode(product.title),
-      categoryId: detected.categoryId,
-      category: detected.category,
-      categoryIds: [detected.categoryId],
-      gender: detected.gender
+      categoryId: primary.categoryId,
+      category: primary.category,
+      categoryIds: detected.map((item) => item.categoryId),
+      gender: primary.gender
     };
   });
 }

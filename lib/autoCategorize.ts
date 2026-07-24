@@ -104,35 +104,48 @@ const ALL_CODES = Object.entries(CATEGORY_LETTER).flatMap(([catLetter, category]
   )
 );
 
-const BRACKETED_RE = new RegExp(`[\\(\\[]\\s*(${ALL_CODES.join("|")})\\s*[\\)\\]]`, "i");
+// Globais (podem apanhar mais que um código no mesmo título — ex: um produto
+// pode pertencer a duas categorias, "(SSM)(LIM)").
+const BRACKETED_RE_GLOBAL = new RegExp(`[\\(\\[]\\s*(${ALL_CODES.join("|")})\\s*[\\)\\]]`, "gi");
 // Sem parênteses/colchetes, exige o código todo em maiúsculas — evita apanhar
 // palavras normais como "sim" (código SIM) numa frase em minúsculas.
-const STANDALONE_RE = new RegExp(`\\b(${ALL_CODES.map((c) => c.toUpperCase()).join("|")})\\b`);
+const STANDALONE_RE_GLOBAL = new RegExp(`\\b(${ALL_CODES.map((c) => c.toUpperCase()).join("|")})\\b`, "g");
 
 // Versões "de remoção": incluem os espaços/parênteses à volta do código para
 // que, ao apagar o código do título, não fique um espaço duplo ou parênteses vazios.
-const BRACKETED_STRIP_RE = new RegExp(`\\s*[\\(\\[]\\s*(?:${ALL_CODES.join("|")})\\s*[\\)\\]]`, "i");
-const STANDALONE_STRIP_RE = new RegExp(`\\s*\\b(?:${ALL_CODES.map((c) => c.toUpperCase()).join("|")})\\b\\s*`);
+const BRACKETED_STRIP_RE_GLOBAL = new RegExp(`\\s*[\\(\\[]\\s*(?:${ALL_CODES.join("|")})\\s*[\\)\\]]`, "gi");
+const STANDALONE_STRIP_RE_GLOBAL = new RegExp(`\\s*\\b(?:${ALL_CODES.map((c) => c.toUpperCase()).join("|")})\\b\\s*`, "g");
 
-export function detectCategoryFromTitle(title: string): Detected | null {
+// Todos os códigos presentes no título (bracketed e standalone, sem duplicados),
+// para produtos que pertencem a mais do que uma categoria.
+function findAllCodes(title: string): string[] {
   const text = String(title || "");
+  const codes = new Set<string>();
 
-  const bracketed = text.match(BRACKETED_RE);
-  const code = bracketed?.[1] || text.match(STANDALONE_RE)?.[1];
-  if (!code) return null;
+  for (const match of text.matchAll(BRACKETED_RE_GLOBAL)) codes.add(match[1].toLowerCase());
+  for (const match of text.matchAll(STANDALONE_RE_GLOBAL)) codes.add(match[1].toLowerCase());
 
-  return decodeParts(code);
+  return Array.from(codes);
 }
 
-// Remove o código de categorização do título para exibição ao cliente
-// (o código continua a ser lido do título original antes desta limpeza).
+export function detectCategoryFromTitle(title: string): Detected | null {
+  return detectCategoriesFromTitle(title)[0] || null;
+}
+
+export function detectCategoriesFromTitle(title: string): Detected[] {
+  return findAllCodes(title)
+    .map((code) => decodeParts(code))
+    .filter((detected): detected is Detected => Boolean(detected));
+}
+
+// Remove todos os códigos de categorização do título para exibição ao cliente
+// (os códigos continuam a ser lidos do título original antes desta limpeza).
 export function stripCategoryCode(title: string): string {
   const text = String(title || "");
 
-  let cleaned = text.replace(BRACKETED_STRIP_RE, " ");
-  if (cleaned === text) {
-    cleaned = text.replace(STANDALONE_STRIP_RE, " ");
-  }
+  const cleaned = text
+    .replace(BRACKETED_STRIP_RE_GLOBAL, " ")
+    .replace(STANDALONE_STRIP_RE_GLOBAL, " ");
 
   return cleaned
     .replace(/\s+/g, " ")
