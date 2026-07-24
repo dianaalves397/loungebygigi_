@@ -47,7 +47,8 @@ export default function SportsExperience({
   subcategories,
   backHref,
   parent,
-  edition = "woman"
+  edition = "woman",
+  from
 }: {
   category: any;
   products: any[];
@@ -55,7 +56,9 @@ export default function SportsExperience({
   backHref: string;
   parent?: { id: string; name: string } | null;
   edition?: "woman" | "man" | "summer" | "summerMan";
+  from?: string;
 }) {
+  const withFrom = (path: string) => (from ? `${path}?from=${from}` : path);
   const chapters = EDITIONS[edition].chapters;
   const rootRef = useRef<HTMLDivElement>(null);
   const progressRef = useRef(0);
@@ -192,7 +195,7 @@ export default function SportsExperience({
         {parent ? (
           <>
             <span aria-hidden="true">/</span>
-            <Link href={`/category/${parent.id}`}>{parent.name}</Link>
+            <Link href={withFrom(`/category/${parent.id}`)}>{parent.name}</Link>
           </>
         ) : null}
         <span aria-hidden="true">/</span>
@@ -207,7 +210,7 @@ export default function SportsExperience({
         {subcategories.length || parent ? (
           <nav className="lgc-tabs" aria-label="Subcategorias">
             {parent ? (
-              <Link href={`/category/${parent.id}`} className="lgc-tab">
+              <Link href={withFrom(`/category/${parent.id}`)} className="lgc-tab">
                 ← {parent.name}
               </Link>
             ) : null}
@@ -215,7 +218,7 @@ export default function SportsExperience({
               Tudo
             </span>
             {subcategories.map((sub) => (
-              <Link key={sub.id} href={`/category/${sub.id}`} className="lgc-tab">
+              <Link key={sub.id} href={withFrom(`/category/${sub.id}`)} className="lgc-tab">
                 {sub.name}
                 {sub.count ? <em>{sub.count}</em> : null}
               </Link>

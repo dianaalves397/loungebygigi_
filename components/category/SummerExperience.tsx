@@ -25,7 +25,8 @@ export default function SummerExperience({
   subcategories,
   backHref,
   parent,
-  edition = "summer"
+  edition = "summer",
+  from
 }: {
   category: any;
   products: any[];
@@ -33,7 +34,9 @@ export default function SummerExperience({
   backHref: string;
   parent?: { id: string; name: string } | null;
   edition?: "summer" | "summerMan";
+  from?: string;
 }) {
+  const withFrom = (path: string) => (from ? `${path}?from=${from}` : path);
   const config = EDITIONS[edition];
   const rootRef = useRef<HTMLDivElement>(null);
 
@@ -209,7 +212,7 @@ export default function SummerExperience({
             {parent ? (
               <>
                 <span aria-hidden="true">/</span>
-                <Link href={`/category/${parent.id}`}>{parent.name}</Link>
+                <Link href={withFrom(`/category/${parent.id}`)}>{parent.name}</Link>
               </>
             ) : null}
             <span aria-hidden="true">/</span>
@@ -386,7 +389,7 @@ export default function SummerExperience({
         {subcategories.length || parent ? (
           <nav className="lgc-tabs" aria-label="Subcategorias">
             {parent ? (
-              <Link href={`/category/${parent.id}`} className="lgc-tab">
+              <Link href={withFrom(`/category/${parent.id}`)} className="lgc-tab">
                 ← {parent.name}
               </Link>
             ) : null}
@@ -394,7 +397,7 @@ export default function SummerExperience({
               Tudo
             </span>
             {subcategories.map((sub) => (
-              <Link key={sub.id} href={`/category/${sub.id}`} className="lgc-tab">
+              <Link key={sub.id} href={withFrom(`/category/${sub.id}`)} className="lgc-tab">
                 {sub.name}
                 {sub.count ? <em>{sub.count}</em> : null}
               </Link>

@@ -70,7 +70,8 @@ export default function AccessoriesExperience({
   subcategories,
   backHref,
   parent,
-  variant = "sea"
+  variant = "sea",
+  from
 }: {
   category: any;
   products: any[];
@@ -78,7 +79,9 @@ export default function AccessoriesExperience({
   backHref: string;
   parent?: { id: string; name: string } | null;
   variant?: "sea" | "sun";
+  from?: string;
 }) {
+  const withFrom = (path: string) => (from ? `${path}?from=${from}` : path);
   const config = VARIANTS[variant];
   const rootRef = useRef<HTMLDivElement>(null);
   const videoRef = useRef<HTMLVideoElement>(null);
@@ -251,7 +254,7 @@ export default function AccessoriesExperience({
             {parent ? (
               <>
                 <span aria-hidden="true">/</span>
-                <Link href={`/category/${parent.id}`}>{parent.name}</Link>
+                <Link href={withFrom(`/category/${parent.id}`)}>{parent.name}</Link>
               </>
             ) : null}
             <span aria-hidden="true">/</span>
@@ -280,7 +283,7 @@ export default function AccessoriesExperience({
         {subcategories.length || parent ? (
           <nav className="lgc-tabs" aria-label="Subcategorias">
             {parent ? (
-              <Link href={`/category/${parent.id}`} className="lgc-tab">
+              <Link href={withFrom(`/category/${parent.id}`)} className="lgc-tab">
                 ← {parent.name}
               </Link>
             ) : null}
@@ -288,7 +291,7 @@ export default function AccessoriesExperience({
               Tudo
             </span>
             {subcategories.map((sub) => (
-              <Link key={sub.id} href={`/category/${sub.id}`} className="lgc-tab">
+              <Link key={sub.id} href={withFrom(`/category/${sub.id}`)} className="lgc-tab">
                 {sub.name}
                 {sub.count ? <em>{sub.count}</em> : null}
               </Link>

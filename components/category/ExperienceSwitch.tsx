@@ -18,7 +18,7 @@ function Inner(rawProps: any) {
   const from = params.get("from") || undefined;
   const sort = params.get("sort") || "";
   const id = rawProps.categoryId as string;
-  const props = { ...rawProps, products: sortProducts(rawProps.products || [], sort) };
+  const props = { ...rawProps, products: sortProducts(rawProps.products || [], sort), from };
 
   if (["acessorios", "jewellery", "bags", "sunglasses", "hats"].includes(id)) {
     return <AccessoriesExperience {...props} variant={from === "men" ? "sun" : "sea"} />;
