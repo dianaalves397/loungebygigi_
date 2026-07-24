@@ -20,9 +20,13 @@ export function slugify(value: string) {
 // Categoriza automaticamente produtos ainda sem categoria (tipicamente vindos
 // de um fornecedor recém-sincronizado), usando os códigos de 3 letras no nome
 // do produto — pode haver mais do que um código, e o produto fica associado a
-// todas as categorias detetadas (categoryId/category/gender vêm do primeiro,
-// como categoria principal). Corre antes de applyOverrides, para que uma
-// escolha manual no painel continue sempre a prevalecer sobre a deteção automática.
+// todas as categorias detetadas (categoryId/category vêm do primeiro, como
+// categoria principal). Se as categorias detetadas abrangerem mais do que um
+// género (ex: um código unisexo numa secção com peças separadas por género,
+// que entra nas categorias de mulher E de homem), o produto fica marcado como
+// unisexo para não ser filtrado fora de nenhuma das duas páginas. Corre antes
+// de applyOverrides, para que uma escolha manual no painel continue sempre a
+// prevalecer sobre a deteção automática.
 function applyAutoCategorize(products: Product[]) {
   return products.map((product) => {
     if (product.categoryId) return product;
@@ -31,6 +35,8 @@ function applyAutoCategorize(products: Product[]) {
     if (!detected.length) return product;
 
     const [primary] = detected;
+    const genders = new Set(detected.map((item) => item.gender));
+    const gender = genders.size > 1 ? "unisex" : primary.gender;
 
     return {
       ...product,
@@ -38,7 +44,7 @@ function applyAutoCategorize(products: Product[]) {
       categoryId: primary.categoryId,
       category: primary.category,
       categoryIds: detected.map((item) => item.categoryId),
-      gender: primary.gender
+      gender
     };
   });
 }

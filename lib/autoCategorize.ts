@@ -76,25 +76,38 @@ const CATEGORY_ID_TABLE: Record<string, string> = {
   "acessorios-h": "hats"
 };
 
-function decodeParts(code: string): Detected | null {
+// Devolve uma lista porque um único código pode implicar mais do que uma
+// categoria: nas secções com peças separadas por género (sports/lounge) não
+// existe um "Peças superiores unisexo" à parte — um código unisexo aí entra
+// nas duas (mulher e homem) em vez de ficar sem categoria válida nenhuma.
+function decodeParts(code: string): Detected[] {
   const [catLetter, partLetter, genderLetter] = code.toLowerCase().split("");
   const category = CATEGORY_LETTER[catLetter];
-  if (!category) return null;
+  if (!category) return [];
 
   const part = PART_TABLE[category]?.[partLetter];
-  if (!part) return null;
+  if (!part) return [];
 
   const gender = GENDER_LETTER[genderLetter];
-  if (!gender) return null;
+  if (!gender) return [];
+
+  if (part.genderSplit && gender === "unisex") {
+    const results: Detected[] = [];
+    for (const eachGender of ["women", "men"] as const) {
+      const categoryId = CATEGORY_ID_TABLE[`${category}-${partLetter}-${eachGender}`];
+      if (categoryId) results.push({ categoryId, category: part.name, gender: eachGender });
+    }
+    return results;
+  }
 
   const idKey = part.genderSplit
     ? `${category}-${partLetter}-${gender}`
     : `${category}-${partLetter}`;
 
   const categoryId = CATEGORY_ID_TABLE[idKey];
-  if (!categoryId) return null;
+  if (!categoryId) return [];
 
-  return { categoryId, category: part.name, gender };
+  return [{ categoryId, category: part.name, gender }];
 }
 
 // Todos os códigos válidos, gerados a partir das tabelas acima.
@@ -133,9 +146,7 @@ export function detectCategoryFromTitle(title: string): Detected | null {
 }
 
 export function detectCategoriesFromTitle(title: string): Detected[] {
-  return findAllCodes(title)
-    .map((code) => decodeParts(code))
-    .filter((detected): detected is Detected => Boolean(detected));
+  return findAllCodes(title).flatMap((code) => decodeParts(code));
 }
 
 // Remove todos os códigos de categorização do título para exibição ao cliente
@@ -156,5 +167,5 @@ export function stripCategoryCode(title: string): string {
 }
 
 export function listAutoCategorizeCodes() {
-  return ALL_CODES.map((code) => ({ code: code.toUpperCase(), ...decodeParts(code) }));
+  return ALL_CODES.map((code) => ({ code: code.toUpperCase(), categories: decodeParts(code) }));
 }
