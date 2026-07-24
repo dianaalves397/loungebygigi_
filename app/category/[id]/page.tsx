@@ -41,10 +41,22 @@ export async function generateMetadata({
   };
 }
 
-function productMatchesAny(product: any, ids: Set<string>) {
+function productMatchesAny(product: any, ids: Set<string>, familyNames: Set<string>) {
   if (ids.has(String(product.categoryId))) return true;
   if ((product.categoryIds || []).some((cid: string) => ids.has(String(cid)))) return true;
-  return ids.has(slugify(product.category));
+  if (ids.has(slugify(product.category))) return true;
+
+  // Produtos sem categoryId/categoryIds próprios (ex: ainda por categorizar
+  // manualmente, ou sincronizados sem código no título) não devem
+  // desaparecer só por não terem um ID exato — como último recurso,
+  // compara pelo NOME da categoria, mas só dentro desta família (nunca
+  // contra a loja toda, para não repetir a mistura entre categorias
+  // homónimas como as duas "Peças superiores").
+  const hasOwnCategory =
+    Boolean(product.categoryId) || (product.categoryIds || []).length > 0;
+  if (hasOwnCategory) return false;
+
+  return familyNames.has(slugify(product.category));
 }
 
 export default async function CategoryPage({
@@ -79,10 +91,23 @@ export default async function CategoryPage({
     return pg === "unisex" || pg === effectiveGender;
   }
 
+  function namesFor(ids: Set<string>) {
+    return new Set(
+      (categories as any[])
+        .filter((cat) => ids.has(String(cat.id)))
+        .map((cat) => slugify(cat.name))
+        .filter(Boolean)
+    );
+  }
+
   // categoria + todas as subcategorias
   const familyIds = new Set(getDescendantCategoryIds(categories as any, id));
+  const familyNames = namesFor(familyIds);
   const products = allProducts.filter(
-    (product) => product.status === "active" && productMatchesAny(product, familyIds) && matchesGender(product)
+    (product) =>
+      product.status === "active" &&
+      productMatchesAny(product, familyIds, familyNames) &&
+      matchesGender(product)
   );
 
   // subcategorias diretas, com contagem (inclui as descendentes de cada uma)
@@ -96,8 +121,12 @@ export default async function CategoryPage({
     .sort((a: any, b: any) => Number(a.sortOrder || 999) - Number(b.sortOrder || 999))
     .map((sub: any) => {
       const subFamily = new Set(getDescendantCategoryIds(categories as any, sub.id));
+      const subFamilyNames = namesFor(subFamily);
       const count = allProducts.filter(
-        (product) => product.status === "active" && productMatchesAny(product, subFamily) && matchesGender(product)
+        (product) =>
+          product.status === "active" &&
+          productMatchesAny(product, subFamily, subFamilyNames) &&
+          matchesGender(product)
       ).length;
       return { id: sub.id, name: sub.name, count };
     });
