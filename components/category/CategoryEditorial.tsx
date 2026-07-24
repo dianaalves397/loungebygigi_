@@ -65,14 +65,17 @@ export default function CategoryEditorial({
   products,
   subcategories,
   backHref,
-  parent
+  parent,
+  from
 }: {
   category: any;
   products: any[];
   subcategories: SubCategory[];
   backHref: string;
   parent?: { id: string; name: string } | null;
+  from?: string;
 }) {
+  const withFrom = (path: string) => (from ? `${path}?from=${from}` : path);
   const rootRef = useRef<HTMLDivElement>(null);
   const [sceneReady, setSceneReady] = useState(false);
   const theme = pickTheme(String(category.id || ""), String(category.name || ""), String(category.parentId || ""));
@@ -164,7 +167,7 @@ export default function CategoryEditorial({
           {parent ? (
             <>
               <span aria-hidden="true">/</span>
-              <Link href={`/category/${parent.id}`}>{parent.name}</Link>
+              <Link href={withFrom(`/category/${parent.id}`)}>{parent.name}</Link>
             </>
           ) : null}
         </nav>
@@ -192,7 +195,7 @@ export default function CategoryEditorial({
         {subcategories.length || parent ? (
           <nav className="lgc-tabs" aria-label="Subcategorias">
             {parent ? (
-              <Link href={`/category/${parent.id}`} className="lgc-tab">
+              <Link href={withFrom(`/category/${parent.id}`)} className="lgc-tab">
                 ← {parent.name}
               </Link>
             ) : null}
@@ -200,7 +203,7 @@ export default function CategoryEditorial({
               Tudo
             </span>
             {subcategories.map((sub) => (
-              <Link key={sub.id} href={`/category/${sub.id}`} className="lgc-tab">
+              <Link key={sub.id} href={withFrom(`/category/${sub.id}`)} className="lgc-tab">
                 {sub.name}
                 {sub.count ? <em>{sub.count}</em> : null}
               </Link>
