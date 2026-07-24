@@ -1102,7 +1102,9 @@ export default function ControlPanel() {
                   </tr>
                 </thead>
                 <tbody>
-                  {products.map((product) => (
+                  {products
+                    .filter((product) => String((product as any).status || "active") !== "archived")
+                    .map((product) => (
                     <tr key={product.id}>
                       <td>{product.title}</td>
                       <td>{product.provider || product.source}</td>
@@ -1311,6 +1313,7 @@ export default function ControlPanel() {
                 </thead>
                 <tbody>
                   {categories
+                    .filter((category) => !(category as any).hidden)
                     .slice()
                     .sort((a, b) => {
                       const aOrder = Number((a as any).sortOrder || 999);

@@ -23,6 +23,8 @@ function filterByGender(categories: any[], gender: "men" | "women") {
       return false;
     }
 
+    if (category.hidden) return false;
+
     return categoryGender === gender || categoryGender === "unisex";
   }));
 }
