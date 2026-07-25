@@ -56,7 +56,10 @@ export default function ProductCard({ product }: { product: Product }) {
   const colors = (product.colors || []).filter((color) => color?.hex);
 
   return (
-    <Link className="product-card" href={`/product/${product.slug}`}>
+    <Link
+      className={`product-card${product.customImage ? " product-card-natural" : ""}`}
+      href={`/product/${product.slug}`}
+    >
       <div className="product-media">
         <MediaBlock type={product.mediaType} url={product.image} alt={product.title} />
       </div>
