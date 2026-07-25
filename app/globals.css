@@ -4882,6 +4882,23 @@ video {
   align-self: start !important;
 }
 
+/* Proporção retrato (estilo referência), não quadrada: as fotos de moda
+   normalmente já vêm neste formato e ficam edge-to-edge sem faixas vazias;
+   mantém "contain" (não "cover") para não cortar as fotos que não sejam
+   neste formato (ex: mockups quadrados de print-on-demand) — essas ficam
+   com uma pequena faixa vazia em vez de aparecerem cortadas. */
+.product-card .product-media,
+.product-media {
+  aspect-ratio: 3 / 4 !important;
+}
+
+.product-card .product-media img,
+.product-card .product-media video,
+.product-media img,
+.product-media video {
+  aspect-ratio: 3 / 4 !important;
+}
+
 /* Produtos com imagem de capa escolhida por nós (não a mockup do
    fornecedor): mostra a foto no seu formato real em vez de a forçar no
    quadrado uniforme — pode ficar mais alta que os cartões vizinhos. */
