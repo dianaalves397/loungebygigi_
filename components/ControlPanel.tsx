@@ -93,6 +93,7 @@ const emptyProduct: Product = {
   status: "active",
   image: "",
   mediaType: "image",
+  naturalImage: false,
   gallery: [],
   description: "",
   details: [],
@@ -1045,6 +1046,17 @@ export default function ControlPanel() {
                 value={productForm.image}
                 onChange={(value) => setProductForm({ ...productForm, image: value })}
               />
+
+              <label className="field wide category-picker-item">
+                <input
+                  type="checkbox"
+                  checked={Boolean(productForm.naturalImage)}
+                  onChange={(event) =>
+                    setProductForm({ ...productForm, naturalImage: event.target.checked })
+                  }
+                />
+                Mostrar esta imagem no seu tamanho real na grelha (não a forçar no quadrado — usa para fotos de capa que escolheste, não mockups do fornecedor)
+              </label>
 
               <TextField
                 label="Galeria (URLs separadas por vírgula)"
