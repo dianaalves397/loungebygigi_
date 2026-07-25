@@ -22,6 +22,7 @@ export type Product = {
   status: "active" | "draft" | "archived";
   image: string;
   mediaType: "image" | "video";
+  customImage?: boolean;
   gallery: string[];
   description: string;
   details: string[];

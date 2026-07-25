@@ -4875,10 +4875,29 @@ video {
    sem cantos arredondados — foto edge-to-edge, ficha em texto simples. */
 .product-grid {
   gap: 2px 10px !important;
+  align-items: start !important;
 }
 
 .lgc-grid > .lgc-reveal {
   align-self: start !important;
+}
+
+/* Produtos com imagem de capa escolhida por nós (não a mockup do
+   fornecedor): mostra a foto no seu formato real em vez de a forçar no
+   quadrado uniforme — pode ficar mais alta que os cartões vizinhos. */
+.product-card-natural .product-media {
+  aspect-ratio: auto !important;
+  height: auto !important;
+}
+
+.product-card-natural .product-media img,
+.product-card-natural .product-media video {
+  aspect-ratio: auto !important;
+  width: 100% !important;
+  height: auto !important;
+  min-height: 0 !important;
+  object-fit: contain !important;
+  padding: 0 !important;
 }
 
 .product-card {
