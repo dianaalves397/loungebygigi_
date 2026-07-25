@@ -49,19 +49,6 @@ function applyAutoCategorize(products: Product[]) {
   });
 }
 
-const SUPPLIER_SOURCES = new Set(["printful", "printify", "apliiq"]);
-
-// Uma imagem principal é "de capa" (escolhida por nós, não a mockup do
-// fornecedor) sempre que o produto não vem de um fornecedor print-on-demand,
-// ou quando veio de um fornecedor mas a imagem foi substituída manualmente
-// no painel de controlo (override.image). Estas usam o tamanho real da foto
-// na grelha, em vez do quadrado uniforme dos restantes produtos.
-function hasCustomImage(product: Product, override: Partial<Product>) {
-  const isSupplierSourced = SUPPLIER_SOURCES.has(String(product.source));
-  if (!isSupplierSourced) return true;
-  return Boolean(override.image);
-}
-
 function applyOverrides(products: Product[], settings: any) {
   const overrides = settings.productOverrides || {};
 
@@ -73,8 +60,7 @@ function applyOverrides(products: Product[], settings: any) {
       gallery: override.gallery?.length ? override.gallery : product.gallery,
       details: override.details?.length ? override.details : product.details,
       colors: override.colors?.length ? override.colors : product.colors,
-      sizes: override.sizes?.length ? override.sizes : product.sizes,
-      customImage: hasCustomImage(product, override)
+      sizes: override.sizes?.length ? override.sizes : product.sizes
     };
   });
 }

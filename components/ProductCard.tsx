@@ -57,7 +57,7 @@ export default function ProductCard({ product }: { product: Product }) {
 
   return (
     <Link
-      className={`product-card${product.customImage ? " product-card-natural" : ""}`}
+      className={`product-card${product.naturalImage ? " product-card-natural" : ""}`}
       href={`/product/${product.slug}`}
     >
       <div className="product-media">
