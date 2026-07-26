@@ -138,6 +138,7 @@ export async function getCategories() {
   const local = await readStore<Category[]>("categories", []);
   const products = await getProducts();
   const dynamic = new Map<string, Category>();
+  const localIds = new Set(local.map((c) => c.id));
 
   for (const product of products) {
     if (!dynamic.has(product.categoryId)) {
@@ -145,6 +146,10 @@ export async function getCategories() {
         id: product.categoryId,
         name: product.category,
         gender: product.gender,
+        // Usa a foto do produto só como marcador de posição interno (para a
+        // página /category/[id] continuar a funcionar mesmo sem categoria
+        // criada no painel) — nunca deve ser tratada como imagem de capa
+        // de uma categoria "a sério" (ver "synthetic" abaixo).
         image: product.image,
         mediaType: product.mediaType,
         featured: true,
@@ -156,9 +161,22 @@ export async function getCategories() {
     }
   }
 
-  return Array.from(
+  const merged = Array.from(
     new Map([...Array.from(dynamic.values()), ...local].map((c) => [c.id, c])).values()
   );
+
+  // "synthetic": categoria que só existe porque um produto aponta para um
+  // categoryId sem correspondência criada no painel — não é uma categoria
+  // real e não deve aparecer como se fosse (ex: moodboard de coleções,
+  // menu de navegação), porque a sua "imagem de capa" é só a foto de um
+  // produto qualquer, não uma imagem editorial escolhida para a categoria.
+  // Mantém-se "synthetic" mesmo depois de gravada (ver ensureCategoryForProduct)
+  // até alguém a editar deliberadamente no painel (o formulário de categorias
+  // grava sempre synthetic:false ao guardar).
+  return merged.map((category) => ({
+    ...category,
+    synthetic: category.synthetic === true || !localIds.has(category.id)
+  }));
 }
 
 export async function saveCategories(categories: Category[]) {
@@ -193,10 +211,14 @@ export async function ensureCategoryForProduct(product: Product) {
       id: categoryId,
       name: product.category || product.collection || "New Category",
       gender: product.gender || "unisex",
+      // Só um marcador de posição (a foto do próprio produto) até alguém
+      // escolher uma imagem de capa a sério no painel — "synthetic" impede
+      // que isto apareça como categoria "a sério" (moodboard, menu) até lá.
       image: product.image,
       mediaType: product.mediaType || "image",
       featured: true,
-      styles: product.style ? [product.style] : []
+      styles: product.style ? [product.style] : [],
+      synthetic: true
     });
   } else if (product.style && !categories[index].styles.includes(product.style)) {
     categories[index].styles.push(product.style);

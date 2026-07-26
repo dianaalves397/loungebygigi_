@@ -497,7 +497,10 @@ export default function ControlPanel() {
           id: categoryForm.id || makeSlug(categoryForm.name),
           sortOrder: Number(categoryForm.sortOrder || 1),
           showInMenTab: categoryForm.showInMenTab ?? true,
-          showInWomenTab: categoryForm.showInWomenTab ?? true
+          showInWomenTab: categoryForm.showInWomenTab ?? true,
+          // Guardar pelo formulário do painel é sempre uma escolha deliberada
+          // — deixa de ser uma categoria "fantasma" criada só por um produto.
+          synthetic: false
         };
 
         const data = await requestJson<CategoryFormModel>("/api/categories", {

@@ -59,6 +59,7 @@ export type Category = {
   introTitle?: string;
   introText?: string;
   styles: string[];
+  synthetic?: boolean;
 };
 
 export type CartItem = {

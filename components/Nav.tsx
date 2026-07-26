@@ -24,6 +24,7 @@ function filterByGender(categories: any[], gender: "men" | "women") {
     }
 
     if (category.hidden) return false;
+    if (category.synthetic) return false; // "categoria" gerada só por um produto sem categoria própria
 
     return categoryGender === gender || categoryGender === "unisex";
   }));
