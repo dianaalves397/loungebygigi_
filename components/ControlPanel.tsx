@@ -372,6 +372,24 @@ export default function ControlPanel() {
     });
   }
 
+  // Avisa quando um produto não tem categoria, ou aponta para uma categoria
+  // que não foi criada a sério no painel (categoria "fantasma", gerada só
+  // por este produto — ver lib/db.ts "synthetic") — é este o tipo de
+  // produto que acaba a aparecer como se fosse uma categoria no site.
+  function categoryWarning(product: any): string | null {
+    const ids: string[] =
+      product.categoryIds && product.categoryIds.length ? product.categoryIds : [product.categoryId].filter(Boolean);
+
+    if (!ids.length) return "Sem categoria atribuída";
+
+    const missingOrSynthetic = ids.some((id) => {
+      const match = categories.find((c: any) => c.id === id);
+      return !match || match.synthetic;
+    });
+
+    return missingOrSynthetic ? "Categoria não existe no painel" : null;
+  }
+
   const saveProduct = useCallback(
     async (event: FormEvent) => {
       event.preventDefault();
@@ -1119,12 +1137,19 @@ export default function ControlPanel() {
                 <tbody>
                   {products
                     .filter((product) => String((product as any).status || "active") !== "archived")
-                    .map((product) => (
+                    .map((product) => {
+                      const warning = categoryWarning(product);
+                      return (
                     <tr key={product.id}>
-                      <td>{product.title}</td>
+                      <td>
+                        {product.title}
+                        {warning ? <span className="row-warning" title={warning}> ⚠</span> : null}
+                      </td>
                       <td>{product.provider || product.source}</td>
                       <td>
-                        {product.categoryIds && product.categoryIds.length > 1
+                        {warning ? (
+                          <span className="row-warning-text" title={warning}>{warning}</span>
+                        ) : product.categoryIds && product.categoryIds.length > 1
                           ? product.categoryIds
                               .map((cid) => categories.find((c) => c.id === cid)?.name || cid)
                               .join(", ")
@@ -1152,7 +1177,8 @@ export default function ControlPanel() {
                         </div>
                       </td>
                     </tr>
-                  ))}
+                      );
+                    })}
                 </tbody>
               </table>
             </div>
