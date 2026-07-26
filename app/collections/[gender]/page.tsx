@@ -81,6 +81,7 @@ export default async function CollectionsPage({
       const id = String(category.id || "").toLowerCase();
       const name = String(category.name || "").toLowerCase();
       if (category.hidden) return false;
+      if (category.synthetic) return false; // "categoria" gerada só por um produto sem categoria própria — não é real
       if (category.parentId) return false; // subcategorias não aparecem no moodboard
       if (["printful", "printify"].includes(id) || ["printful", "printify"].includes(name)) return false;
       const categoryGender = String(category.gender || "unisex").toLowerCase();
