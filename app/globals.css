@@ -5154,3 +5154,19 @@ summary:focus-visible,
 .dark-pill:focus-visible {
   outline-offset: 2px;
 }
+
+/* Aviso no painel: produto sem categoria válida (ver categoryWarning em
+   ControlPanel.tsx) — sinaliza produtos que, sem isto, acabam a criar uma
+   categoria "fantasma" fronteada pela própria foto do produto. */
+.row-warning {
+  color: #a3352b;
+  font-weight: 700;
+  cursor: help;
+}
+
+.row-warning-text {
+  color: #a3352b;
+  font-size: 0.82rem;
+  font-weight: 700;
+  cursor: help;
+}
