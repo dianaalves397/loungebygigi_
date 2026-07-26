@@ -1349,16 +1349,24 @@ header a,
   background: rgba(246, 241, 234, .94);
   border-bottom: 1px solid rgba(31, 23, 19, .08);
   backdrop-filter: blur(14px);
+  transition: box-shadow .25s ease;
 }
 
 .old-nav-logo {
   justify-self: start;
   color: #1f1713;
   text-decoration: none;
-  font-size: clamp(1.6rem, 3vw, 2.2rem);
-  font-weight: 900;
-  letter-spacing: -.08em;
+  font-family: var(--lg-display, inherit);
+  font-size: clamp(1.5rem, 3vw, 2rem);
+  font-weight: 500;
+  font-style: italic;
+  letter-spacing: 0;
   text-transform: lowercase;
+  transition: opacity .2s ease;
+}
+
+.old-nav-logo:hover {
+  opacity: .72;
 }
 
 .old-nav-center {
@@ -4974,6 +4982,26 @@ video {
   padding: 0 !important;
 }
 
+@media (hover: hover) {
+  .product-card .product-media img,
+  .product-card .product-media video {
+    transition: transform .5s cubic-bezier(.2,.7,.3,1) !important;
+  }
+
+  .product-card:hover .product-media img,
+  .product-card:hover .product-media video {
+    transform: scale(1.045) !important;
+  }
+
+  .product-card h3 {
+    transition: opacity .2s ease;
+  }
+
+  .product-card:hover h3 {
+    opacity: .6;
+  }
+}
+
 .product-card .product-media img,
 .product-card .product-media video {
   /* mantém "contain" (não "cover"): as fotos dos produtos nem sempre têm
@@ -5083,4 +5111,23 @@ video {
     width: 10px;
     height: 10px;
   }
+}
+
+/* Foco visível consistente em todo o site (teclado/leitor de ecrã) — só
+   uma regra em toda a folha antes disto, o que dava um aspeto pouco
+   acabado a quem navega por teclado. */
+a:focus-visible,
+button:focus-visible,
+input:focus-visible,
+select:focus-visible,
+textarea:focus-visible,
+summary:focus-visible,
+[role="button"]:focus-visible {
+  outline: 2px solid var(--lg-ink, #1e1913);
+  outline-offset: 3px;
+}
+
+.pill:focus-visible,
+.dark-pill:focus-visible {
+  outline-offset: 2px;
 }
