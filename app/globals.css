@@ -4909,9 +4909,11 @@ video {
 }
 
 /* Grelha de produtos minimalista (estilo Zara): sem moldura, sem sombra,
-   sem cantos arredondados — foto edge-to-edge, ficha em texto simples. */
+   sem cantos arredondados — foto edge-to-edge, ficha em texto simples.
+   Mais espaço vertical entre linhas do que horizontal entre colunas —
+   como na referência, evita um aspeto apertado/amontoado. */
 .product-grid {
-  gap: 2px 10px !important;
+  gap: 30px 10px !important;
   align-items: start !important;
 }
 
@@ -4980,6 +4982,7 @@ video {
 .product-card .product-media {
   background: #f0ece5 !important;
   padding: 0 !important;
+  position: relative !important;
 }
 
 @media (hover: hover) {
@@ -5090,6 +5093,26 @@ video {
   height: 12px;
   border-radius: 50%;
   border: 1px solid rgba(33, 26, 23, 0.15);
+}
+
+.product-card-swatch-more {
+  font-size: 0.6rem;
+  color: var(--lg-sepia, #74665f);
+  line-height: 12px;
+}
+
+.product-card-badge {
+  position: absolute;
+  top: 10px;
+  left: 10px;
+  z-index: 2;
+  background: var(--lg-ink, #1e1913);
+  color: #fdfcf9;
+  font-size: 0.64rem;
+  font-weight: 500;
+  letter-spacing: 0.03em;
+  padding: 0.3rem 0.55rem;
+  border-radius: 3px;
 }
 
 @media (max-width: 640px) {
