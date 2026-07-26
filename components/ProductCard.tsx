@@ -54,6 +54,10 @@ function addToCartQuick(product: Product) {
 
 export default function ProductCard({ product }: { product: Product }) {
   const colors = (product.colors || []).filter((color) => color?.hex);
+  const onSale = Boolean(product.compareAt && product.compareAt > product.price);
+  const discountPct = onSale
+    ? Math.round(((product.compareAt! - product.price) / product.compareAt!) * 100)
+    : 0;
 
   return (
     <Link
@@ -62,6 +66,7 @@ export default function ProductCard({ product }: { product: Product }) {
     >
       <div className="product-media">
         <MediaBlock type={product.mediaType} url={product.image} alt={product.title} />
+        {onSale && discountPct > 0 ? <span className="product-card-badge">-{discountPct}%</span> : null}
       </div>
 
       <div className="product-card-body">
@@ -98,10 +103,18 @@ export default function ProductCard({ product }: { product: Product }) {
       </div>
 
       {colors.length ? (
-        <div className="product-card-swatches" aria-hidden="true">
+        <div className="product-card-swatches">
           {colors.slice(0, 6).map((color, index) => (
-            <span key={`${color.name}-${index}`} className="product-card-swatch" style={{ backgroundColor: color.hex }} />
+            <span
+              key={`${color.name}-${index}`}
+              className="product-card-swatch"
+              style={{ backgroundColor: color.hex }}
+              title={color.name}
+              aria-label={color.name}
+              role="img"
+            />
           ))}
+          {colors.length > 6 ? <span className="product-card-swatch-more">+{colors.length - 6}</span> : null}
         </div>
       ) : null}
     </Link>

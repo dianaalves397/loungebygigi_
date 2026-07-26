@@ -5,7 +5,6 @@
 // para as fotografias locais em /public (zero egress externo).
 
 import Link from "next/link";
-import CartButton from "@/components/CartButton";
 
 function Seal({ brand }: { brand: string }) {
   const ring = `· ${brand} · elevated essentials `.toUpperCase();
@@ -44,10 +43,6 @@ export default function LandingHero({
 }) {
   return (
     <section className="lg-landing" aria-label="Escolher coleção">
-      <div className="lg-landing-utility">
-        <CartButton />
-      </div>
-
       <div className="lg-landing-intro" aria-hidden="true">
         <div className="lg-seal-core" style={{ textAlign: "center", fontFamily: "var(--lg-display)" }}>
           <strong style={{ display: "block", fontStyle: "italic", fontWeight: 500, fontSize: "clamp(34px,5vw,54px)" }}>
