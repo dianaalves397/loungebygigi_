@@ -309,7 +309,9 @@ export default function ProductDetailClient({ product, related = [] }: { product
       printfulSyncProductId: product.printfulSyncProductId,
       printfulSyncVariantId: selectedVariant?.syncVariantId || selectedVariant?.id || product.printfulSyncVariantId,
       printifyProductId: product.printifyProductId,
-      printifyVariantId: selectedVariant?.printifyVariantId || product.printifyVariantId
+      printifyVariantId: selectedVariant?.printifyVariantId || product.printifyVariantId,
+      printkkDesignId: product.printkkDesignId,
+      printkkProductId: product.printkkProductId
     };
 
     let current = [];

@@ -16,7 +16,7 @@ type Tab =
 type MediaType = "image" | "video";
 type Gender = "women" | "men" | "unisex";
 type ProductStatus = "active" | "draft" | "archived";
-type ProviderName = "printful" | "printify" | "apliiq";
+type ProviderName = "printful" | "printify" | "apliiq" | "printkk";
 type PaymentProviderName = "stripe" | "paypal";
 
 type IntegrationSettings = {
@@ -60,6 +60,7 @@ type Settings = {
     printful: IntegrationSettings;
     printify: IntegrationSettings;
     apliiq: IntegrationSettings;
+    printkk: IntegrationSettings;
   };
   payments: PaymentSettings;
 };
@@ -152,6 +153,13 @@ const defaultSettings: Settings = {
       apiToken: "",
       apiKey: "",
       sharedSecret: ""
+    },
+    printkk: {
+      enabled: false,
+      useAsProductSource: false,
+      autoSubmitOrders: true,
+      apiToken: "",
+      apiKey: ""
     }
   },
   payments: {
@@ -283,7 +291,18 @@ export default function ControlPanel() {
         ? await parseJsonSafe<Order[]>(ordersRes)
         : [];
 
-      setSettings(settingsData ?? defaultSettings);
+      // Junta com os valores por omissão por fornecedor: definições já
+      // gravadas antes de um fornecedor novo (ex: printkk) existir não o
+      // teriam, e sem isto o painel rebentava ao tentar ler .enabled de
+      // undefined.
+      setSettings({
+        ...defaultSettings,
+        ...(settingsData || {}),
+        integrations: {
+          ...defaultSettings.integrations,
+          ...((settingsData as any)?.integrations || {})
+        }
+      });
       setProducts(Array.isArray(productsData) ? productsData : []);
       setCategories(
         Array.isArray(categoriesData)
@@ -705,7 +724,7 @@ export default function ControlPanel() {
     return <main className="control-login">A carregar...</main>;
   }
 
-  const { printful, printify, apliiq } = settings.integrations;
+  const { printful, printify, apliiq, printkk } = settings.integrations;
   const payments = settings.payments;
 
   return (
@@ -1078,6 +1097,18 @@ export default function ControlPanel() {
                 />
                 Mostrar esta imagem no seu tamanho real na grelha (não a forçar no quadrado — usa para fotos de capa que escolheste, não mockups do fornecedor)
               </label>
+
+              <TextField
+                label="PrintKK — ID do design"
+                value={productForm.printkkDesignId || ""}
+                onChange={(value) => setProductForm({ ...productForm, printkkDesignId: value })}
+              />
+
+              <TextField
+                label="PrintKK — ID do produto (opcional)"
+                value={productForm.printkkProductId || ""}
+                onChange={(value) => setProductForm({ ...productForm, printkkProductId: value })}
+              />
 
               <TextField
                 label="Galeria (URLs separadas por vírgula)"
@@ -1692,6 +1723,73 @@ export default function ControlPanel() {
                 </button>
                 <button className="pill" type="button" onClick={() => syncProvider("apliiq")}>
                   Sincronizar Apliiq
+                </button>
+              </SectionActions>
+
+              <h3 className="wide">PrintKK</h3>
+              <p className="muted small wide">
+                Sem catálogo para sincronizar automaticamente (a PrintKK funciona por encomenda:
+                escolhes um produto em branco do catálogo deles e crias um design). Serve para
+                submeter automaticamente as encomendas de produtos aos quais tenhas associado um
+                ID de design da PrintKK.
+              </p>
+
+              <SelectField
+                label="Ativar PrintKK"
+                value={printkk.enabled ? "yes" : "no"}
+                options={["yes", "no"]}
+                onChange={(value) =>
+                  setSettings({
+                    ...settings,
+                    integrations: {
+                      ...settings.integrations,
+                      printkk: {
+                        ...printkk,
+                        enabled: value === "yes"
+                      }
+                    }
+                  })
+                }
+              />
+
+              <TextField
+                label="PrintKK API Key"
+                value={printkk.apiKey || ""}
+                onChange={(value) =>
+                  setSettings({
+                    ...settings,
+                    integrations: {
+                      ...settings.integrations,
+                      printkk: {
+                        ...printkk,
+                        apiKey: value
+                      }
+                    }
+                  })
+                }
+              />
+
+              <SelectField
+                label="Envio automático à PrintKK após pagamento"
+                value={printkk.autoSubmitOrders !== false ? "yes" : "no"}
+                options={["yes", "no"]}
+                onChange={(value) =>
+                  setSettings({
+                    ...settings,
+                    integrations: {
+                      ...settings.integrations,
+                      printkk: {
+                        ...printkk,
+                        autoSubmitOrders: value === "yes"
+                      }
+                    }
+                  })
+                }
+              />
+
+              <SectionActions>
+                <button className="pill" type="button" onClick={() => testConnection("printkk")}>
+                  Testar PrintKK
                 </button>
               </SectionActions>
 
