@@ -44,7 +44,9 @@ function addToCartQuick(product: Product) {
       printifyProductId: product.printifyProductId,
       printifyVariantId: product.printifyVariantId,
       apliiqSku: product.apliiqSku,
-      shopifyVariantId: product.shopifyVariantId
+      shopifyVariantId: product.shopifyVariantId,
+      printkkDesignId: product.printkkDesignId,
+      printkkProductId: product.printkkProductId
     });
   }
 

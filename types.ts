@@ -39,6 +39,8 @@ export type Product = {
   apliiqSku?: string;
   shopifyProductId?: string;
   shopifyVariantId?: string;
+  printkkDesignId?: string;
+  printkkProductId?: string;
   createdAt?: string;
 };
 
@@ -81,6 +83,8 @@ export type CartItem = {
   printifyVariantId?: string;
   apliiqSku?: string;
   shopifyVariantId?: string;
+  printkkDesignId?: string;
+  printkkProductId?: string;
 };
 
 export type Order = {

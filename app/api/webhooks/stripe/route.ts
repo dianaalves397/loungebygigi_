@@ -10,6 +10,7 @@ import { getSettings } from "@/lib/settings";
 import { recipientFromStripeSession, submitOrderToPrintful } from "@/lib/printfulOrders";
 import { submitOrderToPrintify } from "@/lib/printifyOrders";
 import { submitOrderToApliiq } from "@/lib/apliiqOrders";
+import { submitOrderToPrintkk } from "@/lib/printkkOrders";
 
 export const dynamic = "force-dynamic";
 export const revalidate = 0;
@@ -121,6 +122,18 @@ export async function POST(req: Request) {
     }
   } catch (error: any) {
     order.apliiq = { ...order.apliiq, submitted: false, error: error.message };
+  }
+
+  try {
+    if (recipient) {
+      const result = await submitOrderToPrintkk(settings, order, recipient);
+      order.printkk = { ...order.printkk, ...result };
+      if (result.submitted) anyFulfilled = true;
+    } else {
+      order.printkk = { ...order.printkk, submitted: false, reason: "Morada de envio em falta." };
+    }
+  } catch (error: any) {
+    order.printkk = { ...order.printkk, submitted: false, error: error.message };
   }
 
   if (anyFulfilled) order.status = "fulfilled";
