@@ -473,9 +473,29 @@ export default function ProductDetailClient({ product, related = [] }: { product
         {message ? <p className="product-message">{message}</p> : null}
 
         <ul className="product-trust-list">
-          <li>Produção sob encomenda — envio estimado indicado na política de envios</li>
-          <li>Problemas com o artigo? Trocas e reembolsos ao abrigo da política de devoluções</li>
-          <li>Pagamento processado de forma segura via Stripe / PayPal</li>
+          <li>
+            <svg viewBox="0 0 24 24" width="18" height="18" fill="none" aria-hidden="true">
+              <path d="M3 7h11v9H3z" stroke="currentColor" strokeWidth="1.4" strokeLinejoin="round" />
+              <path d="M14 10h4l3 3v3h-7z" stroke="currentColor" strokeWidth="1.4" strokeLinejoin="round" />
+              <circle cx="7" cy="18" r="1.6" stroke="currentColor" strokeWidth="1.3" />
+              <circle cx="17.5" cy="18" r="1.6" stroke="currentColor" strokeWidth="1.3" />
+            </svg>
+            <span>Produção sob encomenda — envio estimado indicado na política de envios</span>
+          </li>
+          <li>
+            <svg viewBox="0 0 24 24" width="18" height="18" fill="none" aria-hidden="true">
+              <path d="M4 12a8 8 0 1 1 2.6 5.9" stroke="currentColor" strokeWidth="1.4" strokeLinecap="round" />
+              <path d="M4 8v4h4" stroke="currentColor" strokeWidth="1.4" strokeLinecap="round" strokeLinejoin="round" />
+            </svg>
+            <span>Problemas com o artigo? Trocas e reembolsos ao abrigo da política de devoluções</span>
+          </li>
+          <li>
+            <svg viewBox="0 0 24 24" width="18" height="18" fill="none" aria-hidden="true">
+              <path d="M12 3l7 3v5c0 4.5-3 7.7-7 9-4-1.3-7-4.5-7-9V6z" stroke="currentColor" strokeWidth="1.4" strokeLinejoin="round" />
+              <path d="M9 12l2 2 4-4" stroke="currentColor" strokeWidth="1.4" strokeLinecap="round" strokeLinejoin="round" />
+            </svg>
+            <span>Pagamento processado de forma segura via Stripe / PayPal</span>
+          </li>
         </ul>
 
         {details.length > 0 ? (

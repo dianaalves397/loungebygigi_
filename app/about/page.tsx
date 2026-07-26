@@ -1,4 +1,5 @@
 import MediaBlock from "@/components/MediaBlock";
+import Nav from "@/components/Nav";
 import { getCachedPublicSettings } from "@/lib/cache";
 
 export const revalidate = 3600;
@@ -28,7 +29,9 @@ export default async function AboutPage() {
       : ["/editorial/hold-summer.jpg", "/editorial/hold-wacc.jpg", "/editorial/hold-macc.jpg"];
 
   return (
-    <main className="about-magazine">
+    <>
+      <Nav />
+      <main className="about-magazine">
       <section className="about-hero">
         <div>
           <p className="eyebrow">about</p>
@@ -67,7 +70,8 @@ export default async function AboutPage() {
           da Lounge by Gigi.
         </p>
       </section>
-    </main>
+      </main>
+    </>
   );
 }
 
