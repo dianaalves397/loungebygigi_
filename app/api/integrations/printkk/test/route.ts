@@ -12,7 +12,7 @@ export async function POST() {
   try {
     const result = await testPrintkkConnection(getPrintkkConfig(await getSettings()));
     return Response.json({
-      message: `Ligação PrintKK OK.${typeof result.count === "number" ? ` Produtos encontrados: ${result.count}.` : ""}`,
+      message: "Ligação PrintKK OK.",
       ...result
     });
   } catch (error: any) {

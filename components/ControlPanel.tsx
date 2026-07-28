@@ -29,6 +29,7 @@ type IntegrationSettings = {
   shopId?: string;
   apiKey?: string;
   sharedSecret?: string;
+  secretKey?: string;
 };
 
 type PaymentSettings = {
@@ -180,7 +181,8 @@ const defaultSettings: Settings = {
       useAsProductSource: false,
       autoSubmitOrders: true,
       apiToken: "",
-      apiKey: ""
+      apiKey: "",
+      secretKey: ""
     }
   },
   payments: {
@@ -1979,6 +1981,23 @@ export default function ControlPanel() {
                       printkk: {
                         ...printkk,
                         apiKey: value
+                      }
+                    }
+                  })
+                }
+              />
+
+              <TextField
+                label="PrintKK Secret Key"
+                value={printkk.secretKey || ""}
+                onChange={(value) =>
+                  setSettings({
+                    ...settings,
+                    integrations: {
+                      ...settings.integrations,
+                      printkk: {
+                        ...printkk,
+                        secretKey: value
                       }
                     }
                   })
