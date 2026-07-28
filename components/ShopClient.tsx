@@ -208,6 +208,11 @@ function ShopClientInner({
   const categoryParam = String(params.get("category") || initialCategory || "").trim();
   const query = String(params.get("q") || params.get("search") || initialQuery || "").trim();
   const sort = params.get("sort") || "";
+  const idsParam = String(params.get("ids") || "").trim();
+  const wantedIds = useMemo(
+    () => new Set(idsParam.split(",").map((id) => id.trim()).filter(Boolean)),
+    [idsParam]
+  );
 
   async function load() {
     setLoading(true);
@@ -235,21 +240,29 @@ function ShopClientInner({
   }, [categories, categoryParam]);
 
   const visibleProducts = useMemo(() => {
-    const filtered = products
+    const base = products
       .filter((product) => String(product.status || "active").toLowerCase() === "active")
-      .filter((product) => product.hidden !== true)
-      .filter((product) => productMatchesGender(product, query ? "all" : gender))
-      .filter((product) => productMatchesCategory(product, categoryParam, selectedCategory, categories))
-      .filter((product) => productMatchesSearch(product, query));
+      .filter((product) => product.hidden !== true);
+
+    // Lista escolhida a dedo (ex: secção do painel a apontar para produtos
+    // específicos) — ignora género/categoria/pesquisa, mostra só esta lista.
+    const filtered = wantedIds.size
+      ? base.filter((product) => wantedIds.has(String(product.id)))
+      : base
+          .filter((product) => productMatchesGender(product, query ? "all" : gender))
+          .filter((product) => productMatchesCategory(product, categoryParam, selectedCategory, categories))
+          .filter((product) => productMatchesSearch(product, query));
 
     return sortProducts(filtered, sort);
-  }, [products, categories, gender, categoryParam, selectedCategory, query, sort]);
+  }, [products, categories, gender, categoryParam, selectedCategory, query, sort, wantedIds]);
 
   const title = selectedCategory
     ? clean(selectedCategory.name || selectedCategory.title || categoryParam)
     : query
       ? "Pesquisa inteligente"
-      : "All products";
+      : wantedIds.size
+        ? "Seleção"
+        : "All products";
 
   return (
     <main className="shop-category-page">

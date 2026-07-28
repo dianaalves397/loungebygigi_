@@ -41,7 +41,8 @@ export const getCachedPublicSettings = unstable_cache(
       landing: settings?.landing || {},
       about: settings?.about || {},
       layout: settings?.layout || {},
-      navigation: settings?.navigation || []
+      navigation: settings?.navigation || [],
+      homeSections: settings?.homeSections || []
     };
   },
   ["public-settings"],
