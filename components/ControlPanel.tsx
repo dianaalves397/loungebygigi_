@@ -7,6 +7,7 @@ import type { Product, Category } from "@/types";
 type Tab =
   | "overview"
   | "home"
+  | "sections"
   | "products"
   | "categories"
   | "suppliers"
@@ -54,8 +55,20 @@ type HomeSettings = {
   newnessMediaType: MediaType;
 };
 
+type HomeSectionTargetType = "category" | "products";
+
+type HomeSection = {
+  id: string;
+  name: string;
+  mediaType: MediaType;
+  targetType: HomeSectionTargetType;
+  categoryId?: string;
+  productIds?: string[];
+};
+
 type Settings = {
   home: HomeSettings;
+  homeSections: HomeSection[];
   integrations: {
     printful: IntegrationSettings;
     printify: IntegrationSettings;
@@ -131,6 +144,7 @@ const defaultSettings: Settings = {
     newnessMediaUrl: "",
     newnessMediaType: "image"
   },
+  homeSections: [],
   integrations: {
     printful: {
       enabled: false,
@@ -298,6 +312,9 @@ export default function ControlPanel() {
       setSettings({
         ...defaultSettings,
         ...(settingsData || {}),
+        homeSections: Array.isArray((settingsData as any)?.homeSections)
+          ? (settingsData as any).homeSections
+          : defaultSettings.homeSections,
         integrations: {
           ...defaultSettings.integrations,
           ...((settingsData as any)?.integrations || {})
@@ -726,6 +743,33 @@ export default function ControlPanel() {
 
   const { printful, printify, apliiq, printkk } = settings.integrations;
   const payments = settings.payments;
+  const homeSections = settings.homeSections || [];
+
+  function updateSection(index: number, patch: Partial<HomeSection>) {
+    if (!settings) return;
+    const next = [...homeSections];
+    next[index] = { ...next[index], ...patch };
+    setSettings({ ...settings, homeSections: next });
+  }
+
+  function addSection() {
+    if (!settings) return;
+    setSettings({
+      ...settings,
+      homeSections: [
+        ...homeSections,
+        { id: "", name: "", mediaType: "image", targetType: "category", categoryId: "", productIds: [] }
+      ]
+    });
+  }
+
+  function removeSection(index: number) {
+    if (!settings) return;
+    setSettings({
+      ...settings,
+      homeSections: homeSections.filter((_, i) => i !== index)
+    });
+  }
 
   return (
     <main className="control-shell">
@@ -737,6 +781,9 @@ export default function ControlPanel() {
         </button>
         <button type="button" className={tab === "home" ? "active" : ""} onClick={() => setTab("home")}>
           Página inicial
+        </button>
+        <button type="button" className={tab === "sections" ? "active" : ""} onClick={() => setTab("sections")}>
+          Secções da coleção
         </button>
         <button type="button" className={tab === "products" ? "active" : ""} onClick={() => setTab("products")}>
           Produtos
@@ -969,6 +1016,114 @@ export default function ControlPanel() {
                   onClick={() => saveSettings({ home: settings.home })}
                 >
                   Guardar página inicial
+                </button>
+              </SectionActions>
+            </div>
+          </Panel>
+        )}
+
+        {tab === "sections" && (
+          <Panel title="Secções da coleção" eyebrow="editorial">
+            <div className="form-grid">
+              <p className="muted small wide">
+                Aparecem depois do moodboard, em <code>/collections/women</code> e{" "}
+                <code>/collections/men</code> (blocos grandes, um por cima do outro, com o nome e um
+                link). A imagem/vídeo de cada bloco não se cola aqui — tem de ser colocada no GitHub
+                em <code>public/home-sections/</code> com o nome exato do ID do bloco (ex:{" "}
+                <code>bestsellers.jpg</code> para imagem, ou <code>bestsellers.mp4</code> para vídeo).
+                O ID fica fixo depois de criado, para poderes mudar o nome mostrado no site sem teres
+                de subir o ficheiro outra vez.
+              </p>
+
+              {homeSections.map((section, index) => (
+                <div key={index} className="wide" style={{ borderTop: "1px solid rgba(33,26,23,.12)", paddingTop: 16, marginTop: index === 0 ? 0 : 8 }}>
+                  <div className="form-grid">
+                    <TextField
+                      label="Nome mostrado no site"
+                      value={section.name}
+                      onChange={(value) =>
+                        updateSection(index, {
+                          name: value,
+                          id: section.id || makeSlug(value)
+                        })
+                      }
+                    />
+
+                    <label>
+                      ID (nome do ficheiro no GitHub)
+                      <input value={section.id} readOnly disabled />
+                    </label>
+
+                    <SelectField
+                      label="Tipo de media"
+                      value={section.mediaType}
+                      options={["image", "video"]}
+                      onChange={(value) => updateSection(index, { mediaType: value as MediaType })}
+                    />
+
+                    <SelectField
+                      label="Ao clicar, vai para"
+                      value={section.targetType}
+                      options={["category", "products"]}
+                      onChange={(value) =>
+                        updateSection(index, { targetType: value as HomeSectionTargetType })
+                      }
+                    />
+
+                    {section.targetType === "products" ? (
+                      <TextField
+                        label="IDs dos produtos (separados por vírgula)"
+                        value={(section.productIds || []).join(", ")}
+                        onChange={(value) =>
+                          updateSection(index, {
+                            productIds: value.split(",").map((id) => id.trim()).filter(Boolean)
+                          })
+                        }
+                      />
+                    ) : (
+                      <label>
+                        Categoria ou subcategoria
+                        <select
+                          value={section.categoryId || ""}
+                          onChange={(e) => updateSection(index, { categoryId: e.target.value })}
+                        >
+                          <option value="">— escolhe —</option>
+                          {categories
+                            .filter((category: any) => !category.hidden && !category.synthetic)
+                            .sort((a: any, b: any) => Number(a.sortOrder || 999) - Number(b.sortOrder || 999))
+                            .map((category: any) => (
+                              <option key={category.id} value={category.id}>
+                                {category.parentId ? "— " : ""}
+                                {category.name}
+                              </option>
+                            ))}
+                        </select>
+                      </label>
+                    )}
+                  </div>
+
+                  <SectionActions>
+                    <button className="pill" type="button" onClick={() => removeSection(index)}>
+                      Remover secção
+                    </button>
+                  </SectionActions>
+                </div>
+              ))}
+
+              <SectionActions>
+                <button className="pill" type="button" onClick={addSection}>
+                  Adicionar secção
+                </button>
+              </SectionActions>
+
+              <SectionActions>
+                <button
+                  className="pill dark-pill"
+                  type="button"
+                  disabled={submitting}
+                  onClick={() => saveSettings({ homeSections: settings.homeSections })}
+                >
+                  Guardar secções
                 </button>
               </SectionActions>
             </div>

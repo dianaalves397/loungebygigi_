@@ -575,6 +575,99 @@
 }
 
 /* ------------------------------------------------------------
+   SECÇÕES DEPOIS DO MOODBOARD — banners grandes "shop by", como na
+   home da SKIMS. Imagem/vídeo de fundo + nome + link para uma
+   categoria/subcategoria ou lista de produtos (editável no painel).
+   ------------------------------------------------------------ */
+
+.lg-homesections {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+  background: var(--lg-paper-deep);
+}
+
+.lg-homesection {
+  position: relative;
+  display: block;
+  height: 78vh;
+  min-height: 420px;
+  max-height: 760px;
+  overflow: hidden;
+  color: var(--lg-paper);
+}
+
+.lg-homesection-media {
+  position: absolute;
+  inset: 0;
+}
+
+.lg-homesection-media img,
+.lg-homesection-media video {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  transition: transform 0.7s cubic-bezier(0.22, 1, 0.36, 1);
+}
+
+.lg-homesection:hover .lg-homesection-media img,
+.lg-homesection:hover .lg-homesection-media video {
+  transform: scale(1.035);
+}
+
+.lg-homesection::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(180deg, rgba(30, 25, 19, 0) 40%, rgba(30, 25, 19, 0.55) 100%);
+  pointer-events: none;
+}
+
+.lg-homesection-caption {
+  position: absolute;
+  z-index: 2;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  display: flex;
+  align-items: flex-end;
+  justify-content: space-between;
+  gap: 20px;
+  padding: 44px 6vw;
+}
+
+.lg-homesection-name {
+  font-family: var(--lg-display);
+  font-style: italic;
+  font-weight: 500;
+  font-size: clamp(2.2rem, 5vw, 4.4rem);
+  line-height: 1;
+}
+
+.lg-homesection-cta {
+  font-family: var(--lg-body);
+  font-size: 0.78rem;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  white-space: nowrap;
+  padding-bottom: 0.4rem;
+}
+
+@media (max-width: 720px) {
+  .lg-homesection {
+    height: 60vh;
+    min-height: 340px;
+  }
+
+  .lg-homesection-caption {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 8px;
+    padding: 28px 24px;
+  }
+}
+
+/* ------------------------------------------------------------
    PÁGINA DE CATEGORIA — hero 3D cinematográfico + corpo em papel
    ------------------------------------------------------------ */
 

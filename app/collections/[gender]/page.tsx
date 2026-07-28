@@ -5,6 +5,7 @@ import { notFound } from "next/navigation";
 import type { Metadata } from "next";
 import Nav from "@/components/Nav";
 import MoodboardGrid from "@/components/moodboard/MoodboardGrid";
+import HomeSections from "@/components/moodboard/HomeSections";
 import { getCachedCategories, getCachedProducts, getCachedPublicSettings } from "@/lib/cache";
 import { getDescendantCategoryIds } from "@/lib/categoryUtils";
 
@@ -119,6 +120,8 @@ export default async function CollectionsPage({
         </header>
 
         <MoodboardGrid categories={visible} brand={brand} label={label} gender={gender} />
+
+        <HomeSections sections={settings.homeSections} gender={gender} />
       </main>
     </>
   );
