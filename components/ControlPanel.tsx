@@ -224,6 +224,9 @@ async function requestJson<T>(input: RequestInfo | URL, init?: RequestInit): Pro
   const data = await parseJsonSafe<T & { error?: string; message?: string }>(response);
 
   if (!response.ok) {
+    if (response.status === 401) {
+      throw new Error("Sessão expirada. Atualiza a página e inicia sessão novamente.");
+    }
     throw new Error(data?.error || data?.message || "Pedido falhou.");
   }
 
@@ -535,6 +538,9 @@ export default function ControlPanel() {
       const data = await parseJsonSafe<{ hidden?: boolean; error?: string }>(response);
 
       if (!response.ok) {
+        if (response.status === 401) {
+          throw new Error("Sessão expirada. Atualiza a página e inicia sessão novamente.");
+        }
         throw new Error(data?.error || "Erro ao apagar produto.");
       }
 
@@ -616,6 +622,9 @@ export default function ControlPanel() {
       const data = await parseJsonSafe<{ error?: string }>(response);
 
       if (!response.ok) {
+        if (response.status === 401) {
+          throw new Error("Sessão expirada. Atualiza a página e inicia sessão novamente.");
+        }
         throw new Error(data?.error || "Erro ao apagar categoria.");
       }
 
