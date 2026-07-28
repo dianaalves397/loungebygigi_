@@ -4921,21 +4921,27 @@ video {
   align-self: start !important;
 }
 
-/* Proporção retrato (estilo referência), não quadrada: as fotos de moda
-   normalmente já vêm neste formato e ficam edge-to-edge sem faixas vazias;
-   mantém "contain" (não "cover") para não cortar as fotos que não sejam
-   neste formato (ex: mockups quadrados de print-on-demand) — essas ficam
-   com uma pequena faixa vazia em vez de aparecerem cortadas. */
+/* Cada cartão usa o tamanho real da própria foto — sem proporção forçada,
+   para nunca sobrar uma faixa de fundo de cor diferente da imagem. Imagens
+   de proporções diferentes ficam com alturas diferentes na grelha (o grid
+   já usa align-items:start, por isso isto não estica nem corta cartões
+   vizinhos). */
 .product-card .product-media,
 .product-media {
-  aspect-ratio: 3 / 4 !important;
+  aspect-ratio: auto !important;
+  height: auto !important;
 }
 
 .product-card .product-media img,
 .product-card .product-media video,
 .product-media img,
 .product-media video {
-  aspect-ratio: 3 / 4 !important;
+  aspect-ratio: auto !important;
+  width: 100% !important;
+  height: auto !important;
+  min-height: 0 !important;
+  object-fit: contain !important;
+  padding: 0 !important;
 }
 
 /* Produtos com imagem de capa escolhida por nós (não a mockup do
