@@ -56,10 +56,16 @@ type HomeSettings = {
 };
 
 type HomeSectionTargetType = "category" | "products";
+type HomeSectionFontStyle = "serif-italic" | "serif-upright" | "sans-bold" | "sans-light";
+type HomeSectionWidth = "full" | "half";
 
 type HomeSection = {
   id: string;
   name: string;
+  subtitle?: string;
+  ctaLabel?: string;
+  fontStyle: HomeSectionFontStyle;
+  width: HomeSectionWidth;
   mediaType: MediaType;
   targetType: HomeSectionTargetType;
   categoryId?: string;
@@ -758,7 +764,18 @@ export default function ControlPanel() {
       ...settings,
       homeSections: [
         ...homeSections,
-        { id: "", name: "", mediaType: "image", targetType: "category", categoryId: "", productIds: [] }
+        {
+          id: "",
+          name: "",
+          subtitle: "",
+          ctaLabel: "",
+          fontStyle: "serif-italic",
+          width: "full",
+          mediaType: "image",
+          targetType: "category",
+          categoryId: "",
+          productIds: []
+        }
       ]
     });
   }
@@ -1027,9 +1044,11 @@ export default function ControlPanel() {
             <div className="form-grid">
               <p className="muted small wide">
                 Aparecem depois do moodboard, em <code>/collections/women</code> e{" "}
-                <code>/collections/men</code> (blocos grandes, um por cima do outro, com o nome e um
-                link). A imagem/vídeo de cada bloco não se cola aqui — tem de ser colocada no GitHub
-                em <code>public/home-sections/</code> com o nome exato do ID do bloco (ex:{" "}
+                <code>/collections/men</code>. Duas secções seguidas marcadas como "metade" ficam lado
+                a lado na mesma linha (como "New Arrivals" + "Best Sellers"); uma marcada como "largura
+                total" ocupa a linha toda sozinha (como um banner de destaque). A imagem/vídeo de cada
+                bloco não se cola aqui — tem de ser colocada no GitHub em{" "}
+                <code>public/home-sections/</code> com o nome exato do ID do bloco (ex:{" "}
                 <code>bestsellers.jpg</code> para imagem, ou <code>bestsellers.mp4</code> para vídeo).
                 O ID fica fixo depois de criado, para poderes mudar o nome mostrado no site sem teres
                 de subir o ficheiro outra vez.
@@ -1053,6 +1072,34 @@ export default function ControlPanel() {
                       ID (nome do ficheiro no GitHub)
                       <input value={section.id} readOnly disabled />
                     </label>
+
+                    <TextField
+                      label="Subtítulo (opcional)"
+                      value={section.subtitle || ""}
+                      onChange={(value) => updateSection(index, { subtitle: value })}
+                    />
+
+                    <TextField
+                      label="Texto do botão (opcional — deixa vazio para não mostrar botão)"
+                      value={section.ctaLabel || ""}
+                      onChange={(value) => updateSection(index, { ctaLabel: value })}
+                    />
+
+                    <SelectField
+                      label="Tipo de letra do nome"
+                      value={section.fontStyle || "serif-italic"}
+                      options={["serif-italic", "serif-upright", "sans-bold", "sans-light"]}
+                      onChange={(value) =>
+                        updateSection(index, { fontStyle: value as HomeSectionFontStyle })
+                      }
+                    />
+
+                    <SelectField
+                      label="Largura do bloco"
+                      value={section.width || "full"}
+                      options={["full", "half"]}
+                      onChange={(value) => updateSection(index, { width: value as HomeSectionWidth })}
+                    />
 
                     <SelectField
                       label="Tipo de media"

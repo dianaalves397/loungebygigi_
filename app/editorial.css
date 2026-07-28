@@ -587,6 +587,16 @@
   background: var(--lg-paper-deep);
 }
 
+.lg-homerow {
+  display: flex;
+  gap: 2px;
+}
+
+.lg-homerow .lg-homesection {
+  flex: 1 1 0;
+  min-width: 0;
+}
+
 .lg-homesection {
   position: relative;
   display: block;
@@ -630,39 +640,92 @@
   right: 0;
   bottom: 0;
   display: flex;
-  align-items: flex-end;
-  justify-content: space-between;
-  gap: 20px;
+  flex-direction: column;
+  gap: 10px;
   padding: 44px 6vw;
 }
 
+.lg-homesection--center .lg-homesection-caption {
+  align-items: center;
+  text-align: center;
+}
+
+.lg-homesection--left .lg-homesection-caption {
+  align-items: flex-start;
+  text-align: left;
+}
+
 .lg-homesection-name {
+  line-height: 1;
+}
+
+/* Serifa itálica (o estilo original destas secções) */
+.lg-homesection--serif-italic .lg-homesection-name {
   font-family: var(--lg-display);
   font-style: italic;
   font-weight: 500;
   font-size: clamp(2.2rem, 5vw, 4.4rem);
-  line-height: 1;
+}
+
+/* Serifa direita, sem itálico — mais clássica */
+.lg-homesection--serif-upright .lg-homesection-name {
+  font-family: var(--lg-display);
+  font-style: normal;
+  font-weight: 600;
+  font-size: clamp(2rem, 4.6vw, 4rem);
+}
+
+/* Sans-serif a negrito, maiúsculas — estilo "THE ALTITUDE COLLECTION" */
+.lg-homesection--sans-bold .lg-homesection-name {
+  font-family: var(--lg-body);
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.01em;
+  font-size: clamp(1.8rem, 4.4vw, 3.4rem);
+}
+
+/* Sans-serif fina, maiúsculas, mais espaçada */
+.lg-homesection--sans-light .lg-homesection-name {
+  font-family: var(--lg-body);
+  font-weight: 400;
+  text-transform: uppercase;
+  letter-spacing: 0.14em;
+  font-size: clamp(1.5rem, 3.6vw, 2.8rem);
+}
+
+.lg-homesection-subtitle {
+  font-family: var(--lg-body);
+  font-size: 0.9rem;
+  font-weight: 300;
+  opacity: 0.85;
+  max-width: 460px;
 }
 
 .lg-homesection-cta {
+  display: inline-block;
+  margin-top: 6px;
+  padding: 0.75rem 1.4rem;
+  background: var(--lg-paper);
+  color: var(--lg-ink);
   font-family: var(--lg-body);
-  font-size: 0.78rem;
-  letter-spacing: 0.14em;
+  font-size: 0.76rem;
+  font-weight: 600;
+  letter-spacing: 0.1em;
   text-transform: uppercase;
   white-space: nowrap;
-  padding-bottom: 0.4rem;
 }
 
 @media (max-width: 720px) {
+  .lg-homerow {
+    flex-direction: column;
+  }
+
   .lg-homesection {
     height: 60vh;
     min-height: 340px;
   }
 
   .lg-homesection-caption {
-    flex-direction: column;
-    align-items: flex-start;
-    gap: 8px;
     padding: 28px 24px;
   }
 }
