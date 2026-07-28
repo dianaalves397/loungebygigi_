@@ -1186,7 +1186,15 @@ export default function ControlPanel() {
                               .join(", ")
                           : product.category || product.categoryId}
                       </td>
-                      <td>{product.price} EUR</td>
+                      <td>
+                        {Number(product.price || 0) <= 0 ? (
+                          <span className="row-warning-text" title="Preço a 0 — o produto vende-se de graça até isto ser corrigido">
+                            ⚠ 0 EUR
+                          </span>
+                        ) : (
+                          `${product.price} EUR`
+                        )}
+                      </td>
                       <td>{product.stock}</td>
                       <td>
                         <div className="inline-actions">
