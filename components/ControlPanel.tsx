@@ -75,6 +75,7 @@ type HomeSection = {
 type Settings = {
   home: HomeSettings;
   homeSections: HomeSection[];
+  homeSectionsInitialized?: boolean;
   integrations: {
     printful: IntegrationSettings;
     printify: IntegrationSettings;
@@ -1168,7 +1169,12 @@ export default function ControlPanel() {
                   className="pill dark-pill"
                   type="button"
                   disabled={submitting}
-                  onClick={() => saveSettings({ homeSections: settings.homeSections })}
+                  onClick={() =>
+                    saveSettings({
+                      homeSections: settings.homeSections,
+                      homeSectionsInitialized: true
+                    })
+                  }
                 >
                   Guardar secções
                 </button>
