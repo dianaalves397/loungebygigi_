@@ -731,13 +731,12 @@
   }
 }
 
-/* Galeria (várias fotos lado a lado) — fundo escuro tipo "estojo" de
-   apresentação de coleção, com uma barra de legendas pequenas nos cantos
-   por cima (nome à esquerda, subtítulo à direita), como numa referência
-   de brief/lookbook de marca. */
+/* Galeria (várias fotos lado a lado) — mesmo fundo do resto do site (não
+   escuro), com uma barra de legendas pequenas nos cantos por cima (nome à
+   esquerda, subtítulo à direita). */
 .lg-homegallery {
-  color: var(--lg-paper);
-  background: var(--lg-ink);
+  color: var(--lg-ink);
+  background: var(--lg-paper);
   padding: 20px 20px 26px;
 }
 
