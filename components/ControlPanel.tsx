@@ -29,6 +29,7 @@ type IntegrationSettings = {
   shopId?: string;
   apiKey?: string;
   sharedSecret?: string;
+  secretKey?: string;
 };
 
 type PaymentSettings = {
@@ -58,6 +59,7 @@ type HomeSettings = {
 type HomeSectionTargetType = "category" | "products";
 type HomeSectionFontStyle = "serif-italic" | "serif-upright" | "sans-bold" | "sans-light";
 type HomeSectionWidth = "full" | "half";
+type HomeSectionType = "banner" | "gallery" | "heading";
 
 type HomeSection = {
   id: string;
@@ -70,6 +72,8 @@ type HomeSection = {
   targetType: HomeSectionTargetType;
   categoryId?: string;
   productIds?: string[];
+  type: HomeSectionType;
+  imageCount?: number;
 };
 
 type Settings = {
@@ -180,7 +184,8 @@ const defaultSettings: Settings = {
       useAsProductSource: false,
       autoSubmitOrders: true,
       apiToken: "",
-      apiKey: ""
+      apiKey: "",
+      secretKey: ""
     }
   },
   payments: {
@@ -222,6 +227,9 @@ async function requestJson<T>(input: RequestInfo | URL, init?: RequestInit): Pro
   const data = await parseJsonSafe<T & { error?: string; message?: string }>(response);
 
   if (!response.ok) {
+    if (response.status === 401) {
+      throw new Error("Sessão expirada. Atualiza a página e inicia sessão novamente.");
+    }
     throw new Error(data?.error || data?.message || "Pedido falhou.");
   }
 
@@ -533,6 +541,9 @@ export default function ControlPanel() {
       const data = await parseJsonSafe<{ hidden?: boolean; error?: string }>(response);
 
       if (!response.ok) {
+        if (response.status === 401) {
+          throw new Error("Sessão expirada. Atualiza a página e inicia sessão novamente.");
+        }
         throw new Error(data?.error || "Erro ao apagar produto.");
       }
 
@@ -614,6 +625,9 @@ export default function ControlPanel() {
       const data = await parseJsonSafe<{ error?: string }>(response);
 
       if (!response.ok) {
+        if (response.status === 401) {
+          throw new Error("Sessão expirada. Atualiza a página e inicia sessão novamente.");
+        }
         throw new Error(data?.error || "Erro ao apagar categoria.");
       }
 
@@ -775,7 +789,9 @@ export default function ControlPanel() {
           mediaType: "image",
           targetType: "category",
           categoryId: "",
-          productIds: []
+          productIds: [],
+          type: "banner",
+          imageCount: 3
         }
       ]
     });
@@ -1045,21 +1061,31 @@ export default function ControlPanel() {
             <div className="form-grid">
               <p className="muted small wide">
                 Aparecem depois do moodboard, em <code>/collections/women</code> e{" "}
-                <code>/collections/men</code>. Duas secções seguidas marcadas como "metade" ficam lado
-                a lado na mesma linha (como "New Arrivals" + "Best Sellers"); uma marcada como "largura
-                total" ocupa a linha toda sozinha (como um banner de destaque). A imagem/vídeo de cada
-                bloco não se cola aqui — tem de ser colocada no GitHub em{" "}
-                <code>public/home-sections/</code> com o nome exato do ID do bloco (ex:{" "}
-                <code>bestsellers.jpg</code> para imagem, ou <code>bestsellers.mp4</code> para vídeo).
-                O ID fica fixo depois de criado, para poderes mudar o nome mostrado no site sem teres
-                de subir o ficheiro outra vez.
+                <code>/collections/men</code>. Há 3 tipos de bloco: "Banner" (imagem grande com texto
+                por cima — duas marcadas como "metade" ficam lado a lado, uma "largura total" ocupa a
+                linha toda), "Galeria" (3 ou 5 fotos lado a lado, sem legendas, com um título pequeno
+                opcional por cima) e "Título" (só texto, sem imagem, para separar secções). As
+                imagens/vídeos não se colam aqui — vão para o GitHub em{" "}
+                <code>public/home-sections/</code> com o nome do ID do bloco: <code>{"{id}"}.jpg</code>{" "}
+                (ou <code>.mp4</code>) para Banner, e <code>{"{id}"}-1.jpg</code>, <code>{"{id}"}-2.jpg</code>
+                ... para Galeria. O ID fica fixo depois de criado, para poderes mudar o nome mostrado
+                no site sem teres de subir os ficheiros outra vez.
               </p>
 
-              {homeSections.map((section, index) => (
+              {homeSections.map((section, index) => {
+                const sectionType = section.type || "banner";
+                return (
                 <div key={index} className="wide" style={{ borderTop: "1px solid rgba(33,26,23,.12)", paddingTop: 16, marginTop: index === 0 ? 0 : 8 }}>
                   <div className="form-grid">
+                    <SelectField
+                      label="Tipo de secção"
+                      value={sectionType}
+                      options={["banner", "gallery", "heading"]}
+                      onChange={(value) => updateSection(index, { type: value as HomeSectionType })}
+                    />
+
                     <TextField
-                      label="Nome mostrado no site"
+                      label={sectionType === "gallery" ? "Título mostrado no site (opcional)" : "Nome mostrado no site"}
                       value={section.name}
                       onChange={(value) =>
                         updateSection(index, {
@@ -1080,11 +1106,13 @@ export default function ControlPanel() {
                       onChange={(value) => updateSection(index, { subtitle: value })}
                     />
 
-                    <TextField
-                      label="Texto do botão (opcional — deixa vazio para não mostrar botão)"
-                      value={section.ctaLabel || ""}
-                      onChange={(value) => updateSection(index, { ctaLabel: value })}
-                    />
+                    {sectionType !== "gallery" && (
+                      <TextField
+                        label="Texto do botão (opcional — deixa vazio para não mostrar botão)"
+                        value={section.ctaLabel || ""}
+                        onChange={(value) => updateSection(index, { ctaLabel: value })}
+                      />
+                    )}
 
                     <SelectField
                       label="Tipo de letra do nome"
@@ -1095,19 +1123,32 @@ export default function ControlPanel() {
                       }
                     />
 
-                    <SelectField
-                      label="Largura do bloco"
-                      value={section.width || "full"}
-                      options={["full", "half"]}
-                      onChange={(value) => updateSection(index, { width: value as HomeSectionWidth })}
-                    />
+                    {sectionType === "gallery" && (
+                      <SelectField
+                        label="Número de fotos"
+                        value={String(section.imageCount || 3)}
+                        options={["3", "5"]}
+                        onChange={(value) => updateSection(index, { imageCount: Number(value) })}
+                      />
+                    )}
 
-                    <SelectField
-                      label="Tipo de media"
-                      value={section.mediaType}
-                      options={["image", "video"]}
-                      onChange={(value) => updateSection(index, { mediaType: value as MediaType })}
-                    />
+                    {sectionType === "banner" && (
+                      <SelectField
+                        label="Largura do bloco"
+                        value={section.width || "full"}
+                        options={["full", "half"]}
+                        onChange={(value) => updateSection(index, { width: value as HomeSectionWidth })}
+                      />
+                    )}
+
+                    {sectionType === "banner" && (
+                      <SelectField
+                        label="Tipo de media"
+                        value={section.mediaType}
+                        options={["image", "video"]}
+                        onChange={(value) => updateSection(index, { mediaType: value as MediaType })}
+                      />
+                    )}
 
                     <SelectField
                       label="Ao clicar, vai para"
@@ -1156,7 +1197,8 @@ export default function ControlPanel() {
                     </button>
                   </SectionActions>
                 </div>
-              ))}
+                );
+              })}
 
               <SectionActions>
                 <button className="pill" type="button" onClick={addSection}>
@@ -1979,6 +2021,23 @@ export default function ControlPanel() {
                       printkk: {
                         ...printkk,
                         apiKey: value
+                      }
+                    }
+                  })
+                }
+              />
+
+              <TextField
+                label="PrintKK Secret Key"
+                value={printkk.secretKey || ""}
+                onChange={(value) =>
+                  setSettings({
+                    ...settings,
+                    integrations: {
+                      ...settings.integrations,
+                      printkk: {
+                        ...printkk,
+                        secretKey: value
                       }
                     }
                   })

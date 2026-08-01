@@ -281,7 +281,6 @@
 .lgm-word,
 .lgm-card-caption,
 .lgm-kicker,
-.lgmm-rail,
 .lgm-seal-caption {
   font-family: var(--lg-body);
   text-transform: uppercase;
@@ -472,56 +471,24 @@
     line-height: 1;
   }
 
-  /* duas colunas verdadeiras; goteiras reservadas para o texto vertical */
+  /* uma coluna só: fotos a toda a largura, empilhadas, como numa
+     colagem/lookbook editorial — cada foto no seu tamanho real. */
   .lgm-mobile {
-    display: grid;
-    grid-template-columns: minmax(0, 1fr) minmax(0, 1fr);
-    column-gap: 30px; /* goteira central onde vive o texto vertical */
-    padding-right: 22px; /* margem direita onde vive o outro texto */
-    align-items: start;
+    display: block;
+    padding: 0 20px;
   }
 
-  .lgmm-col {
+  .lgmm-list {
     display: flex;
     flex-direction: column;
-    gap: 14px;
-    min-width: 0;
+    gap: 40px;
   }
 
-  /* a coluna direita é mais densa e alta — ritmo da referência */
-  .lgmm-cell { position: relative; }
-
   .lgmm-tile {
-    position: relative;
     display: block;
     text-decoration: none;
     color: inherit;
   }
-
-  /* o nome corre na vertical, colado à direita de CADA imagem,
-     invadindo a goteira (central para a col. esquerda, margem p/ a direita) */
-  .lgmm-rail {
-    position: absolute;
-    top: 0;
-    bottom: 0;
-    right: -26px;
-    width: 26px;
-    overflow: hidden;
-    display: flex;
-    justify-content: center;
-    writing-mode: vertical-rl;
-    font-family: var(--lg-body);
-    font-size: 9px;
-    font-weight: 500;
-    letter-spacing: 0.42em;
-    text-transform: uppercase;
-    color: rgba(30, 25, 19, 0.62);
-    white-space: nowrap;
-    user-select: none;
-    pointer-events: none;
-  }
-
-  .lgmm-col-right .lgmm-rail { right: -20px; width: 20px; }
 
   .lgmm-media {
     margin: 0;
@@ -529,38 +496,37 @@
     background: var(--lg-paper-deep);
   }
 
-  /* alturas: esquerda mais quadrada, direita mais alta (como a referência) */
-  .lgmm-col-left .lgmm-cell:nth-child(odd) .lgmm-media { aspect-ratio: 1 / 1.05; }
-  .lgmm-col-left .lgmm-cell:nth-child(even) .lgmm-media { aspect-ratio: 4 / 5; }
-  .lgmm-col-right .lgmm-cell:nth-child(odd) .lgmm-media { aspect-ratio: 10 / 16; }
-  .lgmm-col-right .lgmm-cell:nth-child(even) .lgmm-media { aspect-ratio: 3 / 4; }
-
   .lgmm-media img {
+    display: block;
     width: 100%;
-    height: 100%;
-    object-fit: cover;
-    filter: sepia(0.65) saturate(0.5) hue-rotate(-6deg) brightness(1.04) contrast(0.96);
-    transition: filter 0.8s ease;
+    height: auto;
   }
-
-  .lgmm-tile:active .lgmm-media img,
-  .lgmm-tile:focus-visible .lgmm-media img { filter: none; }
 
   .lgmm-caption {
     display: flex;
     justify-content: space-between;
+    align-items: baseline;
     gap: 8px;
-    margin: 8px 2px 0;
-    font-family: var(--lg-body);
-    font-size: 8.5px;
-    letter-spacing: 0.28em;
-    text-transform: uppercase;
+    margin: 12px 2px 0;
+  }
+
+  .lgmm-caption span:first-child {
+    font-family: var(--lg-display);
+    font-style: italic;
+    font-weight: 500;
+    font-size: 20px;
     color: var(--lg-ink);
   }
 
-  .lgmm-caption span:last-child { color: var(--lg-sepia); }
+  .lgmm-caption span:last-child {
+    font-family: var(--lg-body);
+    font-size: 9px;
+    letter-spacing: 0.22em;
+    text-transform: uppercase;
+    color: var(--lg-sepia);
+  }
 
-  .lgmm-seal { padding-top: 14px; }
+  .lgmm-seal { padding-top: 6px; }
 
   .lgmm-seal .lgm-seal-card {
     aspect-ratio: 4 / 5;
@@ -592,7 +558,9 @@
   gap: 2px;
 }
 
-.lg-homerow .lg-homesection {
+.lg-homerow .lg-homesection,
+.lg-homerow .lg-homegallery,
+.lg-homerow .lg-homeheading {
   flex: 1 1 0;
   min-width: 0;
 }
@@ -727,6 +695,79 @@
 
   .lg-homesection-caption {
     padding: 28px 24px;
+  }
+}
+
+/* Galeria (várias fotos lado a lado, sem legendas) */
+.lg-homegallery {
+  color: var(--lg-ink);
+  background: var(--lg-paper);
+  padding: 56px 0;
+}
+
+.lg-homegallery-title {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  text-align: center;
+  gap: 6px;
+  padding: 0 6vw 32px;
+}
+
+.lg-homegallery-row {
+  display: flex;
+  gap: 2px;
+}
+
+.lg-homegallery-item {
+  display: block;
+  flex: 1 1 0;
+  min-width: 0;
+  aspect-ratio: 3 / 4;
+  overflow: hidden;
+}
+
+.lg-homegallery-item img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  transition: transform 0.7s cubic-bezier(0.22, 1, 0.36, 1);
+}
+
+.lg-homegallery-item:hover img {
+  transform: scale(1.035);
+}
+
+/* Título liso (bloco sem imagem, só texto) */
+.lg-homeheading {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  text-align: center;
+  gap: 10px;
+  padding: 90px 6vw;
+  color: var(--lg-ink);
+  background: var(--lg-paper);
+}
+
+.lg-homeheading .lg-homesection-cta {
+  background: var(--lg-ink);
+  color: var(--lg-paper);
+}
+
+@media (max-width: 720px) {
+  .lg-homegallery-row {
+    flex-wrap: wrap;
+  }
+
+  .lg-homegallery-item {
+    flex: 1 1 45%;
+    aspect-ratio: 1 / 1;
+  }
+
+  .lg-homeheading {
+    padding: 56px 24px;
   }
 }
 
