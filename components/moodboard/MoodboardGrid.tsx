@@ -18,14 +18,6 @@ type MoodCategory = {
   count?: number;
 };
 
-function RailText({ word }: { word: string }) {
-  return (
-    <span className="lgmm-rail" aria-hidden="true">
-      {`${word} `.repeat(14).toUpperCase()}
-    </span>
-  );
-}
-
 function SealCard({ brand, className }: { brand: string; className?: string }) {
   return (
     <div className={`lgm-seal-card ${className || ""}`} aria-hidden="true">
@@ -144,66 +136,35 @@ export default function MoodboardGrid({
       </section>
 
       {/* ===================== TELEMÓVEL ===================== */}
-      {/* Duas colunas de fotografias; o nome da coleção corre na vertical
-          na goteira central e na margem direita, colado a cada imagem,
-          como na referência. O cartão-selo entra na coluna esquerda. */}
+      {/* Uma coluna só: fotos a toda a largura, empilhadas com espaço
+          generoso entre elas e uma legenda pequena e discreta por baixo
+          de cada uma — como numa colagem/lookbook editorial. */}
       <section className="lgm-mobile" aria-label={`Moodboard ${label}`}>
-        <div className="lgmm-col lgmm-col-left">
-          {categories
-            .filter((_, index) => index % 2 === 0)
-            .map((category, position) => (
-              <div key={category.id} className="lgmm-cell">
-                <Link href={`/category/${category.id}?from=${gender}`} className="lgmm-tile">
-                  <figure className="lgmm-media">
-                    {/* eslint-disable-next-line @next/next/no-img-element */}
-                    <img src={category.image} alt={category.name} loading="lazy" />
-                  </figure>
-                  <p className="lgmm-caption">
-                    <span>{category.name}</span>
-                    <span>
-                      {typeof category.count === "number" && category.count > 0
-                        ? `${category.count}`
-                        : "→"}
-                    </span>
-                  </p>
-                  <RailText word={label} />
-                </Link>
-                {position === 0 ? (
-                  <div className="lgmm-seal">
-                    <SealCard brand={brand} />
-                  </div>
-                ) : null}
-              </div>
-            ))}
-          {categories.length <= 1 ? (
-            <div className="lgmm-seal">
-              <SealCard brand={brand} />
-            </div>
-          ) : null}
+        <div className="lgmm-list">
+          {categories.map((category) => (
+            <Link
+              key={category.id}
+              href={`/category/${category.id}?from=${gender}`}
+              className="lgmm-tile"
+            >
+              <figure className="lgmm-media">
+                {/* eslint-disable-next-line @next/next/no-img-element */}
+                <img src={category.image} alt={category.name} loading="lazy" />
+              </figure>
+              <p className="lgmm-caption">
+                <span>{category.name}</span>
+                <span>
+                  {typeof category.count === "number" && category.count > 0
+                    ? `${category.count} ${category.count === 1 ? "peça" : "peças"}`
+                    : "Ver peças"}
+                </span>
+              </p>
+            </Link>
+          ))}
         </div>
 
-        <div className="lgmm-col lgmm-col-right">
-          {categories
-            .filter((_, index) => index % 2 === 1)
-            .map((category) => (
-              <div key={category.id} className="lgmm-cell">
-                <Link href={`/category/${category.id}?from=${gender}`} className="lgmm-tile">
-                  <figure className="lgmm-media">
-                    {/* eslint-disable-next-line @next/next/no-img-element */}
-                    <img src={category.image} alt={category.name} loading="lazy" />
-                  </figure>
-                  <p className="lgmm-caption">
-                    <span>{category.name}</span>
-                    <span>
-                      {typeof category.count === "number" && category.count > 0
-                        ? `${category.count}`
-                        : "→"}
-                    </span>
-                  </p>
-                  <RailText word={label} />
-                </Link>
-              </div>
-            ))}
+        <div className="lgmm-seal">
+          <SealCard brand={brand} />
         </div>
       </section>
     </>
