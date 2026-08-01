@@ -762,7 +762,7 @@
 
 .lg-homegallery-row {
   display: flex;
-  gap: 2px;
+  gap: 1px;
 }
 
 .lg-homegallery-item {
@@ -773,10 +773,13 @@
   overflow: hidden;
 }
 
+/* filtro sépia/quente uniforme — as fotos vêm de fontes diferentes, isto
+   dá-lhes a mesma cor de fundo, como se fossem de uma sessão só. */
 .lg-homegallery-item img {
   width: 100%;
   height: 100%;
   object-fit: cover;
+  filter: sepia(0.35) saturate(0.62) contrast(1.02) brightness(0.94);
   transition: transform 0.7s cubic-bezier(0.22, 1, 0.36, 1);
 }
 
