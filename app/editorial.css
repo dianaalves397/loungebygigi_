@@ -472,7 +472,7 @@
   }
 
   /* uma coluna só: fotos a toda a largura, empilhadas, como numa
-     colagem/lookbook editorial — cada foto no seu tamanho real. */
+     colagem/lookbook editorial — todas com o mesmo tamanho/moldura. */
   .lgm-mobile {
     display: block;
     padding: 0 20px;
@@ -493,19 +493,21 @@
     color: inherit;
   }
 
-  /* moldura pequena tipo postal à volta de cada foto */
+  /* moldura tipo postal à volta de cada foto — igual em todas */
   .lgmm-media {
     margin: 0;
-    background: #fdfcf9;
-    padding: 10px 10px 14px;
-    box-shadow: 0 1px 2px rgba(30, 25, 19, 0.08), 0 6px 16px rgba(30, 25, 19, 0.1);
-    border: 1px solid rgba(30, 25, 19, 0.06);
+    background: var(--lg-paper);
+    padding: 14px;
+    box-shadow: 0 1px 1px rgba(30, 25, 19, 0.1), 0 10px 20px rgba(30, 25, 19, 0.14);
+    border: 1px solid rgba(30, 25, 19, 0.1);
   }
 
+  /* todas as fotos com o mesmo tamanho (proporção da "Sports") */
   .lgmm-media img {
     display: block;
     width: 100%;
-    height: auto;
+    aspect-ratio: 3 / 2;
+    object-fit: cover;
     background: var(--lg-paper-deep);
   }
 
