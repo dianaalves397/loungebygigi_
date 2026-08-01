@@ -484,22 +484,29 @@
     gap: 40px;
   }
 
+  /* postal pequeno, centrado, não a toda a largura do ecrã */
   .lgmm-tile {
     display: block;
+    width: min(300px, 78vw);
+    margin: 0 auto;
     text-decoration: none;
     color: inherit;
   }
 
+  /* moldura pequena tipo postal à volta de cada foto */
   .lgmm-media {
     margin: 0;
-    overflow: hidden;
-    background: var(--lg-paper-deep);
+    background: #fdfcf9;
+    padding: 10px 10px 14px;
+    box-shadow: 0 1px 2px rgba(30, 25, 19, 0.08), 0 6px 16px rgba(30, 25, 19, 0.1);
+    border: 1px solid rgba(30, 25, 19, 0.06);
   }
 
   .lgmm-media img {
     display: block;
     width: 100%;
     height: auto;
+    background: var(--lg-paper-deep);
   }
 
   .lgmm-caption {
