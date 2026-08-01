@@ -1,5 +1,5 @@
 import type { Metadata } from "next";
-import { Cormorant_Garamond, Jost } from "next/font/google";
+import { EB_Garamond } from "next/font/google";
 import "./globals.css";
 import "./editorial.css";
 import { getCachedPublicSettings } from "@/lib/cache";
@@ -10,17 +10,20 @@ import { getCachedPublicSettings } from "@/lib/cache";
 // toda a cache estática configurada nas páginas individuais.
 export const revalidate = 3600;
 
-const displayFont = Cormorant_Garamond({
+// Serifada clássica em todo o site (títulos e texto corrido), a pedido —
+// substitui a Cormorant Garamond (títulos) + Jost (texto) anteriores.
+const displayFont = EB_Garamond({
   subsets: ["latin"],
-  weight: ["300", "400", "500", "600"],
+  weight: ["400", "500", "600"],
   style: ["normal", "italic"],
   variable: "--font-display",
   display: "swap"
 });
 
-const bodyFont = Jost({
+const bodyFont = EB_Garamond({
   subsets: ["latin"],
-  weight: ["300", "400", "500"],
+  weight: ["400", "500"],
+  style: ["normal", "italic"],
   variable: "--font-body",
   display: "swap"
 });

@@ -11,8 +11,8 @@
   --lg-court: #4a5d45;
   --lg-riviera: #22354a;
   --lg-brass: #a98e5f;
-  --lg-display: var(--font-display, "Cormorant Garamond", Georgia, serif);
-  --lg-body: var(--font-body, "Jost", "Helvetica Neue", sans-serif);
+  --lg-display: var(--font-display, "EB Garamond", Georgia, serif);
+  --lg-body: var(--font-body, "EB Garamond", Georgia, serif);
   /* nº de colunas da grelha de produtos no telemóvel — ajustável pelo
      cliente (ver GridDensityControl). */
   --mobile-grid-cols: 3;
