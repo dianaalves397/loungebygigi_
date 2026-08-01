@@ -14,7 +14,8 @@
 const DEFAULT_HOME_SECTIONS = [
   {
     id: "galeria-1",
-    name: "",
+    name: "Lounge by Gigi",
+    subtitle: "Coleção",
     type: "gallery",
     imageCount: 3,
     fontStyle: "serif-italic",
@@ -37,7 +38,8 @@ const DEFAULT_HOME_SECTIONS = [
   },
   {
     id: "galeria-2",
-    name: "",
+    name: "Lounge by Gigi",
+    subtitle: "Lookbook",
     type: "gallery",
     imageCount: 3,
     fontStyle: "serif-italic",
@@ -49,7 +51,8 @@ const DEFAULT_HOME_SECTIONS = [
   },
   {
     id: "galeria-3",
-    name: "",
+    name: "Lounge by Gigi",
+    subtitle: "Peças da coleção",
     type: "gallery",
     imageCount: 5,
     fontStyle: "serif-italic",

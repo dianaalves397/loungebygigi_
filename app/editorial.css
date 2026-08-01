@@ -721,20 +721,43 @@
   }
 }
 
-/* Galeria (várias fotos lado a lado, sem legendas) */
+/* Galeria (várias fotos lado a lado) — fundo escuro tipo "estojo" de
+   apresentação de coleção, com uma barra de legendas pequenas nos cantos
+   por cima (nome à esquerda, subtítulo à direita), como numa referência
+   de brief/lookbook de marca. */
 .lg-homegallery {
-  color: var(--lg-ink);
-  background: var(--lg-paper);
-  padding: 56px 0;
+  color: var(--lg-paper);
+  background: var(--lg-ink);
+  padding: 20px 20px 26px;
 }
 
 .lg-homegallery-title {
   display: flex;
-  flex-direction: column;
-  align-items: center;
-  text-align: center;
-  gap: 6px;
-  padding: 0 6vw 32px;
+  justify-content: space-between;
+  align-items: baseline;
+  gap: 12px;
+  padding: 0 2px 16px;
+  text-align: left;
+}
+
+.lg-homegallery-title .lg-homesection-name {
+  font-family: var(--lg-body);
+  font-style: normal;
+  font-weight: 600;
+  font-size: 10px;
+  letter-spacing: 0.22em;
+  text-transform: uppercase;
+  opacity: 0.92;
+}
+
+.lg-homegallery-title .lg-homesection-subtitle {
+  font-family: var(--lg-body);
+  font-size: 10px;
+  font-weight: 400;
+  letter-spacing: 0.18em;
+  text-transform: uppercase;
+  opacity: 0.65;
+  max-width: none;
 }
 
 .lg-homegallery-row {
