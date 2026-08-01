@@ -6,9 +6,12 @@
 //   "width: full" = toda a largura, texto à esquerda. "width: half" = dois
 //   blocos lado a lado (emparelham automaticamente), texto centrado.
 //
-// - "gallery": título pequeno opcional, e por baixo uma fiada de 3 ou 5
-//   fotos lado a lado, sem legendas por foto. Vêm de
-//   /home-sections/{id}-1.jpg, {id}-2.jpg, ... até ao número escolhido.
+// - "gallery": legenda pequena nos cantos (nome/subtítulo), e por baixo
+//   uma fiada de 3 ou 5 fotos lado a lado. Por omissão ("source: custom")
+//   vêm de /home-sections/{id}-1.jpg, {id}-2.jpg, ... até ao número
+//   escolhido. Com "source: recent" mostram, em vez disso, os produtos
+//   adicionados mais recentemente à loja (imagem + nome reais), sempre
+//   atualizados sem precisar de editar nada.
 //
 // - "heading": só texto (nome + subtítulo/botão opcionais) num bloco liso,
 //   sem imagem — para separar secções, como um título de capítulo.
@@ -18,9 +21,10 @@
 
 import Link from "next/link";
 
-export type HomeSectionFontStyle = "serif-italic" | "serif-upright" | "sans-bold" | "sans-light";
+export type HomeSectionFontStyle = "serif-italic" | "serif-upright" | "sans-bold" | "sans-light" | "script";
 export type HomeSectionWidth = "full" | "half";
 export type HomeSectionType = "banner" | "gallery" | "heading";
+export type HomeSectionGallerySource = "custom" | "recent";
 
 export type HomeSection = {
   id: string;
@@ -35,6 +39,14 @@ export type HomeSection = {
   productIds?: string[];
   type?: HomeSectionType;
   imageCount?: number;
+  gallerySource?: HomeSectionGallerySource;
+};
+
+type RecentProduct = {
+  id: string;
+  slug: string;
+  title: string;
+  image: string;
 };
 
 function resolveHref(section: HomeSection, gender: string) {
@@ -94,10 +106,20 @@ function BannerBlock({ section, gender }: { section: HomeSection; gender: string
   );
 }
 
-function GalleryBlock({ section, gender }: { section: HomeSection; gender: string }) {
+function GalleryBlock({
+  section,
+  gender,
+  recentProducts
+}: {
+  section: HomeSection;
+  gender: string;
+  recentProducts: RecentProduct[];
+}) {
   const fontStyle = section.fontStyle || "serif-italic";
   const count = section.imageCount === 5 ? 5 : 3;
   const href = resolveHref(section, gender);
+  const isRecent = section.gallerySource === "recent";
+  const items = isRecent ? recentProducts.slice(0, count) : Array.from({ length: count });
 
   return (
     <div className={`lg-homegallery lg-homesection--${fontStyle}`}>
@@ -108,12 +130,21 @@ function GalleryBlock({ section, gender }: { section: HomeSection; gender: strin
         </div>
       ) : null}
       <div className="lg-homegallery-row">
-        {Array.from({ length: count }).map((_, index) => (
-          <Link href={href} className="lg-homegallery-item" key={index}>
-            {/* eslint-disable-next-line @next/next/no-img-element */}
-            <img src={`/home-sections/${section.id}-${index + 1}.jpg`} alt={section.name || ""} loading="lazy" />
-          </Link>
-        ))}
+        {items.map((item: any, index) => {
+          const itemHref = isRecent ? `/product/${item.slug}` : href;
+          const src = isRecent ? item.image : `/home-sections/${section.id}-${index + 1}.jpg`;
+          const alt = isRecent ? item.title : section.name || "";
+
+          return (
+            <Link href={itemHref} className="lg-homegallery-item" key={isRecent ? item.id : index}>
+              <span className="lg-homegallery-item-media">
+                {/* eslint-disable-next-line @next/next/no-img-element */}
+                <img src={src} alt={alt} loading="lazy" />
+              </span>
+              {isRecent ? <span className="lg-homegallery-item-caption">{item.title}</span> : null}
+            </Link>
+          );
+        })}
       </div>
     </div>
   );
@@ -131,19 +162,29 @@ function HeadingBlock({ section, gender }: { section: HomeSection; gender: strin
   );
 }
 
-function SectionRenderer({ section, gender }: { section: HomeSection; gender: string }) {
+function SectionRenderer({
+  section,
+  gender,
+  recentProducts
+}: {
+  section: HomeSection;
+  gender: string;
+  recentProducts: RecentProduct[];
+}) {
   const type = section.type || "banner";
-  if (type === "gallery") return <GalleryBlock section={section} gender={gender} />;
+  if (type === "gallery") return <GalleryBlock section={section} gender={gender} recentProducts={recentProducts} />;
   if (type === "heading") return <HeadingBlock section={section} gender={gender} />;
   return <BannerBlock section={section} gender={gender} />;
 }
 
 export default function HomeSections({
   sections,
-  gender
+  gender,
+  recentProducts
 }: {
   sections: HomeSection[];
   gender: string;
+  recentProducts?: RecentProduct[];
 }) {
   const visible = (sections || []).filter((section) => section?.id && (section?.name || section?.type === "gallery"));
   if (!visible.length) return null;
@@ -155,7 +196,12 @@ export default function HomeSections({
       {rows.map((row, index) => (
         <div className="lg-homerow" key={row.map((s) => s.id).join("-") || index}>
           {row.map((section) => (
-            <SectionRenderer key={section.id} section={section} gender={gender} />
+            <SectionRenderer
+              key={section.id}
+              section={section}
+              gender={gender}
+              recentProducts={recentProducts || []}
+            />
           ))}
         </div>
       ))}

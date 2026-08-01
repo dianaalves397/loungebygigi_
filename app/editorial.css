@@ -13,6 +13,7 @@
   --lg-brass: #a98e5f;
   --lg-display: var(--font-display, "EB Garamond", Georgia, serif);
   --lg-body: var(--font-body, "EB Garamond", Georgia, serif);
+  --lg-script: var(--font-script, "Brush Script MT", cursive);
   /* nº de colunas da grelha de produtos no telemóvel — ajustável pelo
      cliente (ver GridDensityControl). */
   --mobile-grid-cols: 3;
@@ -507,6 +508,7 @@
   .lgmm-tile:nth-child(odd) .lgmm-media { transform: rotate(-0.7deg); }
   .lgmm-tile:nth-child(even) .lgmm-media { transform: rotate(0.7deg); }
 
+
   /* todas as fotos com o mesmo tamanho (proporção da "Sports"), com o
      mesmo filtro suave da página inicial — desaparece ao tocar/clicar */
   .lgmm-media img {
@@ -684,6 +686,14 @@
   font-size: clamp(1.5rem, 3.6vw, 2.8rem);
 }
 
+/* Script caligráfico — como "The PHOTO" / "new Collection" na referência */
+.lg-homesection--script .lg-homesection-name {
+  font-family: var(--lg-script);
+  font-weight: 400;
+  font-style: normal;
+  font-size: clamp(2.6rem, 6vw, 5.2rem);
+}
+
 .lg-homesection-subtitle {
   font-family: var(--lg-body);
   font-size: 0.9rem;
@@ -766,16 +776,22 @@
 }
 
 .lg-homegallery-item {
-  display: block;
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
   flex: 1 1 0;
   min-width: 0;
+}
+
+.lg-homegallery-item-media {
+  display: block;
   aspect-ratio: 3 / 4;
   overflow: hidden;
 }
 
 /* filtro sépia/quente uniforme — as fotos vêm de fontes diferentes, isto
    dá-lhes a mesma cor de fundo, como se fossem de uma sessão só. */
-.lg-homegallery-item img {
+.lg-homegallery-item-media img {
   width: 100%;
   height: 100%;
   object-fit: cover;
@@ -783,8 +799,20 @@
   transition: transform 0.7s cubic-bezier(0.22, 1, 0.36, 1);
 }
 
-.lg-homegallery-item:hover img {
+.lg-homegallery-item:hover .lg-homegallery-item-media img {
   transform: scale(1.035);
+}
+
+/* legenda pequena por baixo de cada foto — só nas galerias de produtos
+   recentes (nome real do produto), como na referência */
+.lg-homegallery-item-caption {
+  font-family: var(--lg-body);
+  font-size: 9px;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  text-align: center;
+  opacity: 0.8;
+  padding: 0 2px;
 }
 
 /* Título liso (bloco sem imagem, só texto) */
@@ -812,6 +840,9 @@
 
   .lg-homegallery-item {
     flex: 1 1 45%;
+  }
+
+  .lg-homegallery-item-media {
     aspect-ratio: 1 / 1;
   }
 

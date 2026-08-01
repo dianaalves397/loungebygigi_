@@ -110,6 +110,24 @@ export default async function CollectionsPage({
   const label = gender === "men" ? "Man" : "Woman";
   const brand = settings.brand?.name || "Lounge by Gigi";
 
+  // Produtos adicionados mais recentemente, para a secção do tipo galeria
+  // com "gallerySource: recent" (ex: "Nova Coleção") — sempre atualizados,
+  // sem precisar de escolher imagens manualmente.
+  const recentProducts = products
+    .filter((product: any) => {
+      if (product.status !== "active") return false;
+      const pg = String(product.gender || "unisex");
+      return pg === "unisex" || pg === gender;
+    })
+    .sort((a: any, b: any) => new Date(b.createdAt || 0).getTime() - new Date(a.createdAt || 0).getTime())
+    .slice(0, 5)
+    .map((product: any) => ({
+      id: product.id,
+      slug: product.slug,
+      title: product.title,
+      image: product.image
+    }));
+
   return (
     <>
       <Nav />
@@ -121,7 +139,7 @@ export default async function CollectionsPage({
 
         <MoodboardGrid categories={visible} brand={brand} label={label} gender={gender} />
 
-        <HomeSections sections={settings.homeSections} gender={gender} />
+        <HomeSections sections={settings.homeSections} gender={gender} recentProducts={recentProducts} />
       </main>
     </>
   );
