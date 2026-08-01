@@ -57,9 +57,10 @@ type HomeSettings = {
 };
 
 type HomeSectionTargetType = "category" | "products";
-type HomeSectionFontStyle = "serif-italic" | "serif-upright" | "sans-bold" | "sans-light";
+type HomeSectionFontStyle = "serif-italic" | "serif-upright" | "sans-bold" | "sans-light" | "script";
 type HomeSectionWidth = "full" | "half";
 type HomeSectionType = "banner" | "gallery" | "heading";
+type HomeSectionGallerySource = "custom" | "recent";
 
 type HomeSection = {
   id: string;
@@ -74,6 +75,7 @@ type HomeSection = {
   productIds?: string[];
   type: HomeSectionType;
   imageCount?: number;
+  gallerySource?: HomeSectionGallerySource;
 };
 
 type Settings = {
@@ -791,7 +793,8 @@ export default function ControlPanel() {
           categoryId: "",
           productIds: [],
           type: "banner",
-          imageCount: 3
+          imageCount: 3,
+          gallerySource: "custom"
         }
       ]
     });
@@ -1069,7 +1072,10 @@ export default function ControlPanel() {
                 <code>public/home-sections/</code> com o nome do ID do bloco: <code>{"{id}"}.jpg</code>{" "}
                 (ou <code>.mp4</code>) para Banner, e <code>{"{id}"}-1.jpg</code>, <code>{"{id}"}-2.jpg</code>
                 ... para Galeria. O ID fica fixo depois de criado, para poderes mudar o nome mostrado
-                no site sem teres de subir os ficheiros outra vez.
+                no site sem teres de subir os ficheiros outra vez. Numa Galeria, "Fotos vêm de:{" "}
+                <code>custom</code>" usa essas fotos do GitHub; "<code>recent</code>" mostra automaticamente
+                os produtos adicionados mais recentemente à loja (foto e nome reais), sem precisares de
+                escolher imagens.
               </p>
 
               {homeSections.map((section, index) => {
@@ -1117,7 +1123,7 @@ export default function ControlPanel() {
                     <SelectField
                       label="Tipo de letra do nome"
                       value={section.fontStyle || "serif-italic"}
-                      options={["serif-italic", "serif-upright", "sans-bold", "sans-light"]}
+                      options={["serif-italic", "serif-upright", "sans-bold", "sans-light", "script"]}
                       onChange={(value) =>
                         updateSection(index, { fontStyle: value as HomeSectionFontStyle })
                       }
@@ -1129,6 +1135,17 @@ export default function ControlPanel() {
                         value={String(section.imageCount || 3)}
                         options={["3", "5"]}
                         onChange={(value) => updateSection(index, { imageCount: Number(value) })}
+                      />
+                    )}
+
+                    {sectionType === "gallery" && (
+                      <SelectField
+                        label="Fotos vêm de"
+                        value={section.gallerySource || "custom"}
+                        options={["custom", "recent"]}
+                        onChange={(value) =>
+                          updateSection(index, { gallerySource: value as HomeSectionGallerySource })
+                        }
                       />
                     )}
 

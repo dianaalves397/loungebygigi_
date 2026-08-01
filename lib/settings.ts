@@ -27,8 +27,21 @@ const DEFAULT_HOME_SECTIONS = [
   },
   {
     id: "nova-colecao",
-    name: "Nova Coleção",
+    name: "new Collection",
     type: "heading",
+    fontStyle: "script",
+    width: "full",
+    mediaType: "image",
+    targetType: "category",
+    categoryId: "",
+    productIds: []
+  },
+  {
+    id: "produtos-recentes",
+    name: "",
+    type: "gallery",
+    imageCount: 3,
+    gallerySource: "recent",
     fontStyle: "serif-italic",
     width: "full",
     mediaType: "image",

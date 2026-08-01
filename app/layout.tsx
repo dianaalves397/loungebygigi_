@@ -1,5 +1,5 @@
 import type { Metadata } from "next";
-import { EB_Garamond } from "next/font/google";
+import { EB_Garamond, Parisienne } from "next/font/google";
 import "./globals.css";
 import "./editorial.css";
 import { getCachedPublicSettings } from "@/lib/cache";
@@ -25,6 +25,15 @@ const bodyFont = EB_Garamond({
   weight: ["400", "500"],
   style: ["normal", "italic"],
   variable: "--font-body",
+  display: "swap"
+});
+
+// Script caligráfico — só para os títulos das secções da coleção (estilo
+// "The PHOTO" / "new Collection" da referência), não usado no resto do site.
+const scriptFont = Parisienne({
+  subsets: ["latin"],
+  weight: ["400"],
+  variable: "--font-script",
   display: "swap"
 });
 import SiteFooter from "@/components/SiteFooter";
@@ -134,7 +143,7 @@ export default async function RootLayout({
   };
 
   return (
-    <html lang="pt" className={`${displayFont.variable} ${bodyFont.variable}`}>
+    <html lang="pt" className={`${displayFont.variable} ${bodyFont.variable} ${scriptFont.variable}`}>
       <body>
         {themeStyle && <style dangerouslySetInnerHTML={{ __html: themeStyle }} />}
         <link rel="preconnect" href="https://i.postimg.cc" />
