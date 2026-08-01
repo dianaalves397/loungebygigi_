@@ -28,8 +28,9 @@ const DEFAULT_HOME_SECTIONS = [
   {
     id: "nova-colecao",
     name: "new Collection",
+    subtitle: "As peças mais recentes da loja, escolhidas com cuidado para o dia a dia.",
     type: "heading",
-    fontStyle: "script",
+    fontStyle: "serif-italic",
     width: "full",
     mediaType: "image",
     targetType: "category",
@@ -78,6 +79,7 @@ const DEFAULT_HOME_SECTIONS = [
   {
     id: "marca",
     name: "lounge by gigi",
+    subtitle: "Peças pensadas para vestir todos os dias, feitas para durar.",
     ctaLabel: "Ver tudo",
     type: "heading",
     fontStyle: "serif-italic",
