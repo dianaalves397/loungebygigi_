@@ -4,52 +4,71 @@
 // mostradas por omissão enquanto a loja não guardar as suas próprias pela
 // aba "Secções da coleção" do painel (a primeira gravação lá marca
 // homeSectionsInitialized:true e estes deixam de aparecer). As fotos já
-// existem em public/home-sections/ (cópias das imagens de categoria já
-// usadas no moodboard), por isso já aparece algo assim que se acede ao
-// site, mesmo antes de a loja escolher as suas próprias imagens/textos.
+// existem em public/home-sections/, por isso já aparece algo assim que se
+// acede ao site, mesmo antes de a loja escolher as suas próprias
+// imagens/textos.
+//
+// Ritmo inspirado num lookbook/apresentação de marca: fiadas de fotos
+// (tipo "gallery") intercaladas com títulos lisos sem imagem (tipo
+// "heading"), com o mínimo de texto por bloco.
 const DEFAULT_HOME_SECTIONS = [
   {
-    id: "sports",
-    name: "Sports",
-    subtitle: "Peças pensadas para o movimento.",
-    ctaLabel: "Comprar agora",
-    fontStyle: "sans-bold",
+    id: "galeria-1",
+    name: "",
+    type: "gallery",
+    imageCount: 3,
+    fontStyle: "serif-italic",
     width: "full",
     mediaType: "image",
     targetType: "category",
-    categoryId: "sports",
+    categoryId: "",
     productIds: []
   },
   {
-    id: "verao",
-    name: "Verão",
-    subtitle: "A nova coleção de verão.",
-    ctaLabel: "Comprar agora",
-    fontStyle: "sans-bold",
+    id: "nova-colecao",
+    name: "Nova Coleção",
+    type: "heading",
+    fontStyle: "serif-italic",
     width: "full",
     mediaType: "image",
     targetType: "category",
-    categoryId: "summer",
+    categoryId: "",
     productIds: []
   },
   {
-    id: "loungewear",
-    name: "Loungewear",
-    fontStyle: "sans-bold",
-    width: "half",
+    id: "galeria-2",
+    name: "",
+    type: "gallery",
+    imageCount: 3,
+    fontStyle: "serif-italic",
+    width: "full",
     mediaType: "image",
     targetType: "category",
-    categoryId: "loungewear",
+    categoryId: "",
     productIds: []
   },
   {
-    id: "acessorios",
-    name: "Acessórios",
-    fontStyle: "sans-bold",
-    width: "half",
+    id: "galeria-3",
+    name: "",
+    type: "gallery",
+    imageCount: 5,
+    fontStyle: "serif-italic",
+    width: "full",
     mediaType: "image",
     targetType: "category",
-    categoryId: "acessorios",
+    categoryId: "",
+    productIds: []
+  },
+  {
+    id: "marca",
+    name: "lounge by gigi",
+    ctaLabel: "Ver tudo",
+    type: "heading",
+    fontStyle: "serif-italic",
+    width: "full",
+    mediaType: "image",
+    targetType: "category",
+    categoryId: "",
     productIds: []
   }
 ];
