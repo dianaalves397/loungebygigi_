@@ -90,7 +90,7 @@ export default function NavClient({
     <header className="old-nav">
       <Link className="old-nav-logo old-nav-logo-image" href="/" aria-label="Lounge by Gigi">
         {/* eslint-disable-next-line @next/next/no-img-element */}
-        <img src="/lounge-logo.jpg" alt="Lounge by Gigi" />
+        <img src="/lounge-logo.svg" alt="Lounge by Gigi" />
       </Link>
 
       <nav className="old-nav-center">
