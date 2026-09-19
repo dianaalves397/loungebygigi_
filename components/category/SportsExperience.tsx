@@ -132,7 +132,9 @@ export default function SportsExperience({
     return () => observer.disconnect();
   }, []);
 
-  const intro = category.introText || category.introTitle || chapters.openFallback;
+  // Esta experiência tem narrativa editorial própria: não deixar o texto antigo da categoria
+  // substituir a homenagem ao impacto do desporto na moda.
+  const intro = chapters.openFallback;
 
   return (
     <div className={`sx sx-ed-${edition}`} ref={rootRef}>
