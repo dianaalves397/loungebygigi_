@@ -46,7 +46,7 @@ export default function LandingHero({
       <div className="lg-landing-intro" aria-hidden="true">
         <div className="lg-landing-brand-logo">
           {/* eslint-disable-next-line @next/next/no-img-element */}
-          <img src="/lounge-logo.jpg" alt="" />
+          <img src="/lounge-logo.svg" alt="" />
         </div>
       </div>
 
