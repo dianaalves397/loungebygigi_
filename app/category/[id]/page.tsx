@@ -52,11 +52,14 @@ function productMatchesAny(product: any, ids: Set<string>, familyNames: Set<stri
   // compara pelo NOME da categoria, mas só dentro desta família (nunca
   // contra a loja toda, para não repetir a mistura entre categorias
   // homónimas como as duas "Peças superiores").
-  const hasOwnCategory =
-    Boolean(product.categoryId) || (product.categoryIds || []).length > 0;
-  if (hasOwnCategory) return false;
+  // Também aceita o nome/collection/tags dentro da família. Alguns produtos
+  // sincronizados mantêm um categoryId antigo nas overrides; rejeitá-los só
+  // por esse ID fazia peças válidas desaparecerem da categoria.
+  if (familyNames.has(slugify(product.category))) return true;
+  if (familyNames.has(slugify(product.collection))) return true;
+  if ((product.tags || []).some((tag: string) => familyNames.has(slugify(tag)))) return true;
 
-  return familyNames.has(slugify(product.category));
+  return false;
 }
 
 export default async function CategoryPage({
