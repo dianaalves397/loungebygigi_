@@ -44,22 +44,9 @@ export default function LandingHero({
   return (
     <section className="lg-landing" aria-label="Escolher coleção">
       <div className="lg-landing-intro" aria-hidden="true">
-        <div className="lg-seal-core" style={{ textAlign: "center", fontFamily: "var(--lg-display)" }}>
-          <strong style={{ display: "block", fontStyle: "italic", fontWeight: 500, fontSize: "clamp(34px,5vw,54px)" }}>
-            Lounge
-          </strong>
-          <span
-            style={{
-              display: "block",
-              marginTop: 8,
-              fontFamily: "var(--lg-body)",
-              fontSize: 10,
-              letterSpacing: "0.44em",
-              textTransform: "uppercase"
-            }}
-          >
-            by Gigi
-          </span>
+        <div className="lg-landing-brand-logo">
+          {/* eslint-disable-next-line @next/next/no-img-element */}
+          <img src="/lounge-logo.jpg" alt="" />
         </div>
       </div>
 
