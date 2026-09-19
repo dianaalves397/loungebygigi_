@@ -78,7 +78,7 @@ export async function getProducts() {
       const cachedPrintful = unstable_cache(
         async () => queryPrintfulProducts(printful, settings),
         ["printful-products", String(printful.storeId || "default")],
-        { revalidate: 60 * 60 * 6, tags: ["store"] }
+        { revalidate: 60 * 5, tags: ["store"] }
       );
       products.push(...(await cachedPrintful()));
     } catch (error) {
@@ -92,7 +92,7 @@ export async function getProducts() {
       const cachedPrintify = unstable_cache(
         async () => queryPrintifyProducts(printify, settings),
         ["printify-products", String(printify.shopId || "default")],
-        { revalidate: 60 * 60 * 6, tags: ["store"] }
+        { revalidate: 60 * 5, tags: ["store"] }
       );
       products.push(...(await cachedPrintify()));
     } catch (error) {
@@ -106,7 +106,7 @@ export async function getProducts() {
       const cachedApliiq = unstable_cache(
         async () => queryApliiqProducts(apliiq, settings),
         ["apliiq-products", String(apliiq.apiKey || "default")],
-        { revalidate: 60 * 60 * 6, tags: ["store"] }
+        { revalidate: 60 * 5, tags: ["store"] }
       );
       products.push(...(await cachedApliiq()));
     } catch (error) {
