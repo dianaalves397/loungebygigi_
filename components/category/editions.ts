@@ -59,11 +59,11 @@ export const EDITIONS: Record<"woman" | "man" | "summer" | "summerMan", EditionC
     ),
     essential: [0, 2, 3, 4],
     chapters: {
-      openFallback: "Peças de desporto pensadas para o court, o green e a cidade.",
-      spreadQuote: ["As páginas desta edição", "ganharam profundidade."],
+      openFallback: "Antes de ser tendência, foi movimento. O desporto ensinou a moda a vestir velocidade, liberdade e atitude — do court e da pista para a rua.",
+      spreadQuote: ["Do campo para a rua.", "Do uniforme para a cultura."],
       collage:
-        "Recortes da edição, pendurados como provas de impressão — fragmentos que se tornam cenário.",
-      closingQuote: ["As peças esperam", "na última página."]
+        "Ténis, polos, malhas, fatos de treino e silhuetas técnicas atravessaram gerações. O que nasceu para competir tornou-se linguagem de estilo — e continua a reinventar a forma como nos vestimos.",
+      closingQuote: ["O jogo muda.", "A influência permanece."]
     },
     cover: {
       photo: 4,
@@ -111,11 +111,11 @@ export const EDITIONS: Record<"woman" | "man" | "summer" | "summerMan", EditionC
     ),
     essential: [0, 3, 5, 7],
     chapters: {
-      openFallback: "Peças pensadas para o court, o ringue e o bar do clube.",
-      spreadQuote: ["O clube abre", "as portas."],
+      openFallback: "Antes de ser tendência, foi movimento. O desporto ensinou a moda a vestir velocidade, liberdade e atitude — do court, do ringue e da pista para a rua.",
+      spreadQuote: ["Do campo para a rua.", "Do uniforme para a cultura."],
       collage:
-        "Provas de impressão da edição masculina — polo, terra batida e o vestiário do clube, pendurados a secar.",
-      closingQuote: ["As peças esperam", "na última página."]
+        "Ténis, polos, malhas, fatos de treino e silhuetas técnicas atravessaram gerações. O que nasceu para competir tornou-se linguagem de estilo — e continua a reinventar a forma como nos vestimos.",
+      closingQuote: ["O jogo muda.", "A influência permanece."]
     },
     cover: {
       photo: 3, // guarda no relvado do clube, ao entardecer
