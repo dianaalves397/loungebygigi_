@@ -11,7 +11,9 @@ import { getSettings } from "@/lib/settings";
 export const STORE_TAG = "store";
 
 // 6 horas de vida máxima; na prática é invalidada logo que algo muda no painel.
-const REVALIDATE_SECONDS = 60 * 60 * 6;
+// Produtos/categorias de fornecedores externos devem aparecer rapidamente no site.
+// 5 minutos evita que novos produtos fiquem invisíveis durante horas.
+const REVALIDATE_SECONDS = 60 * 5;
 
 export const getCachedProducts = unstable_cache(
   async () => {
